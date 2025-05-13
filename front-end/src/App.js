@@ -6,7 +6,7 @@ function App() {
   useEffect(() => {
     const fetchMessage = async () => {
       try {
-        const response = await fetch("http://210.110.171.12:32323/api/hello");
+        const response = await fetch("/api/hello");
         if (!response.ok) {
           throw new Error("서버 응답 오류");
         }
