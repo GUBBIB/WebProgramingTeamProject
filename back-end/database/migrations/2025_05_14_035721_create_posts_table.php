@@ -6,28 +6,25 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
-{
-    Schema::create('posts', function (Blueprint $table) {
-        $table->id('PST_id');
-        $table->unsignedBigInteger('BRD_id');
-        $table->unsignedBigInteger('USR_id');
-        $table->string('PST_title');
-        $table->text('PST_content');
-        $table->timestamps(); // created_at, updated_at
+    {
+        Schema::create('posts', function (Blueprint $table) {
+            $table->id('PST_id'); // 기본키
 
-        $table->foreign('BRD_id')->references('BRD_id')->on('boards')->onDelete('cascade');
-        $table->foreign('USR_id')->references('USR_id')->on('users')->onDelete('cascade');
-    });
-}
+            $table->unsignedBigInteger('BRD_id'); // boards 테이블 외래키
+            $table->unsignedBigInteger('USR_id'); // users 테이블 외래키
 
+            $table->text('PST_title');
+            $table->text('PST_content');
 
-    /**
-     * Reverse the migrations.
-     */
+            $table->timestamps(); // created_at, updated_at 자동 생성 및 관리
+
+            // 외래 키 제약 조건
+            $table->foreign('BRD_id')->references('BRD_id')->on('boards')->onDelete('cascade');
+            $table->foreign('USR_id')->references('USR_id')->on('users')->onDelete('cascade');
+        });
+    }
+
     public function down(): void
     {
         Schema::dropIfExists('posts');
