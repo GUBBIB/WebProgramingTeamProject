@@ -3,13 +3,13 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import BoardForm from './Board/BoardForm';
+import BoardFetch from './Board/BoardFetch';
 import BoardList from './Board/BoardList';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <BoardList />
+    <BoardFetch />
   </React.StrictMode>
 );
 
