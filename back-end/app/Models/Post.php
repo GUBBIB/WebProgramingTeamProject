@@ -15,6 +15,7 @@ class Post extends Model
         'PST_front_page',
         'PST_behind_page',
         'PST_content',
+        
     ];
 
     // timestamps()를 사용하는 경우 true가 기본값이므로 명시할 필요 없음
