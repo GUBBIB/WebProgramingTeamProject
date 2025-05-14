@@ -23,6 +23,12 @@ class RegisterController extends Controller
             'USR_created_at' => now()->toDateString(),
         ]);
 
+        if(!$user){
+            return response()->json([
+                'message' => '회원가입 실패'
+            ], 500);
+        }
+
         return response()->json(['message' => '회원가입 완료', 'user' => $user]);
     }
 }

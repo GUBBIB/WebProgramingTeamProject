@@ -1,0 +1,23 @@
+.board-type-selector-container {
+  margin-bottom: 1rem;
+  display: flex;
+  gap: 0.5rem; /* 버튼 사이 간격 */
+}
+
+.board-type-button {
+  padding: 0.5rem 1rem;
+  border: 1px solid #ccc;
+  background-color: #f0f0f0;
+  cursor: pointer;
+  border-radius: 0.25rem;
+}
+
+.board-type-button.active {
+  background-color: #007bff;
+  color: white;
+  border-color: #007bff;
+}
+
+.board-type-button:hover:not(.active) {
+  background-color: #e0e0e0;
+}

@@ -1,0 +1,27 @@
+.post-item-row:hover {
+  background-color: #f1f1f1; /* 마우스 오버 시 배경색 변경 */
+}
+
+.post-title a {
+  text-decoration: none;
+  color: #007bff;
+  font-weight: 500;
+}
+
+.post-title a:hover {
+  text-decoration: underline;
+}
+
+.post-author,
+.post-date,
+.post-views {
+  color: #6c757d;
+  font-size: 0.9rem;
+}
+
+/* 각 셀의 너비를 조절하고 싶다면 아래와 같이 추가할 수 있습니다. */
+.post-table .post-title { width: 50%; }
+.post-table .post-author { width: 15%; }
+.post-table .post-date { width: 20%; }
+.post-table .post-views { width: 15%; text-align: center; }
+
