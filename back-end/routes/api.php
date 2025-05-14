@@ -32,3 +32,6 @@ Route::get('/boards/{boardId}/comments', [CommentController::class, 'coments_Lis
 
 // 게시글 생성
 Route::post('/posts', [PostController::class, 'store']);
+
+// 댓글 생성
+Route::post('/comments', [CommentController::class, 'store']);
