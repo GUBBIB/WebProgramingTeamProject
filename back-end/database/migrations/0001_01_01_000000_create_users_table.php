@@ -15,7 +15,7 @@ return new class extends Migration
         $table->id('USR_id'); // primary key
 
         $table->string('USR_email')->unique();
-        $table->text('USR_pass');
+        $table->string('USR_pass');
 
         $table->timestamps();
     });
