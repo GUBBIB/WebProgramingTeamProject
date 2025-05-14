@@ -32,3 +32,8 @@ Route::get('/boards/{boardId}/comments', [CommentController::class, 'coments_Lis
 
 // 게시글 생성
 Route::post('/posts', [PostController::class, 'store']);
+
+//제목 OR 사용자 검색
+Route::get('/boards', [BoardController::class, 'board_List_Search']);
+Route::get('/boards/search', [BoardController::class, 'board_Search_By_Keyword']);
+
