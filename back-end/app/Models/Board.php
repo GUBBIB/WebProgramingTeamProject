@@ -11,8 +11,13 @@ class Board extends Model
 
     protected $fillable = ['BRD_name'];
 
-    public function posts() {
+    public function posts()
+    {
         return $this->hasMany(Post::class, 'BRD_id');
     }
-}
 
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'USR_id');
+    }
+}
