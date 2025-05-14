@@ -12,6 +12,8 @@ class Post extends Model
         'BRD_id',
         'USR_id',
         'PST_title',
+        'PST_front_page',
+        'PST_behind_page',
         'PST_content',
     ];
 
