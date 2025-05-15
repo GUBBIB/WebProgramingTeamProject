@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './LoginPage.css'; // CSS 파일 임포트
 
-const LoginPage = () => {
+const LoginPage = ({ onLogin }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
@@ -27,11 +27,14 @@ const LoginPage = () => {
 
     if (res.ok) {
       console.log("✅ 로그인 성공", data);
+      if (onLogin) {
+        onLogin(data.user);
+      }
+      navigate('/'); 
     } else {
       console.log("❌ 로그인 실패", data.message);
     }
 
-    navigate('/'); 
   };
 
   return (

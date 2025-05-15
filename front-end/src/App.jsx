@@ -11,39 +11,19 @@ import SignupPage from './pages/SignupPage';
 import LoginPage from './pages/LoginPage';
 import './pages/MainPage.css';
 
-// --- Mock Data --- (API 연동 전 임시 데이터)
-const initialPosts = [
-  { id: '1', title: '리액트 질문입니다!', author: '개발자A', createdAt: '2024-05-10T10:00:00Z', views: 150, boardType: 'qna', content: '리액트에서 상태 관리는 어떻게 하는게 좋을까요? Redux, Zustand, Context API 등 선택지가 많네요.' },
-  { id: '2', title: '자바스크립트 클로저 심층 분석', author: '코딩마스터', createdAt: '2024-05-09T14:30:00Z', views: 250, boardType: 'code', content: '클로저는 자바스크립트의 강력한 기능 중 하나입니다. 이 글에서는 클로저의 동작 원리와 활용법을 자세히 다룹니다.' },
-  { id: '3', title: '오늘 날씨가 너무 좋네요!', author: '날씨요정', createdAt: '2024-05-11T09:00:00Z', views: 80, boardType: 'free', content: '다들 주말 계획 있으신가요? 저는 공원에 피크닉 가려구요!' },
-  // ... (기존 게시물 데이터 유지)
-];
-
-const headerBoardTypes = [
-  { id: 'all', name: '전체' },
-  { id: 'code', name: '코드 게시판' },
-  { id: 'free', name: '자유 게시판' },
-  { id: 'qna', name: '질문 게시판' },
-];
-
-const boardTypesForSearchDropdown = [
-  { id: 'all', name: '전체에서 검색' },
-  { id: 'code', name: '코드 게시판에서 검색' },
-  { id: 'free', name: '자유 게시판에서 검색' },
-  { id: 'qna', name: '질문 게시판에서 검색' },
-];
-// --- End Mock Data ---
-
 const App = () => {
   const [currentUser, setCurrentUser] = useState(null); // { username: '유저명', isLoggedIn: true } 또는 null
   const [allPosts, setAllPosts] = useState(initialPosts);
   const navigate = useNavigate();
 
   // (가상) 로그인 처리 함수
-  const handleLogin = (username) => {
-    setCurrentUser({ username: username, isLoggedIn: true });
-    // 실제 앱에서는 API 호출 후 토큰 등을 저장
-    navigate('/'); // 로그인 후 메인 페이지로 이동
+  const handleLogin = (user) => {
+    setCurrentUser({
+      id: user.USR_id,
+      email: user.USR_email,
+      nickname: user.USR_nickname,
+      isLoggedIn: true
+    });
   };
 
   // (가상) 회원가입 성공 처리 함수 (회원가입 후 자동 로그인)
@@ -135,8 +115,13 @@ const App = () => {
     );
   };
 
+
+
+
+
+
   return (
-    <>
+    <div>
       <Header currentUser={currentUser} onLogout={handleLogout} />
       <main className="app-main-content">
         <Routes>
@@ -153,7 +138,7 @@ const App = () => {
           <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
         </Routes>
       </main>
-    </>
+    </div>
   );
 };
 
