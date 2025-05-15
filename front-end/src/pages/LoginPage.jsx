@@ -12,7 +12,7 @@ const LoginPage = () => {
     
     const res = await fetch("/api/login", {
       method: "POST",
-      HEADERS: {
+      headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
