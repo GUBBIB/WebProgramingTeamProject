@@ -1,0 +1,97 @@
+.board-controls-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1rem;
+  padding: 1rem;
+  border-top: 1px solid #eee;
+  gap: 1rem; /* 요소들 사이의 간격 추가 */
+}
+
+/* 검색과 필터링을 함께 묶는 컨테이너 */
+.search-and-filter-container {
+  display: flex;
+  flex-grow: 1; /* 검색/필터 영역이 가능한 많은 공간을 차지하도록 */
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.search-form {
+  display: flex;
+  flex-grow: 1; /* 폼이 search-and-filter-container 내에서 늘어나도록 */
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.search-input {
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 0.25rem;
+  flex-grow: 1; /* 검색창이 남은 공간을 최대한 채우도록 */
+  min-width: 150px; /* 검색창 최소 너비 */
+}
+
+/* BoardTypeSelector를 BoardControls 내부에 맞게 조정 */
+/* BoardTypeSelector의 자체 스타일은 BoardTypeSelector.css에서 관리 */
+.search-form .board-type-selector-container {
+  flex-shrink: 0; /* 선택기가 줄어들지 않도록 */
+  max-width: 300px; /* 선택기 최대 너비 (필요에 따라 조정) */
+  margin-bottom: 0; /* BoardControls 내에서는 하단 마진 제거 */
+}
+
+.search-button,
+.write-post-button {
+  padding: 0.5rem 1rem;
+  border: none;
+  background-color: #007bff;
+  color: white;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  flex-shrink: 0; /* 버튼 크기 고정 */
+}
+
+.search-button:hover,
+.write-post-button:hover {
+  background-color: #0056b3;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) { /* 브레이크포인트 조정 */
+  .board-controls-container {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .search-and-filter-container {
+    width: 100%;
+    margin-bottom: 0.5rem;
+    flex-direction: column; /* 작은 화면에서는 검색폼과 필터를 수직으로 */
+    align-items: stretch;
+  }
+
+  .search-form {
+    flex-direction: column; /* 매우 작은 화면에서는 검색 입력, 필터, 버튼을 수직으로 */
+    align-items: stretch;
+    width: 100%;
+  }
+
+  .search-form .board-type-selector-container {
+    max-width: 100%; /* 작은 화면에서는 선택기 너비 제한 해제 */
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .search-input {
+    margin-bottom: 0.5rem; /* 검색창과 다음 요소 사이 간격 */
+  }
+
+  .search-button {
+     width: 100%;
+  }
+
+  .write-post-button {
+    width: 100%;
+    margin-top: 0.5rem; /* 검색/필터 그룹과 작성 버튼 사이 간격 */
+  }
+}
+

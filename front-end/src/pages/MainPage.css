@@ -1,0 +1,41 @@
+.app-main-content {
+  padding: 1rem 2rem; /* 헤더와의 간격 및 좌우 여백 */
+  max-width: 1200px; /* 최대 너비 설정 */
+  margin: 0 auto; /* 중앙 정렬 */
+}
+
+.main-page-container {
+  /* 메인 페이지 컨테이너에 필요한 추가 스타일이 있다면 여기에 작성합니다. */
+  /* 예를 들어, 게시판 섹션과 하단 컨트롤 섹션 사이의 구분선 등 */
+}
+
+/* 전역 스타일 (index.css 또는 App.css에 위치하는 것이 더 일반적일 수 있습니다) */
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #f4f6f8; /* 전체 페이지 배경색 */
+  color: #333; /* 기본 텍스트 색상 */
+  margin: 0;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+button {
+  font-family: inherit; /* 버튼 폰트를 body와 동일하게 */
+}
+
+* {
+  box-sizing: border-box; /* 모든 요소에 border-box 적용 */
+}
+
+a {
+  text-decoration: none; /* 기본 링크 밑줄 제거 */
+  color: inherit; /* 링크 색상 상속 */
+}
+

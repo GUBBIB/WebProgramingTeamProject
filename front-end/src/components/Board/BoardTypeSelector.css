@@ -1,0 +1,42 @@
+.board-type-selector-container {
+  margin-bottom: 1rem;
+  display: flex;
+  gap: 0.5rem; /* 버튼 사이 간격 */
+  overflow-x: auto; /* 가로 스크롤 추가 */
+  white-space: nowrap; /* 버튼들이 한 줄에 표시되도록 강제 */
+  padding-bottom: 8px; /* 스크롤바 공간 확보 (선택 사항) */
+}
+
+.board-type-button {
+  padding: 0.5rem 1rem;
+  border: 1px solid #ccc;
+  background-color: #f0f0f0;
+  cursor: pointer;
+  border-radius: 0.25rem;
+  flex-shrink: 0; /* 버튼 크기가 줄어들지 않도록 설정 */
+}
+
+.board-type-button.active {
+  background-color: #007bff;
+  color: white;
+  border-color: #007bff;
+}
+
+.board-type-button:hover:not(.active) {
+  background-color: #e0e0e0;
+}
+
+/* 스크롤바 스타일 (선택 사항, 브라우저 기본값 사용 가능) */
+.board-type-selector-container::-webkit-scrollbar {
+  height: 8px;
+}
+
+.board-type-selector-container::-webkit-scrollbar-thumb {
+  background-color: #ccc;
+  border-radius: 4px;
+}
+
+.board-type-selector-container::-webkit-scrollbar-thumb:hover {
+  background-color: #aaa;
+}
+
