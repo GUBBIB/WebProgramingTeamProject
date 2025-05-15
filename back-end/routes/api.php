@@ -19,7 +19,7 @@ Route::post('/register', [RegisterController::class, 'register']);
 Route::post('/login', [LoginController::class, 'login']);
 
 // 게시판 목록 조회
-Route::get('/boards', [BoardController::class, 'board_list_search']);
+Route::get('/boards', [BoardController::class, 'board_List_Search']);
 
 // 전체 게시글 목록 조회
 Route::get('/boards/all', [PostController::class, 'post_List_Search']);
@@ -39,3 +39,6 @@ Route::post('/posts', [PostController::class, 'store']);
 
 // 댓글 생성
 Route::post('/comments', [CommentController::class, 'store']);
+
+//제목 OR 사용자 검색
+Route::get('/boards/search', [BoardController::class, 'board_Search_By_Keyword']);
