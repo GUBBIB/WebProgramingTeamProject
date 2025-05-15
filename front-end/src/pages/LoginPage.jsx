@@ -3,8 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import './LoginPage.css'; // CSS 파일 임포트
 
 const LoginPage = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [USR_email, setUSR_Email] = useState('');
+  const [USR_password, setUSR_Password] = useState('');
   const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
@@ -16,8 +16,8 @@ const LoginPage = () => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        email: email,
-        password: password,
+        email: USR_email,
+        password: USR_password,
       }),
     });
 
@@ -41,7 +41,7 @@ const LoginPage = () => {
           <input 
             type="email" 
             id="email" 
-            value={email} 
+            value={USR_email} 
             onChange={(e) => setEmail(e.target.value)} 
             placeholder="이메일 주소를 입력하세요" 
             required 
@@ -53,7 +53,7 @@ const LoginPage = () => {
           <input 
             type="password" 
             id="password" 
-            value={password} 
+            value={USR_password} 
             onChange={(e) => setPassword(e.target.value)} 
             placeholder="비밀번호를 입력하세요" 
             required 
