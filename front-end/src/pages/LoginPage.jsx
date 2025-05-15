@@ -8,6 +8,7 @@ const LoginPage = () => {
   const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
+    console.log("handleSubmit 실행");
     event.preventDefault();
     
     const res = await fetch("http://13.60.93.77/api/login", {
@@ -17,7 +18,7 @@ const LoginPage = () => {
       },
       body: JSON.stringify({
         USR_email: email,
-        USR_password: password,
+        USR_pass: password,
       }),
       credentials: "include" // 세션 쿠키 저장 필요 시 추가
     });
@@ -36,7 +37,6 @@ const LoginPage = () => {
   return (
     <div className="login-page-container">
       <h1 className="page-title">로그인</h1>
-      <form onSubmit={handleSubmit} className="login-form">
         <div className="form-group">
           <label htmlFor="email">이메일 주소</label>
           <input 
@@ -67,7 +67,6 @@ const LoginPage = () => {
         <div className="signup-link">
           <p>계정이 없으신가요? <a href="/signup">회원가입</a></p>
         </div>
-      </form>
     </div>
   );
 };
