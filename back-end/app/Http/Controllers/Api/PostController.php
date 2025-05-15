@@ -44,7 +44,7 @@ class PostController extends Controller
         ]);
     }
 
-    // 게시글 상세 조회
+    // 게시글 상세 조회 + 조회수 증가
     public function posts_Details_Search(Board $BRD_id, Post $PST_id)
     {
         $board = Board::find($BRD_id);
@@ -65,6 +65,9 @@ class PostController extends Controller
                 'message' => '해당 게시글을 찾을 수 없습니다.'
             ], 404);
         }
+
+        // 조회수 증가
+        $post->increment('PST_views');
 
         return response()->json([
             'data' => $post
