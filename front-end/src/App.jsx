@@ -11,26 +11,28 @@ import SignupPage from './pages/SignupPage';
 import LoginPage from './pages/LoginPage';
 import './pages/MainPage.css';
 
-// 게시판 목록 리스트 변수
-const [ boardList, setBoardList ] = useState([]);
+// --- Mock Data --- (API 연동 전 임시 데이터)
+const initialPosts = [
+  { id: '1', title: '리액트 질문입니다!', author: '개발자A', createdAt: '2024-05-10T10:00:00Z', views: 150, boardType: 'qna', content: '리액트에서 상태 관리는 어떻게 하는게 좋을까요? Redux, Zustand, Context API 등 선택지가 많네요.' },
+  { id: '2', title: '자바스크립트 클로저 심층 분석', author: '코딩마스터', createdAt: '2024-05-09T14:30:00Z', views: 250, boardType: 'code', content: '클로저는 자바스크립트의 강력한 기능 중 하나입니다. 이 글에서는 클로저의 동작 원리와 활용법을 자세히 다룹니다.' },
+  { id: '3', title: '오늘 날씨가 너무 좋네요!', author: '날씨요정', createdAt: '2024-05-11T09:00:00Z', views: 80, boardType: 'free', content: '다들 주말 계획 있으신가요? 저는 공원에 피크닉 가려구요!' },
+  // ... (기존 게시물 데이터 유지)
+];
 
-// 게시판 목록 리스트 불러오기
-useEffect(() => {
-  const fetchBoards = async () => {
-    try {
-      const res = await fetch("/boards");
-      if(!res.ok) throw new Error("게시판 목록을 불러오지 못했습니다.");
+const headerBoardTypes = [
+  { id: 'all', name: '전체' },
+  { id: 'code', name: '코드 게시판' },
+  { id: 'free', name: '자유 게시판' },
+  { id: 'qna', name: '질문 게시판' },
+];
 
-      const data = await res.json();
-      setBoardList(data);
-    } catch(err){
-      console.error('게시판 목록 에러', err);
-    }
-  };
-
-  fetchBoards();
-}, []);
-
+const boardTypesForSearchDropdown = [
+  { id: 'all', name: '전체에서 검색' },
+  { id: 'code', name: '코드 게시판에서 검색' },
+  { id: 'free', name: '자유 게시판에서 검색' },
+  { id: 'qna', name: '질문 게시판에서 검색' },
+];
+// --- End Mock Data ---
 
 const App = () => {
   const [currentUser, setCurrentUser] = useState(null); // { username: '유저명', isLoggedIn: true } 또는 null
