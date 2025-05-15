@@ -32,7 +32,7 @@ Route::get('/boards/{BRD_id}', [PostController::class, 'post_List_Search']);
 Route::get('/boards/{BRD_id}/posts/{PST_id}', [PostController::class, 'posts_Details_Search']);
 
 //댓글 조회
-Route::get('/boards/{boardId}/comments', [CommentController::class, 'coments_List_Search']);
+Route::get('/boards/{BRD_id}/posts/{PST_id}/comments', [CommentController::class, 'coments_List_Search']);
 
 // 게시글 생성
 Route::post('/posts', [PostController::class, 'store']);

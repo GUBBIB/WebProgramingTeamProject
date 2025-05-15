@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import './SignupPage.css';
 
-const API_BASE_URL = 'http://13.60.93.77/api'; // ✅ 실제 서버 주소 사용
+const API_BASE_URL = 'http://13.60.93.77/api'; 
 
 const SignupPage = ({ onSignupSuccess }) => {
   const [USR_nickname, setNickname] = useState('');
@@ -28,7 +28,7 @@ const SignupPage = ({ onSignupSuccess }) => {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
         },
-        credentials: 'include', // ✅ Laravel 세션 쿠키 저장
+        credentials: 'include', 
         body: JSON.stringify({
           USR_nickname,
           USR_email,
@@ -42,9 +42,9 @@ const SignupPage = ({ onSignupSuccess }) => {
       if (response.ok && data.user) {
         alert('회원가입이 완료되었습니다.');
         if (onSignupSuccess) {
-          onSignupSuccess(data.user.USR_nickname); // 또는 data.user
+          onSignupSuccess(data.user.USR_nickname); 
         }
-        navigate('/login'); // ✅ 로그인 페이지로 이동
+        navigate('/login'); 
       } else {
         if (data.errors) {
           const errorMessages = Object.values(data.errors).flat().join('\n');
