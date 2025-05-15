@@ -71,6 +71,7 @@ class PostController extends Controller
         ]);
     }
 
+    // 전체 게시글 목록 조회
     public function posts_All_List_Search(){
         
     }

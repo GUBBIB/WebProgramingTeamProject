@@ -16,7 +16,6 @@ const App = () => {
   const [allPosts, setAllPosts] = useState(initialPosts);
   const navigate = useNavigate();
 
-  // (가상) 로그인 처리 함수
   const handleLogin = (user) => {
     setCurrentUser({
       id: user.USR_id,
