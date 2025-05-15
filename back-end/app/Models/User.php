@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 
-class User extends Model
+class User extends Authenticatable
 {
+    use Notifiable;
+
     protected $table = 'users';
     protected $primaryKey = 'USR_id';
 
@@ -18,6 +21,16 @@ class User extends Model
     protected $hidden = [
         'USR_pass',
     ];
+
+    public function getAuthIdentifierName()
+    {
+        return 'USR_id';
+    }
+
+    public function getAuthPassword()
+    {
+        return $this->USR_pass;
+    }
 
     public function posts()
     {
