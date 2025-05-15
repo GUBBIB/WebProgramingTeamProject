@@ -1,10 +1,13 @@
 import React from 'react';
-import PostItem from './PostItem'; // PostItem 컴포넌트를 import 합니다.
+import PostItem from './PostItem';
 import './PostList.css';
 
 const PostList = ({ posts }) => {
-  // posts 배열이 비어있거나 없을 경우를 대비한 처리
-  if (!posts || posts.length === 0) {
+  // Laravel의 paginate 응답 구조에 맞춰서 posts.data 사용
+  const postArray = posts?.data ?? posts; // 둘 중 뭐든 배열로 처리
+
+  // posts가 없거나 비어있으면 메시지 출력
+  if (!postArray || postArray.length === 0) {
     return <div className="no-posts">게시글이 없습니다.</div>;
   }
 
@@ -20,8 +23,8 @@ const PostList = ({ posts }) => {
           </tr>
         </thead>
         <tbody>
-          {posts.slice(0, 8).map((post) => ( // 최대 8개의 게시글만 보이도록 slice
-            <PostItem key={post.id} post={post} />
+          {postArray.slice(0, 8).map((post) => (
+            <PostItem key={post.PST_id} post={post} />
           ))}
         </tbody>
       </table>

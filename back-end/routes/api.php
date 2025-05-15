@@ -11,6 +11,7 @@ Route::get('/hello', function () {
     return response()->json(['message' => 'Hello from Laravel']);
 });
 
+
 // 회원가입
 Route::post('/register', [RegisterController::class, 'register']);
 
