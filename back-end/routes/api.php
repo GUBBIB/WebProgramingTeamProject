@@ -21,6 +21,9 @@ Route::post('/login', [LoginController::class, 'login']);
 // 게시판 목록 조회
 Route::get('/boards', [BoardController::class, 'board_list_search']);
 
+// 전체 게시글 목록 조회
+Route::get('/boards/all', [PostController::class, 'post_List_Search']);
+
 //게시글 목록 조회
 // 호출할때 /api/boards/{BRD_id}?page=1 2 3 이런식으로 호출해야함
 Route::get('/boards/{BRD_id}', [PostController::class, 'post_List_Search']);

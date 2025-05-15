@@ -70,4 +70,8 @@ class PostController extends Controller
             'data' => $post
         ]);
     }
+
+    public function posts_All_List_Search(){
+        
+    }
 }
