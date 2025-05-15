@@ -3,8 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import './LoginPage.css'; // CSS 파일 임포트
 
 const LoginPage = () => {
-  const [USR_email, setUSR_Email] = useState('');
-  const [USR_password, setUSR_Password] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
@@ -12,12 +12,12 @@ const LoginPage = () => {
     
     const res = await fetch("/api/login", {
       method: "POST",
-      headers: {
+      HEADERS: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        email: USR_email,
-        password: USR_password,
+        USR_email: email,
+        USR_password: password,
       }),
     });
 
@@ -41,8 +41,8 @@ const LoginPage = () => {
           <input 
             type="email" 
             id="email" 
-            value={USR_email} 
-            onChange={(e) => setUSR_Email(e.target.value)} 
+            value={email} 
+            onChange={(e) => setEmail(e.target.value)} 
             placeholder="이메일 주소를 입력하세요" 
             required 
             className="form-control"
@@ -53,8 +53,8 @@ const LoginPage = () => {
           <input 
             type="password" 
             id="password" 
-            value={USR_password} 
-            onChange={(e) => setUSR_Password(e.target.value)} 
+            value={password} 
+            onChange={(e) => setPassword(e.target.value)} 
             placeholder="비밀번호를 입력하세요" 
             required 
             className="form-control"
