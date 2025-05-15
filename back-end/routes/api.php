@@ -6,11 +6,19 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Api\BoardController;
 use App\Http\Controllers\Api\PostController;
 use App\Http\Controllers\Api\CommentController;
+use Illuminate\Http\Request;
 
-Route::get('/hello', function () {
-    return response()->json(['message' => 'Hello from Laravel']);
+
+
+
+Route::middleware('auth')->get('/user', function (Request $request) {
+    $user = $request->user();
+        return response()->json([
+        'USR_id' => $user->USR_id,
+        'USR_email' => $user->USR_email,
+        'USR_nickname' => $user->USR_nickname,
+    ]);
 });
-
 
 // 회원가입
 Route::post('/register', [RegisterController::class, 'register']);
