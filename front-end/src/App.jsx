@@ -24,7 +24,6 @@ const App = () => {
   const [currentUser, setCurrentUser] = useState(null);
   const navigate = useNavigate();
 
-<<<<<<< HEAD
   const handleLogin = (user) => {
     setCurrentUser({
       id: user.USR_id,
@@ -32,28 +31,6 @@ const App = () => {
       nickname: user.USR_nickname,
       isLoggedIn: true
     });
-  };
-=======
-  useEffect(() => {
-    // 앱 시작 시 로컬 스토리지에서 토큰 및 사용자 정보 확인
-    const token = localStorage.getItem('authToken');
-    const storedUser = localStorage.getItem('currentUser');
-    if (token && storedUser) {
-      try {
-        const user = JSON.parse(storedUser);
-        setCurrentUser({ username: user.USR_nickname, isLoggedIn: true }); // API 응답에 따라 user.USR_nickname 사용
-      } catch (e) {
-        console.error("Error parsing stored user data:", e);
-        localStorage.removeItem('authToken');
-        localStorage.removeItem('currentUser');
-      }
-    }
-  }, []);
->>>>>>> feature/front-end
-
-  const handleLogin = (username) => {
-    setCurrentUser({ username: username, isLoggedIn: true });
-    // LoginPage에서 navigate('/')를 이미 호출함
   };
 
   const handleSignupSuccess = (username) => {
