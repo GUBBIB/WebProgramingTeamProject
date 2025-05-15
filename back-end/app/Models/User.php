@@ -1,12 +1,15 @@
 <?php
 
 namespace App\Models;
-
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
+    use Notifiable;
+
+    protected $table = 'users'; // 기본 테이블 명은 유지
+
     protected $primaryKey = 'USR_id';
 
     protected $fillable = [
@@ -18,6 +21,21 @@ class User extends Authenticatable
         'USR_pass',
     ];
 
+    public function getAuthIdentifierName()
+    {
+        return 'USR_id';
+    }
+
+    public function getAuthPassword()
+    {
+        return $this->USR_pass;
+    }
+
+    public function getAuthIdentifier()
+    {
+        return $this->USR_id;
+    }
+    
     public function posts()
     {
         return $this->hasMany(Post::class, 'USR_id');
