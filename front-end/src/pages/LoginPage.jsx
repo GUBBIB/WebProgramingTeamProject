@@ -10,7 +10,7 @@ const LoginPage = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     
-    const res = await fetch("/api/login", {
+    const res = await fetch("http://13.60.93.77/api/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
