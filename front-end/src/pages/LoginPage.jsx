@@ -42,7 +42,7 @@ const LoginPage = () => {
             type="email" 
             id="email" 
             value={USR_email} 
-            onChange={(e) => setEmail(e.target.value)} 
+            onChange={(e) => setUSR_Email(e.target.value)} 
             placeholder="이메일 주소를 입력하세요" 
             required 
             className="form-control"
@@ -54,7 +54,7 @@ const LoginPage = () => {
             type="password" 
             id="password" 
             value={USR_password} 
-            onChange={(e) => setPassword(e.target.value)} 
+            onChange={(e) => setUSR_Password(e.target.value)} 
             placeholder="비밀번호를 입력하세요" 
             required 
             className="form-control"
