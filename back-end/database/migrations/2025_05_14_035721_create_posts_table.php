@@ -19,8 +19,7 @@ return new class extends Migration
 
             $table->timestamps(); // created_at, updated_at 자동 생성 및 관리
 
-            $table->integer('PST_front_page')->nullable();
-            $table->integer('PST_behind_page')->nullable();
+            $table->unsignedInteger('PST_views')->default(0); // 조회수 컬럼 추가
 
             // 외래 키 제약 조건
             $table->foreign('BRD_id')->references('BRD_id')->on('boards')->onDelete('cascade');

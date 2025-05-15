@@ -12,10 +12,8 @@ class Post extends Model
         'BRD_id',
         'USR_id',
         'PST_title',
-        'PST_front_page',
-        'PST_behind_page',
         'PST_content',
-        
+        'PST_views',
     ];
 
     // timestamps()를 사용하는 경우 true가 기본값이므로 명시할 필요 없음

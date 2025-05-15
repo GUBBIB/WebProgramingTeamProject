@@ -16,6 +16,7 @@ return new class extends Migration
 
         $table->string('USR_email')->unique();
         $table->string('USR_pass');
+        $table->string('USR_nickname'); //닉네임 컬럼 추가
 
         $table->timestamps();
     });

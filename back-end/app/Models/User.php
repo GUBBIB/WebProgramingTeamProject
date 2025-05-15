@@ -15,6 +15,7 @@ class User extends Authenticatable
     protected $fillable = [
         'USR_email',
         'USR_pass',
+        'USR_nickname',
     ];
 
     protected $hidden = [
@@ -35,7 +36,7 @@ class User extends Authenticatable
     {
         return $this->USR_id;
     }
-    
+
     public function posts()
     {
         return $this->hasMany(Post::class, 'USR_id');
