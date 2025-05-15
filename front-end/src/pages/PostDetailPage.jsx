@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useLocation } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import CommentList from '../components/Comment/CommentList';
@@ -7,62 +7,122 @@ import CommentForm from '../components/Comment/CommentForm';
 import '../components/Comment/Comment.css';
 import './PostDetailPage.css';
 
-// App.jsx에 있는 allPosts 목 데이터를 가져오기 위한 임시 방편
-// 실제 앱에서는 props, Context API, 또는 Redux/Zustand 등을 사용해야 합니다.
-// 이 부분은 App.jsx에서 currentUser와 함께 게시글 데이터를 내려주는 방식으로 변경하는 것이 이상적입니다.
-const AppMockPosts = [
-    { id: '1', title: '리액트 질문입니다!', author: '개발자A', createdAt: '2024-05-10T10:00:00Z', views: 150, boardType: 'qna', content: '리액트에서 상태 관리는 어떻게 하는게 좋을까요? `Redux`, `Zustand`, `Context API` 등 선택지가 많네요. \n\n## 코드 예시\n```javascript\nfunction Greeting({ name }) {\n  return <h1>Hello, {name}!</h1>;\n}\n```\n*감사합니다.*', comments: [{id: 'c1', author: '답변자1', text: 'Context API도 좋은 선택입니다.', createdAt: '2024-05-10T11:00:00Z'}] },
-    { id: '2', title: '자바스크립트 클로저 심층 분석', author: '코딩마스터', createdAt: '2024-05-09T14:30:00Z', views: 250, boardType: 'code', content: '클로저는 자바스크립트의 강력한 기능 중 하나입니다. 이 글에서는 클로저의 동작 원리와 활용법을 자세히 다룹니다.', comments: [] },
-    // ... (다른 목업 게시물들) ...
-];
+const API_BASE_URL = 'http://localhost:8000/api';
 
-// 임시 데이터 함수 (실제 앱에서는 API 호출)
-const getSamplePost = (postId) => {
-    // PostWritePage에서 localStorage에 임시 저장한 게시글을 먼저 찾아봅니다.
-    // 이 부분은 App.jsx에서 관리하는 allPosts를 직접 참조하거나 props로 받는 것이 좋습니다.
-    // 여기서는 AppMockPosts를 사용합니다.
-    const postFromMock = AppMockPosts.find(p => p.id === postId);
-    if (postFromMock) {
-        return JSON.parse(JSON.stringify(postFromMock)); // 깊은 복사하여 원본 데이터 불변성 유지
-    }
-
-    // 그래도 없으면 기본 샘플 데이터 반환
-    return {
-        id: postId,
-        title: `게시글 제목 ${postId} (기본 샘플)`,
-        author: '작성자 예시',
-        createdAt: new Date().toISOString(),
-        views: 100,
-        content: `# 기본 샘플 게시글 ${postId}\n\n이것은 **기본** 마크다운 내용입니다.`,
-        boardType: '자유게시판',
-        comments: [] // 기본 댓글은 없음
-    };
-};
-
-const PostDetailPage = ({ currentUser }) => { // currentUser prop 수신
-  const { postId } = useParams();
+const PostDetailPage = ({ currentUser }) => {
+  const { postId } = useParams(); // This will be PST_id
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const boardId = queryParams.get('boardType') || 'all'; // This will be BRD_id
+  
   const [post, setPost] = useState(null);
+  const [comments, setComments] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
+  // 게시글 상세 정보 가져오기
   useEffect(() => {
-    const currentPostData = getSamplePost(postId);
-    setPost(currentPostData);
-  }, [postId]);
-
-  const handleAddComment = (newCommentData) => { // newCommentData는 { author: 'username', text: 'comment text' } 형태
-    const commentToAdd = {
-      id: `c${Date.now()}`,
-      ...newCommentData, // author와 text 포함
-      createdAt: new Date().toISOString(),
+    const fetchPostDetail = async () => {
+      setIsLoading(true);
+      setError(null);
+      try {
+        const response = await fetch(`${API_BASE_URL}/boards/${boardId}/posts/${postId}`);
+        
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({ message: '게시글을 불러오는데 실패했습니다.' }));
+          throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        // API 응답이 { "data": { ...post_details... } } 형태일 수 있음, 또는 바로 post 객체일 수 있음.
+        // PHP 모델을 보면 PostController@posts_Details_Search 가 직접 Post 모델을 반환할 가능성이 높음.
+        // 우선 data가 바로 post 객체라고 가정. 만약 data.data 형태라면 data.data로 수정.
+        setPost(data); 
+        
+        fetchComments();
+      } catch (err) {
+        console.error("Error fetching post details:", err);
+        setError(err.message);
+      } finally {
+        setIsLoading(false);
+      }
     };
-    setPost(prevPost => ({
-      ...prevPost,
-      comments: [...(prevPost.comments || []), commentToAdd]
-    }));
-    // TODO: 실제 API가 있다면, 서버에 댓글을 저장하는 로직이 필요합니다.
+
+    if (postId) {
+      fetchPostDetail();
+    }
+  }, [postId, boardId]);
+
+  // 댓글 목록 가져오기
+  const fetchComments = async () => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/boards/${boardId}/comments?post_id=${postId}`);
+      
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ message: '댓글을 불러오는데 실패했습니다.' }));
+        throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
+      }
+      
+      const data = await response.json();
+      setComments(data.data || []); // API 응답이 { data: [...] } 형태라고 가정
+    } catch (err) {
+      console.error("Error fetching comments:", err);
+    }
   };
 
-  if (!post) {
+  // 새 댓글 추가
+  const handleAddComment = async (newCommentData) => {
+    if (!currentUser || !currentUser.isLoggedIn) {
+      alert('댓글을 작성하려면 로그인이 필요합니다.');
+      return;
+    }
+
+    try {
+      const token = localStorage.getItem('authToken');
+      if (!token) {
+        alert('로그인 세션이 만료되었습니다. 다시 로그인해주세요.');
+        return;
+      }
+
+      const commentPayload = {
+        PST_id: postId, // Post ID
+        BRD_id: boardId, // Board ID, API 명세에 따라 필요 없을 수도 있음. Comments 모델은 PST_id, USR_id만 fillable
+        COM_content: newCommentData.text // Comment content from form
+        // USR_id는 백엔드에서 토큰으로 처리
+      };
+
+      const response = await fetch(`${API_BASE_URL}/comments`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(commentPayload)
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ message: '댓글 등록에 실패했습니다.' }));
+        throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
+      }
+
+      fetchComments(); // Refresh comments list
+    } catch (err) {
+      console.error("Error adding comment:", err);
+      alert(`댓글 등록 중 오류가 발생했습니다: ${err.message}`);
+    }
+  };
+
+  if (isLoading) {
     return <div className="post-detail-container">게시글을 불러오는 중...</div>;
+  }
+
+  if (error) {
+    return <div className="post-detail-container error-message">오류: {error}</div>;
+  }
+
+  if (!post) {
+    return <div className="post-detail-container">게시글을 찾을 수 없습니다.</div>;
   }
 
   const formatDate = (dateString) => {
@@ -71,24 +131,27 @@ const PostDetailPage = ({ currentUser }) => { // currentUser prop 수신
     return date.toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' });
   };
 
+  // API 응답에서 post.user.USR_nickname, post.board.BRD_name 형태로 올 수 있음
+  const authorNickname = post.user?.USR_nickname || '정보 없음';
+  const boardName = post.board?.BRD_name || boardId; // boardId는 'code', 'free' 등, BRD_name은 '코드 게시판'
+
   return (
     <div className="post-detail-container">
-      <h1 className="post-detail-title">{post.title}</h1>
+      <h1 className="post-detail-title">{post.PST_title}</h1>
       <div className="post-meta">
-        <span className="post-author">작성자: {post.author}</span>
-        <span className="post-date">작성일: {formatDate(post.createdAt)}</span>
-        <span className="post-views">조회수: {post.views}</span>
-        <span className="post-board-type">게시판: {post.boardType}</span>
+        <span className="post-author">작성자: {authorNickname}</span>
+        <span className="post-date">작성일: {formatDate(post.created_at)}</span>
+        <span className="post-views">조회수: {post.PST_views}</span>
+        <span className="post-board-type">게시판: {boardName}</span>
       </div>
       <hr className="divider"/>
       <div className="post-detail-content markdown-body">
-        <ReactMarkdown remarkPlugins={[remarkGfm]}>{post.content}</ReactMarkdown>
+        <ReactMarkdown remarkPlugins={[remarkGfm]}>{post.PST_content}</ReactMarkdown>
       </div>
       <hr className="divider"/>
       <div className="comments-section">
         <h2>댓글</h2>
-        <CommentList comments={post.comments || []} />
-        {/* CommentForm에 currentUser prop 전달 */}
+        <CommentList comments={comments} />
         <CommentForm onSubmitComment={handleAddComment} currentUser={currentUser} />
       </div>
     </div>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
 import Header from './components/Header/Header';
 import BoardTypeSelector from './components/Board/BoardTypeSelector';
@@ -11,11 +11,20 @@ import SignupPage from './pages/SignupPage';
 import LoginPage from './pages/LoginPage';
 import './pages/MainPage.css';
 
+const API_BASE_URL = 'http://localhost:8000/api';
+
+const headerBoardTypes = [
+  { BRD_id: 'all', BRD_name: '전체' }, // 'all'을 백엔드에서 모든 게시물을 의미하는 특별한 ID로 처리하거나, 프론트에서 별도 로직 필요
+  { BRD_id: 'code', BRD_name: '코드 게시판' },
+  { BRD_id: 'free', BRD_name: '자유 게시판' },
+  { BRD_id: 'qna', BRD_name: '질문 게시판' },
+];
+
 const App = () => {
-  const [currentUser, setCurrentUser] = useState(null); // { username: '유저명', isLoggedIn: true } 또는 null
-  const [allPosts, setAllPosts] = useState(initialPosts);
+  const [currentUser, setCurrentUser] = useState(null);
   const navigate = useNavigate();
 
+<<<<<<< HEAD
   const handleLogin = (user) => {
     setCurrentUser({
       id: user.USR_id,
@@ -24,69 +33,115 @@ const App = () => {
       isLoggedIn: true
     });
   };
+=======
+  useEffect(() => {
+    // 앱 시작 시 로컬 스토리지에서 토큰 및 사용자 정보 확인
+    const token = localStorage.getItem('authToken');
+    const storedUser = localStorage.getItem('currentUser');
+    if (token && storedUser) {
+      try {
+        const user = JSON.parse(storedUser);
+        setCurrentUser({ username: user.USR_nickname, isLoggedIn: true }); // API 응답에 따라 user.USR_nickname 사용
+      } catch (e) {
+        console.error("Error parsing stored user data:", e);
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('currentUser');
+      }
+    }
+  }, []);
+>>>>>>> feature/front-end
 
-  // (가상) 회원가입 성공 처리 함수 (회원가입 후 자동 로그인)
-  const handleSignupSuccess = (username) => {
+  const handleLogin = (username) => {
     setCurrentUser({ username: username, isLoggedIn: true });
-    // 실제 앱에서는 API 호출 후 사용자 정보 저장 및 자동 로그인 처리
-    navigate('/'); // 회원가입 및 자동 로그인 후 메인 페이지로 이동
+    // LoginPage에서 navigate('/')를 이미 호출함
   };
 
-  // (가상) 로그아웃 처리 함수
+  const handleSignupSuccess = (username) => {
+    // SignupPage에서 로그인 페이지로 이동시키므로, 별도 처리는 불필요하거나 로그인과 동일하게 처리
+    // setCurrentUser({ username: username, isLoggedIn: true }); 
+    // navigate('/');
+  };
+
   const handleLogout = () => {
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('currentUser');
     setCurrentUser(null);
-    navigate('/'); // 로그아웃 후 메인 페이지로 이동
-  };
-
-  // 새 게시물 추가 함수 (PostWritePage에서 사용)
-  const addNewPost = (newPostData) => {
-    const newPost = {
-      ...newPostData,
-      id: String(Date.now()), // 임시 ID
-      author: currentUser ? currentUser.username : '익명', // 작성자는 현재 로그인된 사용자 또는 익명
-      createdAt: new Date().toISOString(),
-      views: 0,
-    };
-    setAllPosts(prevPosts => [newPost, ...prevPosts]);
+    navigate('/');
   };
 
   const MainPageContent = () => {
-    const [selectedBoard, setSelectedBoard] = useState('all');
-    const [searchScope, setSearchScope] = useState('all');
+    const [posts, setPosts] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState(null);
+    const [selectedBoard, setSelectedBoard] = useState('all'); 
+    const [selectedSearchType, setSelectedSearchType] = useState('title'); 
     const [searchTerm, setSearchTerm] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
-    const postsPerPage = 8;
+    const [totalPages, setTotalPages] = useState(0);
+    const postsPerPage = 8; // 이 값은 API 페이징과 일치하거나, API가 반환하는 값 사용
+
+    const fetchPosts = useCallback(async () => {
+      setIsLoading(true);
+      setError(null);
+      
+      // 'all' 게시판에 대한 특별한 API 엔드포인트 처리
+      let url;
+      if (selectedBoard === 'all') {
+        url = `${API_BASE_URL}/boards/all?page=${currentPage}`;
+      } else {
+        url = `${API_BASE_URL}/boards/${selectedBoard}?page=${currentPage}`;
+      }
+      
+      if (searchTerm) {
+        url += `&search_type=${selectedSearchType}&search_term=${encodeURIComponent(searchTerm)}`;
+      }
+
+      try {
+        const response = await fetch(url);
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({ message: '게시글 목록을 불러오는데 실패했습니다.' }));
+          throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        
+        // API 응답 구조에 따라 posts와 totalPages 설정
+        setPosts(data.data || []); // data.data가 실제 게시물 배열이라고 가정
+        setTotalPages(data.meta?.last_page || Math.ceil((data.total || data.data?.length || 0) / postsPerPage));
+        
+        if (data.data?.length === 0 && currentPage > 1) { // 데이터가 없는데 현재 페이지가 1보다 크면 1페이지로
+            setCurrentPage(1);
+        }
+      } catch (e) {
+        console.error("Error fetching posts:", e);
+        setError(e.message);
+        setPosts([]);
+        setTotalPages(0);
+      }
+      setIsLoading(false);
+    }, [selectedBoard, currentPage, searchTerm, selectedSearchType]);
+
+    useEffect(() => {
+      fetchPosts();
+    }, [fetchPosts]);
 
     const handleSelectHeaderBoard = (boardId) => {
       setSelectedBoard(boardId);
-      setSearchTerm('');
+      setSearchTerm(''); 
       setCurrentPage(1);
+      // fetchPosts는 useEffect에 의해 호출됨
     };
 
-    const handleSetSearchScope = (scopeId) => {
-      setSearchScope(scopeId);
+    const handleSetSearchType = (type) => {
+      setSelectedSearchType(type);
+      // 검색 타입 변경 시 바로 검색 실행은 하지 않고, 검색 버튼 클릭 시 실행
     };
 
-    const handleSearch = (term) => {
+    const handleSearch = (term, searchType) => {
       setSearchTerm(term.toLowerCase());
+      setSelectedSearchType(searchType); 
       setCurrentPage(1);
+      // fetchPosts는 useEffect에 의해 호출됨
     };
-
-    const filteredPosts = allPosts.filter(post => {
-      const mainBoardFilter = selectedBoard === 'all' || post.boardType === selectedBoard;
-      if (!mainBoardFilter) return false;
-      if (searchTerm) {
-        const searchScopeFilter = searchScope === 'all' || post.boardType === searchScope;
-        const titleFilter = post.title.toLowerCase().includes(searchTerm.toLowerCase());
-        return searchScopeFilter && titleFilter;
-      }
-      return true;
-    });
-
-    const indexOfLastPost = currentPage * postsPerPage;
-    const indexOfFirstPost = indexOfLastPost - postsPerPage;
-    const currentPosts = filteredPosts.slice(indexOfFirstPost, indexOfLastPost);
-    const totalPages = Math.ceil(filteredPosts.length / postsPerPage);
 
     return (
       <div className="main-page-container">
@@ -95,7 +150,10 @@ const App = () => {
           selectedBoard={selectedBoard} 
           onSelectBoard={handleSelectHeaderBoard} 
         />
-        <PostList posts={currentPosts} />
+        {isLoading && <p>로딩 중...</p>}
+        {error && <p className="error-message">오류: {error}</p>}
+        {!isLoading && !error && posts.length === 0 && <p>게시글이 없습니다.</p>}
+        {!isLoading && !error && posts.length > 0 && <PostList posts={posts} />}
         {totalPages > 0 && (
           <Pagination 
             currentPage={currentPage} 
@@ -105,22 +163,15 @@ const App = () => {
         )}
         <BoardControls 
           onSearch={handleSearch} 
-          boardTypesForDropdown={boardTypesForSearchDropdown}
-          selectedSearchScope={searchScope}
-          onSelectSearchScope={handleSetSearchScope}
-          isLoggedIn={currentUser?.isLoggedIn || false} // 로그인 상태 전달
+          selectedSearchType={selectedSearchType} 
+          onSelectSearchType={handleSetSearchType} 
         />
       </div>
     );
   };
 
-
-
-
-
-
   return (
-    <div>
+    <>
       <Header currentUser={currentUser} onLogout={handleLogout} />
       <main className="app-main-content">
         <Routes>
@@ -131,15 +182,14 @@ const App = () => {
           />
           <Route 
             path="/write" 
-            element={currentUser?.isLoggedIn ? <PostWritePage addNewPost={addNewPost} currentUser={currentUser} /> : <LoginPage onLogin={handleLogin} />} 
+            element={currentUser?.isLoggedIn ? <PostWritePage currentUser={currentUser} /> : <LoginPage onLogin={handleLogin} />} 
           />
           <Route path="/signup" element={<SignupPage onSignupSuccess={handleSignupSuccess} />} />
           <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
         </Routes>
       </main>
-    </div>
+    </>
   );
 };
 
 export default App;
-

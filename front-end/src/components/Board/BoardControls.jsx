@@ -2,14 +2,11 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './BoardControls.css';
 
-// BoardTypeSelector는 더 이상 여기서 사용하지 않음
-// import BoardTypeSelector from './BoardTypeSelector'; 
-
 const BoardControls = ({ 
   onSearch, 
-  boardTypesForDropdown, // App.jsx에서 전달된 드롭다운용 게시판 목록
-  selectedSearchScope,   // App.jsx에서 전달된 현재 선택된 검색 범위
-  onSelectSearchScope    // App.jsx에서 전달된 검색 범위 변경 핸들러
+  // boardTypesForDropdown, // 이제 사용하지 않음
+  selectedSearchType,   // 변경: 검색 유형 (title, author)
+  onSelectSearchType    // 변경: 검색 유형 변경 핸들러
 }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const navigate = useNavigate();
@@ -18,36 +15,38 @@ const BoardControls = ({
     setSearchTerm(event.target.value);
   };
 
-  const handleSearchSubmit = (event) => {
+  const handleSearchSubmit = async (event) => {
     event.preventDefault();
-    onSearch(searchTerm); // 검색어만 전달, 검색 범위는 App.jsx의 searchScope 상태 사용
+    // onSearch는 부모 컴포넌트(App.jsx)에서 실제 API 호출을 포함하므로, 
+    // 해당 함수가 비동기 처리를 할 것을 대비하여 async로 선언합니다.
+    // 이제 onSearch는 searchTerm과 selectedSearchType을 모두 받아야 합니다.
+    await onSearch(searchTerm, selectedSearchType);
   };
 
   const handleWritePost = () => {
     navigate('/write');
   };
 
-  const handleScopeChange = (event) => {
-    onSelectSearchScope(event.target.value);
+  const handleSearchTypeChange = (event) => {
+    onSelectSearchType(event.target.value);
   };
 
   return (
     <div className="board-controls-container">
       <div className="search-and-filter-container">
         <form onSubmit={handleSearchSubmit} className="search-form">
-          {/* 검색 범위 선택 드롭다운 (셀렉트 바) */}
+          {/* 검색 유형 선택 드롭다운 (제목/작성자) */}
           <select 
-            value={selectedSearchScope} 
-            onChange={handleScopeChange} 
-            className="search-scope-select"
+            value={selectedSearchType} 
+            onChange={handleSearchTypeChange} 
+            className="search-scope-select" // 클래스명은 유지하거나 변경 가능
           >
-            {boardTypesForDropdown && boardTypesForDropdown.map(board => (
-              <option key={board.id} value={board.id}>{board.name}</option>
-            ))}
+            <option value="title">제목 검색</option>
+            <option value="author">작성자 검색</option>
           </select>
           <input
             type="text"
-            placeholder="게시글 제목 검색..."
+            placeholder={selectedSearchType === 'title' ? "제목으로 검색..." : "작성자명으로 검색..."}
             value={searchTerm}
             onChange={handleSearchChange}
             className="search-input"

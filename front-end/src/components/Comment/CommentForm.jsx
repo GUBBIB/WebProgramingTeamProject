@@ -4,7 +4,7 @@ import './Comment.css';
 const CommentForm = ({ onSubmitComment, currentUser }) => {
   const [comment, setComment] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!comment.trim()) {
       alert('댓글 내용을 입력해주세요.');
@@ -14,8 +14,9 @@ const CommentForm = ({ onSubmitComment, currentUser }) => {
       alert('로그인이 필요합니다.');
       return;
     }
-    // onSubmitComment에 author와 text를 전달. author는 currentUser.username 사용
-    onSubmitComment({ author: currentUser.username, text: comment });
+    // onSubmitComment는 부모 컴포넌트(PostDetailPage.jsx)에서 실제 API 호출을 포함할 수 있으므로,
+    // 해당 함수가 비동기 처리를 할 것을 대비하여 async로 선언하고 await를 사용합니다.
+    await onSubmitComment({ author: currentUser.username, text: comment });
     setComment(''); // 입력 필드 초기화
   };
 
