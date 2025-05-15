@@ -7,12 +7,28 @@ const LoginPage = () => {
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    // TODO: 실제 로그인 API 연동 로직 구현 필요
-    console.log('로그인 시도:', { email, password });
-    alert('로그인 되었습니다. (실제 API 연동 필요)');
-    // 성공적으로 로그인 후 메인 페이지로 이동 (또는 이전 페이지)
+    
+    const res = await fetch("/api/login", {
+      method: "POST",
+      HEADERS: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email: "test@example.com",
+        password: "password123",
+      }),
+    });
+
+    const data = await res.json();
+
+    if (res.ok) {
+      console.log("✅ 로그인 성공", data);
+    } else {
+      console.log("❌ 로그인 실패", data.message);
+    }
+
     navigate('/'); 
   };
 
