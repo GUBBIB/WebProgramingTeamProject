@@ -1,115 +1,77 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, useLocation } from 'react-router-dom';
+import React, { useState, useEffect, useCallback } from 'react';
+import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import CommentList from '../components/Comment/CommentList';
 import CommentForm from '../components/Comment/CommentForm';
 import '../components/Comment/Comment.css';
 import './PostDetailPage.css';
+// Import API functions
+import { fetchPostDetails, fetchCommentsForPost, createNewComment } from '../services/api';
 
-const API_BASE_URL = 'http://localhost:8000/api';
+// API_BASE_URL is now managed within api.js
 
 const PostDetailPage = ({ currentUser }) => {
-  const { postId } = useParams(); // This will be PST_id
+  const { postId } = useParams(); // PST_id
   const location = useLocation();
+  const navigate = useNavigate();
   const queryParams = new URLSearchParams(location.search);
-  const boardId = queryParams.get('boardType') || 'all'; // This will be BRD_id
+  const boardId = queryParams.get('boardType') || 'all'; // BRD_id
   
   const [post, setPost] = useState(null);
   const [comments, setComments] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // 게시글 상세 정보 가져오기
-  useEffect(() => {
-    const fetchPostDetail = async () => {
-      setIsLoading(true);
-      setError(null);
-      try {
-        const response = await fetch(`${API_BASE_URL}/boards/${boardId}/posts/${postId}`);
-        
-        if (!response.ok) {
-          const errorData = await response.json().catch(() => ({ message: '게시글을 불러오는데 실패했습니다.' }));
-          throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
-        }
-        
-        const data = await response.json();
-        // API 응답이 { "data": { ...post_details... } } 형태일 수 있음, 또는 바로 post 객체일 수 있음.
-        // PHP 모델을 보면 PostController@posts_Details_Search 가 직접 Post 모델을 반환할 가능성이 높음.
-        // 우선 data가 바로 post 객체라고 가정. 만약 data.data 형태라면 data.data로 수정.
-        setPost(data); 
-        
-        fetchComments();
-      } catch (err) {
-        console.error("Error fetching post details:", err);
-        setError(err.message);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    if (postId) {
-      fetchPostDetail();
+  const loadPostAndComments = useCallback(async () => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const postData = await fetchPostDetails(boardId, postId);
+      setPost(postData); // Assuming API returns post object directly or data.data if wrapped
+      
+      const commentsData = await fetchCommentsForPost(boardId, postId);
+      setComments(commentsData.data || []); // Assuming API returns { data: [...] }
+    } catch (err) {
+      console.error("Error fetching post details or comments:", err.message);
+      setError(err.data?.message || err.message || '게시글 또는 댓글을 불러오는데 실패했습니다.');
+    } finally {
+      setIsLoading(false);
     }
   }, [postId, boardId]);
 
-  // 댓글 목록 가져오기
-  const fetchComments = async () => {
-    try {
-      const response = await fetch(`${API_BASE_URL}/boards/${boardId}/comments?post_id=${postId}`);
-      
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({ message: '댓글을 불러오는데 실패했습니다.' }));
-        throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
-      }
-      
-      const data = await response.json();
-      setComments(data.data || []); // API 응답이 { data: [...] } 형태라고 가정
-    } catch (err) {
-      console.error("Error fetching comments:", err);
+  useEffect(() => {
+    if (postId) {
+      loadPostAndComments();
     }
-  };
+  }, [loadPostAndComments, postId]); // Added postId to dependencies for safety, though covered by loadPostAndComments
 
-  // 새 댓글 추가
   const handleAddComment = async (newCommentData) => {
     if (!currentUser || !currentUser.isLoggedIn) {
       alert('댓글을 작성하려면 로그인이 필요합니다.');
+      navigate('/login'); // Redirect to login if not logged in
       return;
     }
 
     try {
-      const token = localStorage.getItem('authToken');
-      if (!token) {
-        alert('로그인 세션이 만료되었습니다. 다시 로그인해주세요.');
-        return;
-      }
-
       const commentPayload = {
-        PST_id: postId, // Post ID
-        BRD_id: boardId, // Board ID, API 명세에 따라 필요 없을 수도 있음. Comments 모델은 PST_id, USR_id만 fillable
-        COM_content: newCommentData.text // Comment content from form
-        // USR_id는 백엔드에서 토큰으로 처리
+        PST_id: postId, 
+        BRD_id: boardId, // May not be needed by backend if it can infer from PST_id
+        COM_content: newCommentData.text,
+        // USR_id should be handled by the backend (e.g., via session)
+        // If your backend expects USR_id in the payload, you might need to add it:
+        // USR_id: currentUser.details?.USR_id, 
       };
 
-      const response = await fetch(`${API_BASE_URL}/comments`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify(commentPayload)
-      });
+      // Use createNewComment from api.js
+      await createNewComment(commentPayload);
+      // Refresh comments list by re-fetching
+      const updatedCommentsData = await fetchCommentsForPost(boardId, postId);
+      setComments(updatedCommentsData.data || []);
 
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({ message: '댓글 등록에 실패했습니다.' }));
-        throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
-      }
-
-      fetchComments(); // Refresh comments list
     } catch (err) {
-      console.error("Error adding comment:", err);
-      alert(`댓글 등록 중 오류가 발생했습니다: ${err.message}`);
+      console.error("Error adding comment:", err.message);
+      alert(`댓글 등록 중 오류가 발생했습니다: ${err.data?.message || err.message}`);
     }
   };
 
@@ -131,9 +93,8 @@ const PostDetailPage = ({ currentUser }) => {
     return date.toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' });
   };
 
-  // API 응답에서 post.user.USR_nickname, post.board.BRD_name 형태로 올 수 있음
   const authorNickname = post.user?.USR_nickname || '정보 없음';
-  const boardName = post.board?.BRD_name || boardId; // boardId는 'code', 'free' 등, BRD_name은 '코드 게시판'
+  const boardName = post.board?.BRD_name || boardId;
 
   return (
     <div className="post-detail-container">

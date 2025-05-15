@@ -10,11 +10,13 @@ import PostWritePage from './pages/PostWritePage';
 import SignupPage from './pages/SignupPage';
 import LoginPage from './pages/LoginPage';
 import './pages/MainPage.css';
+// Import API functions from api.js
+import { fetchAllPosts, fetchBoardPosts } from './services/api'; 
 
-const API_BASE_URL = 'http://localhost:8000/api';
+// API_BASE_URL is now managed within api.js, so it's removed from here.
 
 const headerBoardTypes = [
-  { BRD_id: 'all', BRD_name: '전체' }, // 'all'을 백엔드에서 모든 게시물을 의미하는 특별한 ID로 처리하거나, 프론트에서 별도 로직 필요
+  { BRD_id: 'all', BRD_name: '전체' },
   { BRD_id: 'code', BRD_name: '코드 게시판' },
   { BRD_id: 'free', BRD_name: '자유 게시판' },
   { BRD_id: 'qna', BRD_name: '질문 게시판' },
@@ -25,34 +27,36 @@ const App = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // 앱 시작 시 로컬 스토리지에서 토큰 및 사용자 정보 확인
-    const token = localStorage.getItem('authToken');
+    // Token usage is removed, rely on currentUser from localStorage
+    // localStorage.removeItem('authToken'); // Ensure any old tokens are cleared if logic changes
     const storedUser = localStorage.getItem('currentUser');
-    if (token && storedUser) {
+    if (storedUser) {
       try {
         const user = JSON.parse(storedUser);
-        setCurrentUser({ username: user.USR_nickname, isLoggedIn: true }); // API 응답에 따라 user.USR_nickname 사용
+        // Ensure the structure matches what LoginPage sets: { USR_nickname: ..., ... }
+        if (user && user.USR_nickname) {
+            setCurrentUser({ username: user.USR_nickname, isLoggedIn: true, details: user });
+        } else {
+            localStorage.removeItem('currentUser'); // Clear invalid stored user data
+        }
       } catch (e) {
         console.error("Error parsing stored user data:", e);
-        localStorage.removeItem('authToken');
         localStorage.removeItem('currentUser');
       }
     }
   }, []);
 
-  const handleLogin = (username) => {
-    setCurrentUser({ username: username, isLoggedIn: true });
-    // LoginPage에서 navigate('/')를 이미 호출함
+  const handleLogin = (username, userDetails) => {
+    setCurrentUser({ username: username, isLoggedIn: true, details: userDetails });
+    // LoginPage handles navigation
   };
 
   const handleSignupSuccess = (username) => {
-    // SignupPage에서 로그인 페이지로 이동시키므로, 별도 처리는 불필요하거나 로그인과 동일하게 처리
-    // setCurrentUser({ username: username, isLoggedIn: true }); 
-    // navigate('/');
+    // SignupPage navigates to login, no direct state change here needed for currentUser
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('authToken');
+    // localStorage.removeItem('authToken'); // Token removal already handled or not used
     localStorage.removeItem('currentUser');
     setCurrentUser(null);
     navigate('/');
@@ -67,42 +71,26 @@ const App = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
-    const postsPerPage = 8; // 이 값은 API 페이징과 일치하거나, API가 반환하는 값 사용
+    const postsPerPage = 8; // This might be dictated by API or can be a client-side preference if API supports limit
 
-    const fetchPosts = useCallback(async () => {
+    const loadPosts = useCallback(async () => {
       setIsLoading(true);
       setError(null);
-      
-      // 'all' 게시판에 대한 특별한 API 엔드포인트 처리
-      let url;
-      if (selectedBoard === 'all') {
-        url = `${API_BASE_URL}/boards/all?page=${currentPage}`;
-      } else {
-        url = `${API_BASE_URL}/boards/${selectedBoard}?page=${currentPage}`;
-      }
-      
-      if (searchTerm) {
-        url += `&search_type=${selectedSearchType}&search_term=${encodeURIComponent(searchTerm)}`;
-      }
-
       try {
-        const response = await fetch(url);
-        if (!response.ok) {
-          const errorData = await response.json().catch(() => ({ message: '게시글 목록을 불러오는데 실패했습니다.' }));
-          throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
+        let data;
+        if (selectedBoard === 'all') {
+          data = await fetchAllPosts(currentPage, searchTerm, selectedSearchType);
+        } else {
+          data = await fetchBoardPosts(selectedBoard, currentPage, searchTerm, selectedSearchType);
         }
-        const data = await response.json();
-        
-        // API 응답 구조에 따라 posts와 totalPages 설정
-        setPosts(data.data || []); // data.data가 실제 게시물 배열이라고 가정
+        setPosts(data.data || []);
         setTotalPages(data.meta?.last_page || Math.ceil((data.total || data.data?.length || 0) / postsPerPage));
-        
-        if (data.data?.length === 0 && currentPage > 1) { // 데이터가 없는데 현재 페이지가 1보다 크면 1페이지로
-            setCurrentPage(1);
+        if (data.data?.length === 0 && currentPage > 1) {
+            setCurrentPage(1); // Reset to page 1 if current page has no data (and not already page 1)
         }
       } catch (e) {
-        console.error("Error fetching posts:", e);
-        setError(e.message);
+        console.error("Error fetching posts:", e.message);
+        setError(e.message || '게시글 목록을 불러오는데 실패했습니다.');
         setPosts([]);
         setTotalPages(0);
       }
@@ -110,26 +98,25 @@ const App = () => {
     }, [selectedBoard, currentPage, searchTerm, selectedSearchType]);
 
     useEffect(() => {
-      fetchPosts();
-    }, [fetchPosts]);
+      loadPosts();
+    }, [loadPosts]); // Dependency array includes loadPosts which has its own dependencies
 
     const handleSelectHeaderBoard = (boardId) => {
       setSelectedBoard(boardId);
       setSearchTerm(''); 
       setCurrentPage(1);
-      // fetchPosts는 useEffect에 의해 호출됨
+      // loadPosts will be called by useEffect due to state change
     };
 
     const handleSetSearchType = (type) => {
       setSelectedSearchType(type);
-      // 검색 타입 변경 시 바로 검색 실행은 하지 않고, 검색 버튼 클릭 시 실행
     };
 
     const handleSearch = (term, searchType) => {
       setSearchTerm(term.toLowerCase());
       setSelectedSearchType(searchType); 
       setCurrentPage(1);
-      // fetchPosts는 useEffect에 의해 호출됨
+      // loadPosts will be called by useEffect due to state change
     };
 
     return (
@@ -174,7 +161,8 @@ const App = () => {
             element={currentUser?.isLoggedIn ? <PostWritePage currentUser={currentUser} /> : <LoginPage onLogin={handleLogin} />} 
           />
           <Route path="/signup" element={<SignupPage onSignupSuccess={handleSignupSuccess} />} />
-          <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
+          {/* Pass userDetails to onLogin in LoginPage */}
+          <Route path="/login" element={<LoginPage onLogin={(username, userDetails) => handleLogin(username, userDetails)} />} /> 
         </Routes>
       </main>
     </>
@@ -182,3 +170,4 @@ const App = () => {
 };
 
 export default App;
+
