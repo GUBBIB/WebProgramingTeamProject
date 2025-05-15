@@ -20,7 +20,7 @@ class RegisterController extends Controller
         $user = User::create([
             'USR_email' => $request->input('USR_email'),
             'USR_pass' => Hash::make($request->input('USR_pass')),
-            'USR_created_at' => now()->toDateString(),
+            'created_at' => now()->toDateString(),
         ]);
 
         if(!$user){
