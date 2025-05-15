@@ -22,6 +22,8 @@ return new class extends Migration
             $table->integer('PST_front_page')->nullable();
             $table->integer('PST_behind_page')->nullable();
 
+            $table->unsignedInteger('PST_views')->default(0); // 조회수 컬럼 추가
+
             // 외래 키 제약 조건
             $table->foreign('BRD_id')->references('BRD_id')->on('boards')->onDelete('cascade');
             $table->foreign('USR_id')->references('USR_id')->on('users')->onDelete('cascade');
