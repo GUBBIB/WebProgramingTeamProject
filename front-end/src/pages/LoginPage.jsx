@@ -61,7 +61,7 @@ const LoginPage = () => {
           />
         </div>
         <div className="form-actions">
-          <button type="submit" className="submit-button">로그인</button>
+          <button type="submit" className="submit-button" onSubmit={handleSubmit}>로그인</button>
         </div>
         <div className="signup-link">
           <p>계정이 없으신가요? <a href="/signup">회원가입</a></p>
