@@ -3,13 +3,13 @@ import axios from 'axios';
 import CommentItem from './CommentItem';
 import './Comment.css';
 
-const CommentList = () => {
+const CommentList = ($BRD_id, $PST_id) => { 
   const [comments, setComments] = useState([]);
 
   useEffect(() => {
     const fetchComments = async () => {
       try {
-        const response = await axios.get('http://13.60.93.77/');
+        const response = await axios.get('http://13.60.93.77/boards/'+ BRD_id + '/posts/' + PST_id + '/comments');
         setComments(response.data);
       } catch (error) {
         console.error('댓글 불러오기 실패:', error);
