@@ -1,15 +1,12 @@
 <?php
 
 namespace App\Models;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
 
-class User extends Authenticatable
+use Illuminate\Database\Eloquent\Model;
+
+class User extends Model
 {
-    use Notifiable;
-
-    protected $table = 'users'; // 기본 테이블 명은 유지
-
+    protected $table = 'users';
     protected $primaryKey = 'USR_id';
 
     protected $fillable = [
@@ -21,21 +18,6 @@ class User extends Authenticatable
     protected $hidden = [
         'USR_pass',
     ];
-
-    public function getAuthIdentifierName()
-    {
-        return 'USR_id';
-    }
-
-    public function getAuthPassword()
-    {
-        return $this->USR_pass;
-    }
-
-    public function getAuthIdentifier()
-    {
-        return $this->USR_id;
-    }
 
     public function posts()
     {
