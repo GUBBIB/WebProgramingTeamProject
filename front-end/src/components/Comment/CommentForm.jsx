@@ -21,7 +21,7 @@ const CommentForm = ({ onSubmitComment, currentUser }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="comment-form">
+    <div>
       {/* 작성자명 입력 필드 제거 */}
       <textarea
         value={comment}
@@ -34,7 +34,7 @@ const CommentForm = ({ onSubmitComment, currentUser }) => {
       <button type="submit" disabled={!currentUser?.isLoggedIn}>
         {currentUser?.isLoggedIn ? "댓글 작성" : "로그인 후 작성 가능"}
       </button>
-    </form>
+    </div>
   );
 };
 
