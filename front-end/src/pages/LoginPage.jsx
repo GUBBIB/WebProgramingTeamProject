@@ -12,13 +12,14 @@ const LoginPage = () => {
     
     const res = await fetch("/api/login", {
       method: "POST",
-      HEADERS: {
+      headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
         USR_email: email,
         USR_password: password,
       }),
+      credentials: "include" // 세션 쿠키 저장 필요 시 추가
     });
 
     const data = await res.json();
