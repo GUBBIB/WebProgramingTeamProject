@@ -1,8 +1,12 @@
 {
   "ExpandedNodes": [
     "",
-    "\\front-end"
+    "\\back-end\\app",
+    "\\back-end\\routes",
+    "\\front-end",
+    "\\front-end\\src",
+    "\\front-end\\src\\pages"
   ],
-  "SelectedNode": "\\front-end\\public",
+  "SelectedNode": "\\front-end\\src\\pages\\LoginPage.jsx",
   "PreviewInSolutionExplorer": false
 }
