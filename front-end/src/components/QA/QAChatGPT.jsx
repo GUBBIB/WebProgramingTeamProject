@@ -7,11 +7,8 @@ const QAChatGPT = ({ boardId }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   
-  const OPENAI_API_URL = 'https://api.openai.com/v1/chat/completions';
-  
-  // API 키는 환경 변수에서 가져오거나 서버 측에서 처리하는 것이 이상적입니다
-  // 클라이언트에서 직접 API 키를 사용하는 것은 보안상 위험합니다
-  // 실제 구현 시에는 백엔드를 통해 요청을 프록시하는 것이 좋습니다
+  const API_BASE_URL = 'http://13.60.93.77/api';
+  const OPENAI_ENDPOINT = `${API_BASE_URL}/ask-openai`;
   
   const handleQuestionSubmit = async (e) => {
     e.preventDefault();
@@ -25,36 +22,25 @@ const QAChatGPT = ({ boardId }) => {
     setError('');
     
     try {
-      // 실제 구현에서는 이 요청이 서버 측으로 가야 합니다
-      // const response = await fetch('/api/ask-openai', {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify({ question })
-      // });
-      
-      // 프론트엔드에서 직접 OpenAI API를 호출하는 예시 (보안상 권장하지 않음)
-      const response = await fetch(OPENAI_API_URL, {
+      // 백엔드 API를 통해 OpenAI에 요청
+      const response = await fetch(OPENAI_ENDPOINT, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer YOUR_OPENAI_API_KEY` // 실제 구현에서는 절대 클라이언트 측에 노출하면 안 됨
-        },
-        body: JSON.stringify({
-          model: 'gpt-3.5-turbo',
-          messages: [
-            { role: 'system', content: '당신은 질문게시판의 도우미입니다. 질문에 간결하고 정확하게 답변해주세요.' },
-            { role: 'user', content: question }
-          ],
-          max_tokens: 500
-        })
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ question })
       });
       
       if (!response.ok) {
-        throw new Error('OpenAI API 요청 실패');
+        throw new Error('API 요청 실패');
       }
       
       const data = await response.json();
-      setAnswer(data.choices[0].message.content);
+      
+      if (data.error) {
+        throw new Error(data.error);
+      }
+      
+      setAnswer(data.answer);
       
     } catch (err) {
       console.error('API 호출 오류:', err);
