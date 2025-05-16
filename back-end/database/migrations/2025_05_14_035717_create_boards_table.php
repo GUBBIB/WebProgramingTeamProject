@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('boards', function (Blueprint $table) {
             $table->id('BRD_id');
-            $table->string('BRD_name')->unique();            $table->timestamps();
+            $table->string('BRD_name')->unique();
             $table->timestamps();
         });
     }    
