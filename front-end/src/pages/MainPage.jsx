@@ -48,7 +48,6 @@ const MainPage = () => {
           {/* 홈 경로는 현재 아무 것도 렌더링하지 않음 */}
           <Route path="/" element={
             <div>
-              <Header />
               <BoardTypeSelector />
               <PostList />
               <BoardControls />
