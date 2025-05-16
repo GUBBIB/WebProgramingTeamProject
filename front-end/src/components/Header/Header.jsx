@@ -8,7 +8,7 @@ const Header = () => {
   return (
     <header className="header-container">
       <div className="logo">
-        <Link to="/">MyBoard</Link>
+        <Link to="/">아팠찌</Link>
       </div>
       <nav className="auth-buttons">
         {isLoggedIn ? (
