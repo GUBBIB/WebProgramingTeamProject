@@ -1,88 +1,83 @@
-.qa-chatgpt-container {
-  background-color: #f8f9fa;
-  border-radius: 8px;
-  padding: 16px;
-  margin: 16px 0;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
+import React, { useState, useEffect } from 'react';
+import { Routes, Route, useNavigate } from 'react-router-dom';
+import Header from '../components/Header/Header';
+import PostDetailPage from './PostDetailPage';
+import PostWritePage from './PostWritePage';
+import SignupPage from './SignupPage';
+import LoginPage from './LoginPage';
+import PostList from '../components/Post/PostList';
+import QAChatGPT from '../components/QA/QAChatGPT'; // 새로운 QAChatGPT 컴포넌트 추가
+import './MainPage.css';
+import BoardControls from '../components/Board/BoardControls';
+import BoardTypeSelector from '../components/Board/BoardTypeSelector';
 
-.qa-title {
-  color: #343a40;
-  font-size: 18px;
-  margin-bottom: 8px;
-}
+const MainPage = () => {
+  const [selectedBoard, setSelectedBoard] = useState(1);
+  const [currentUser, setCurrentUser] = useState(null);
+  const [searchType, setSearchType] = useState('title'); // 검색 유형 상태 추가
+  const navigate = useNavigate();
 
-.qa-description {
-  color: #6c757d;
-  font-size: 14px;
-  margin-bottom: 16px;
-}
+  useEffect(() => {
+    const storedUser = localStorage.getItem('currentUser');
+    if (storedUser) {
+      try {
+        const user = JSON.parse(storedUser);
+        if (user && user.USR_nickname) {
+          setCurrentUser({ username: user.USR_nickname, isLoggedIn: true, details: user });
+        } else {
+          localStorage.removeItem('currentUser');
+        }
+      } catch {
+        localStorage.removeItem('currentUser');
+      }
+    }
+  }, []);
 
-.qa-form {
-  display: flex;
-  flex-direction: column;
-}
+  const handleLogin = (username, userDetails) => {
+    setCurrentUser({ username, isLoggedIn: true, details: userDetails });
+  };
 
-.qa-input {
-  padding: 12px;
-  border: 1px solid #ced4da;
-  border-radius: 4px;
-  margin-bottom: 10px;
-  font-size: 14px;
-  resize: vertical;
-}
+  const handleLogout = () => {
+    localStorage.removeItem('currentUser');
+    setCurrentUser(null);
+    navigate('/');
+  };
 
-.qa-submit-btn {
-  background-color: #0d6efd;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  padding: 10px 16px;
-  font-size: 14px;
-  cursor: pointer;
-  transition: background-color 0.2s;
-  align-self: flex-end;
-}
+  const handleSearch = async (searchTerm, searchType) => {
+    console.log(`검색 실행: ${searchTerm}, 검색 유형: ${searchType}`);
+    // 여기에 검색 API 호출 로직 구현
+  };
 
-.qa-submit-btn:hover {
-  background-color: #0b5ed7;
-}
+  return (
+    <div>
+      <Header currentUser={currentUser} onLogout={handleLogout} />
+      <div className="app-main-content">
+        <Routes>
+          <Route path="/" element={
+            <div>
+              <BoardTypeSelector selectedBoard={selectedBoard} onSelectedBoard={setSelectedBoard}/>
+              <BoardControls 
+                onSearch={handleSearch}
+                selectedSearchType={searchType}
+                onSelectSearchType={setSearchType}
+              />
+              {/* Q&A 게시판(ID=3)일 때만 QAChatGPT 컴포넌트 표시 */}
+              <QAChatGPT boardId={selectedBoard} />
+            </div>
+          } />
 
-.qa-submit-btn:disabled {
-  background-color: #6c757d;
-  cursor: not-allowed;
-}
+          <Route path="/boards/:BRD_id/posts/:PST_id" element={<PostDetailPage currentUser={currentUser} />} />
 
-.qa-error {
-  color: #dc3545;
-  font-size: 14px;
-  margin: 10px 0;
-}
+          <Route path="/write" element={currentUser?.isLoggedIn 
+            ? <PostWritePage currentUser={currentUser} /> 
+            : <LoginPage onLogin={handleLogin} />} 
+          />
+          <Route path="/signup" element={<SignupPage />} />
+          <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
+        </Routes>
+      </div>
+    </div>
+  );
+};
 
-.qa-answer {
-  background-color: white;
-  border-radius: 4px;
-  padding: 16px;
-  margin-top: 16px;
-  border-left: 4px solid #0d6efd;
-}
-
-.qa-answer h4 {
-  font-size: 16px;
-  margin-bottom: 10px;
-  color: #0d6efd;
-}
-
-.qa-answer p {
-  font-size: 14px;
-  line-height: 1.5;
-  color: #343a40;
-  white-space: pre-line;
-}
-
-.qa-disclaimer {
-  margin-top: 16px;
-  color: #6c757d;
-  font-size: 12px;
-  text-align: right;
-}
+export default MainPage;
