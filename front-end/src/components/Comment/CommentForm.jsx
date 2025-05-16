@@ -2,11 +2,10 @@ import React, { useState } from 'react';
 import './Comment.css';
 
 const CommentForm = ({ onSubmitComment, currentUser }) => {
-  const [comment, setComment] = useState('');
+  const [commentText, setCommentText] = useState(''); // Renamed state for clarity
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!comment.trim()) {
+  const handleCommentSubmitClick = async () => { // Renamed and no event parameter
+    if (!commentText.trim()) {
       alert('댓글 내용을 입력해주세요.');
       return;
     }
@@ -14,24 +13,35 @@ const CommentForm = ({ onSubmitComment, currentUser }) => {
       alert('로그인이 필요합니다.');
       return;
     }
-    // onSubmitComment는 부모 컴포넌트(PostDetailPage.jsx)에서 실제 API 호출을 포함할 수 있으므로,
-    // 해당 함수가 비동기 처리를 할 것을 대비하여 async로 선언하고 await를 사용합니다.
-    await onSubmitComment({ author: currentUser.username, text: comment });
-    setComment(''); // 입력 필드 초기화
+    // onSubmitComment is expected to be an async function from PostDetailPage.jsx
+    // It should handle the API call and receive an object like { text: commentText }
+    // The actual payload sent to the API (e.g., COM_content) is handled in PostDetailPage's handleAddComment
+    await onSubmitComment({ text: commentText });
+    setCommentText(''); // Clear input field
   };
 
   return (
+<<<<<<< HEAD
     <div>
       {/* 작성자명 입력 필드 제거 */}
+=======
+    // Replaced form with div
+    <div className="comment-form">
+>>>>>>> feature/4
       <textarea
-        value={comment}
-        onChange={(e) => setComment(e.target.value)}
+        value={commentText}
+        onChange={(e) => setCommentText(e.target.value)}
         placeholder={currentUser?.isLoggedIn ? `${currentUser.username}님, 댓글을 입력하세요...` : "댓글을 입력하려면 로그인하세요..."}
         rows="3"
-        required
+        // Removed 'required' as it's a form attribute, handling validation in JS
         disabled={!currentUser?.isLoggedIn}
       />
-      <button type="submit" disabled={!currentUser?.isLoggedIn}>
+      {/* Changed button type to button and added onClick */}
+      <button 
+        type="button" 
+        onClick={handleCommentSubmitClick} 
+        disabled={!currentUser?.isLoggedIn || !commentText.trim()}
+      >
         {currentUser?.isLoggedIn ? "댓글 작성" : "로그인 후 작성 가능"}
       </button>
     </div>

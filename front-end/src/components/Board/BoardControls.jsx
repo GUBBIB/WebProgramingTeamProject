@@ -4,9 +4,8 @@ import './BoardControls.css';
 
 const BoardControls = ({ 
   onSearch, 
-  // boardTypesForDropdown, // 이제 사용하지 않음
-  selectedSearchType,   // 변경: 검색 유형 (title, author)
-  onSelectSearchType    // 변경: 검색 유형 변경 핸들러
+  selectedSearchType, 
+  onSelectSearchType 
 }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const navigate = useNavigate();
@@ -15,11 +14,9 @@ const BoardControls = ({
     setSearchTerm(event.target.value);
   };
 
-  const handleSearchSubmit = async (event) => {
-    event.preventDefault();
-    // onSearch는 부모 컴포넌트(App.jsx)에서 실제 API 호출을 포함하므로, 
-    // 해당 함수가 비동기 처리를 할 것을 대비하여 async로 선언합니다.
-    // 이제 onSearch는 searchTerm과 selectedSearchType을 모두 받아야 합니다.
+  // Removed event parameter as it's no longer a form submission event
+  const handleSearchSubmit = async () => { 
+    // event.preventDefault(); // Removed, not a form submission
     await onSearch(searchTerm, selectedSearchType);
   };
 
@@ -34,12 +31,12 @@ const BoardControls = ({
   return (
     <div className="board-controls-container">
       <div className="search-and-filter-container">
-        <form onSubmit={handleSearchSubmit} className="search-form">
-          {/* 검색 유형 선택 드롭다운 (제목/작성자) */}
+        {/* Changed form to div */}
+        <div className="search-form"> 
           <select 
             value={selectedSearchType} 
             onChange={handleSearchTypeChange} 
-            className="search-scope-select" // 클래스명은 유지하거나 변경 가능
+            className="search-scope-select"
           >
             <option value="title">제목 검색</option>
             <option value="author">작성자 검색</option>
@@ -51,8 +48,9 @@ const BoardControls = ({
             onChange={handleSearchChange}
             className="search-input"
           />
-          <button type="submit" className="search-button">검색</button>
-        </form>
+          {/* Changed button type to button and added onClick */}
+          <button type="button" onClick={handleSearchSubmit} className="search-button">검색</button>
+        </div>
       </div>
       <button onClick={handleWritePost} className="write-post-button">
         게시글 작성
