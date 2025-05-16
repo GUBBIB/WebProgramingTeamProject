@@ -40,7 +40,7 @@ const PostList = ({ BRD_id }) => {
         const data = await response.json();
         
         // API 응답에서 게시글 데이터 추출
-        setPosts(data.data || []);
+        setPosts(data || []);
         
         // 총 페이지 수 설정 (API가 이 정보를 제공한다고 가정)
         setTotalPages(data.last_page || 1);
