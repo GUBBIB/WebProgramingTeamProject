@@ -5,7 +5,7 @@ import './PostList.css';
 
 const API_BASE_URL = 'http://13.60.93.77/api';
 
-const PostList = ({ BRD_id }) => {
+const PostList = ({ selectedBoard }) => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null); 
@@ -19,9 +19,9 @@ const PostList = ({ BRD_id }) => {
 
       try {
         const url =
-        BRD_id == '1'
+        selectedBoard?.BRD_id == '1'
             ? `${API_BASE_URL}/boards/postAll?page=${page}`
-            : `${API_BASE_URL}/boards/${BRD_id}/posts?page=${page}`;
+            : `${API_BASE_URL}/boards/${selectedBoard?.BRD_id}/posts?page=${page}`;
 
         const response = await fetch(url, {
           credentials: 'include',
