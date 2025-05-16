@@ -43,7 +43,7 @@ const MainPage = () => {
       <main className="app-main-content">
         <Routes>
           {/* 홈 경로는 현재 아무 것도 렌더링하지 않음 */}
-          <Route path="index" element={<div>홈 화면을 구성하세요</div>} />
+          <Route path="/" element={<div>홈 화면을 구성하세요</div>} />
           
           <Route path="/boards/:BRD_id/posts/:PST_id" element={<PostDetailPage currentUser={currentUser} />} />
 
