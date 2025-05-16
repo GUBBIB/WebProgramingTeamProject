@@ -17,7 +17,7 @@ const PostItem = ({ post }) => {
     <tr className="post-item-row">
       <td className="post-title">
         {/* 상세 페이지 이동 시 boardType도 전달해야 PostDetailPage에서 API 호출 가능 */}
-        <Link to={`/post/${post.PST_id}?boardType=${post.BRD_id}`}>{post.PST_title}</Link>
+        <Link to={`/boards/${post.BRD_id}/posts/${post.PST_id}`}>{post.PST_title}</Link>
       </td>
       <td className="post-author">{authorNickname}</td>
       <td className="post-date">{formatDate(post.created_at)}</td>

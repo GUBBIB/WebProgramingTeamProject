@@ -1,4 +1,4 @@
-<!-- <?php
+<?php
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\RegisterController;
@@ -7,8 +7,6 @@ use App\Http\Controllers\Api\BoardController;
 use App\Http\Controllers\Api\PostController;
 use App\Http\Controllers\Api\CommentController;
 use Illuminate\Http\Request;
-
-
 
 
 Route::middleware('auth')->get('/user', function (Request $request) {
@@ -50,3 +48,6 @@ Route::post('/comments', [CommentController::class, 'store']);
 
 //제목 OR 사용자 검색
 Route::get('/boards/search', [BoardController::class, 'board_Search_By_Keyword']);
+
+// 조회수 증가
+Route::post('/boards/{BRD_id}/posts/{PST_id}/view', [PostController::class, 'incrementViews']);

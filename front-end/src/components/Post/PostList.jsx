@@ -1,16 +1,20 @@
 import React, { useEffect, useState } from 'react';
+import { useParams, useSearchParams } from 'react-router-dom';
 import PostItem from './PostItem';
 import './PostList.css';
 
 const PostList = () => {
   const [posts, setPosts] = useState([]);
-  const [loading, setLoading] = useState(true); // 로딩 상태
-  const [error, setError] = useState(null);     // 에러 상태
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null); 
+  const { BRD_id } = useParams();
+  const [searchParam] = useSearchParams();
+  const page = searchParam.get('page') || 1;
 
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const response = await fetch('/api/boards/{BRD_id}?page=1'); // 실제 API 주소로 수정 필요
+        const response = await fetch(`/api/boards/${BRD_id}?page=${page}`);
         if (!response.ok) throw new Error('서버 응답 오류');
         const data = await response.json();
         setPosts(data);
@@ -22,8 +26,8 @@ const PostList = () => {
     };
 
     fetchPosts();
-  }, []);
-
+  }, [BRD_id, page]);
+  
   if (loading) return <div className="loading">로딩 중...</div>;
   if (error) return <div className="error">에러 발생: {error}</div>;
   if (!posts || posts.length === 0) return <div className="no-posts">게시글이 없습니다.</div>;
@@ -49,3 +53,5 @@ const PostList = () => {
     </div>
   );
 };
+
+export default PostList;

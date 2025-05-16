@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 class Board extends Model
 {
     protected $primaryKey = 'BRD_id';
-    public $timestamps = false;
 
     protected $fillable = ['BRD_name'];
 

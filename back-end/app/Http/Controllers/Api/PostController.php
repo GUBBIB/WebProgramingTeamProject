@@ -75,4 +75,21 @@ class PostController extends Controller
     public function posts_All_List_Search(){
         
     }
+
+    // 게시글 조회수 증가 API
+    public function incrementViews($BRD_id, $PST_id)
+    {
+        $post = \App\Models\Post::where('BRD_id', $BRD_id)
+            ->where('PST_id', $PST_id)
+            ->first();
+
+        if (!$post) {
+            return response()->json(['message' => '게시글을 찾을 수 없습니다.'], 404);
+        }
+
+        $post->increment('PST_views');
+
+        return response()->json(['message' => '조회수 증가 완료', 'views' => $post->PST_views]);
+    }
+
 }
