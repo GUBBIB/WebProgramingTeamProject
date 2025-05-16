@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
-import Header from './components/Header/Header';
+import Header from '../components/Header/Header';
 import PostDetailPage from './PostDetailPage';
 import PostWritePage from './PostWritePage';
 import SignupPage from './SignupPage';
