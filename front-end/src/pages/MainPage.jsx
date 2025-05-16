@@ -5,7 +5,10 @@ import PostDetailPage from './PostDetailPage';
 import PostWritePage from './PostWritePage';
 import SignupPage from './SignupPage';
 import LoginPage from './LoginPage';
+import PostList from '../components/Post/PostList'
 import './MainPage.css';
+import BoardControls from '../components/Board/BoardControls';
+import BoardTypeSelector from '../components/Board/BoardTypeSelector';
 
 const MainPage = () => {
   const [currentUser, setCurrentUser] = useState(null);
@@ -43,8 +46,15 @@ const MainPage = () => {
       <main className="app-main-content">
         <Routes>
           {/* 홈 경로는 현재 아무 것도 렌더링하지 않음 */}
-          <Route path="/" element={<div>홈 화면을 구성하세요</div>} />
-          
+          <Route path="/" element={
+            <div>
+              <Header />
+              <BoardTypeSelector />
+              <PostList />
+              <BoardControls />
+            </div>
+            } />
+
           <Route path="/boards/:BRD_id/posts/:PST_id" element={<PostDetailPage currentUser={currentUser} />} />
 
           <Route path="/write" element={currentUser?.isLoggedIn 
