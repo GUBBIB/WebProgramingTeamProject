@@ -19,7 +19,7 @@ const PostList = () => {
         const response = await fetch(`${API_BASE_URL}/boards/${BRD_id}?page=${page}`);
         if (!response.ok) throw new Error('서버 응답 오류');
         const data = await response.json();
-        setPosts(data);
+        setPosts(data.data || data);
       } catch (err) {
         setError(err.message);
       } finally {

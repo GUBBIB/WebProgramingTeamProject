@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import CommentList from '../components/Comment/CommentList';
@@ -8,29 +8,12 @@ import './PostDetailPage.css';
 
 const API_BASE_URL = 'http://13.60.93.77/api';
 
-const PostDetailPage = () => {
+const PostDetailPage = ({ currentUser }) => {
   const { BRD_id, PST_id } = useParams();
-  const navigate = useNavigate();
 
   const [post, setPost] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [currentUser, setCurrentUser] = useState(null);
-
-  const fetchCurrentUser = async () => {
-    try {
-      const res = await fetch(`${API_BASE_URL}/user`, {
-        method: 'GET',
-        credentials: 'include',
-        headers: { Accept: 'application/json' },
-      });
-      if (!res.ok) throw new Error('세션 없음');
-      const data = await res.json();
-      setCurrentUser(data);
-    } catch {
-      setCurrentUser(null);
-    }
-  };
 
   const loadPost = useCallback(async () => {
     setIsLoading(true);
@@ -57,7 +40,6 @@ const PostDetailPage = () => {
   }, [BRD_id, PST_id]);
 
   useEffect(() => {
-    fetchCurrentUser();
     loadPost();
   }, [loadPost]);
 

@@ -17,7 +17,7 @@ const CommentList = ({ BRD_id, PST_id }) => {
     };
 
     fetchComments();
-  }, []);
+  }, [BRD_id, PST_id]);
 
   if (!comments || comments.length === 0) {
     return <p className="no-comments">아직 댓글이 없습니다.</p>;
