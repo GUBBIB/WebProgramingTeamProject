@@ -21,13 +21,8 @@ const CommentForm = ({ onSubmitComment, currentUser }) => {
   };
 
   return (
-<<<<<<< HEAD
-    <div>
-      {/* 작성자명 입력 필드 제거 */}
-=======
     // Replaced form with div
     <div className="comment-form">
->>>>>>> feature/4
       <textarea
         value={commentText}
         onChange={(e) => setCommentText(e.target.value)}

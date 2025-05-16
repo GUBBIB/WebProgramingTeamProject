@@ -15,26 +15,11 @@ import { fetchAllPosts, fetchBoardPosts } from './services/api';
 
 // API_BASE_URL is now managed within api.js, so it's removed from here.
 
-const headerBoardTypes = [
-  { BRD_id: 'all', BRD_name: '전체' },
-  { BRD_id: 'code', BRD_name: '코드 게시판' },
-  { BRD_id: 'free', BRD_name: '자유 게시판' },
-  { BRD_id: 'qna', BRD_name: '질문 게시판' },
-];
 
 const App = () => {
   const [currentUser, setCurrentUser] = useState(null);
   const navigate = useNavigate();
 
-<<<<<<< HEAD
-  const handleLogin = (user) => {
-    setCurrentUser({
-      id: user.USR_id,
-      email: user.USR_email,
-      nickname: user.USR_nickname,
-      isLoggedIn: true
-    });
-=======
   useEffect(() => {
     // Token usage is removed, rely on currentUser from localStorage
     // localStorage.removeItem('authToken'); // Ensure any old tokens are cleared if logic changes
@@ -58,7 +43,6 @@ const App = () => {
   const handleLogin = (username, userDetails) => {
     setCurrentUser({ username: username, isLoggedIn: true, details: userDetails });
     // LoginPage handles navigation
->>>>>>> feature/4
   };
 
   const handleSignupSuccess = (username) => {
@@ -73,7 +57,6 @@ const App = () => {
   };
 
   const MainPageContent = () => {
-    const [posts, setPosts] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
     const [selectedBoard, setSelectedBoard] = useState('all'); 

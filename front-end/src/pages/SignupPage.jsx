@@ -1,13 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import './SignupPage.css';
-import { registerUser } from '../services/api'; // Import registerUser from api.js
 
-<<<<<<< HEAD
-const API_BASE_URL = 'http://13.60.93.77/api'; 
-=======
-// API_BASE_URL is now managed within api.js, so it's removed from here.
->>>>>>> feature/4
+const API_BASE_URL = 'http://13.60.93.77/api';
 
 const SignupPage = ({ onSignupSuccess }) => {
   const [USR_nickname, setNickname] = useState('');
@@ -24,20 +19,20 @@ const SignupPage = ({ onSignupSuccess }) => {
       setError('비밀번호가 일치하지 않습니다.');
       return;
     }
+
     if (!USR_nickname.trim() || !USR_email.trim() || !USR_pass.trim()) {
       setError('모든 필드를 입력해주세요.');
       return;
     }
 
     try {
-<<<<<<< HEAD
       const response = await fetch(`${API_BASE_URL}/register`, {
         method: 'POST',
+        credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
         },
-        credentials: 'include', 
         body: JSON.stringify({
           USR_nickname,
           USR_email,
@@ -51,9 +46,9 @@ const SignupPage = ({ onSignupSuccess }) => {
       if (response.ok && data.user) {
         alert('회원가입이 완료되었습니다.');
         if (onSignupSuccess) {
-          onSignupSuccess(data.user.USR_nickname); 
+          onSignupSuccess(data.user.USR_nickname); // 필요 시 전체 user 객체 전달
         }
-        navigate('/login'); 
+        navigate('/login');
       } else {
         if (data.errors) {
           const errorMessages = Object.values(data.errors).flat().join('\n');
@@ -62,45 +57,23 @@ const SignupPage = ({ onSignupSuccess }) => {
           setError(data.message || '회원가입에 실패했습니다.');
         }
       }
-    } catch (error) {
-      console.error('회원가입 오류:', error);
+    } catch (err) {
+      console.error('회원가입 오류:', err);
       setError('회원가입 중 네트워크 오류가 발생했습니다.');
-=======
-      // Use registerUser from api.js
-      const data = await registerUser({
-        USR_nickname: USR_nickname,
-        USR_email: USR_email,
-        USR_pass: USR_pass,
-        USR_pass_confirmation: USR_pass_confirmation
-      });
-
-      // The registerUser function in api.js will throw an error if response is not ok.
-      // If successful, data will be the parsed JSON response.
-      alert('회원가입이 완료되었습니다. 로그인 페이지로 이동합니다.');
-      if (onSignupSuccess) {
-        onSignupSuccess(USR_nickname); // Or data.user.USR_nickname if API returns it
-      }
-      navigate('/login');
-
-    } catch (err) { // Catch error thrown by fetchApi in api.js
-      console.error('회원가입 API 호출 오류:', err.message);
-      // err.data might contain specific error messages from the backend
-      setError(err.data?.message || err.message || '회원가입에 실패했습니다.');
->>>>>>> feature/4
     }
   };
 
   return (
     <div className="signup-page-container">
       <h1 className="page-title">회원가입</h1>
-      {error && <p className="error-message">{error.split('\n').map((line, i) => <span key={i}>{line}<br/></span>)}</p>}
+      {error && (
+        <p className="error-message">
+          {error.split('\n').map((line, i) => <span key={i}>{line}<br /></span>)}
+        </p>
+      )}
       <div className="signup-form">
         <div className="form-group">
-<<<<<<< HEAD
           <label htmlFor="nickname">닉네임</label>
-=======
-          <label htmlFor="nickname">사용자 닉네임</label>
->>>>>>> feature/4
           <input
             type="text"
             id="nickname"
@@ -112,21 +85,13 @@ const SignupPage = ({ onSignupSuccess }) => {
           />
         </div>
         <div className="form-group">
-<<<<<<< HEAD
-          <label htmlFor="email">이메일</label>
-=======
           <label htmlFor="email">이메일 주소</label>
->>>>>>> feature/4
           <input
             type="email"
             id="email"
             value={USR_email}
             onChange={(e) => setEmail(e.target.value)}
-<<<<<<< HEAD
-            placeholder="이메일을 입력하세요"
-=======
             placeholder="이메일 주소를 입력하세요"
->>>>>>> feature/4
             required
             className="form-control"
           />
@@ -156,7 +121,9 @@ const SignupPage = ({ onSignupSuccess }) => {
           />
         </div>
         <div className="form-actions">
-          <button type="button" onClick={handleSignupClick} className="submit-button">가입하기</button>
+          <button type="button" onClick={handleSignupClick} className="submit-button">
+            가입하기
+          </button>
         </div>
         <div className="login-link">
           <p>이미 계정이 있으신가요? <Link to="/login">로그인</Link></p>

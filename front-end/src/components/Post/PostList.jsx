@@ -3,6 +3,8 @@ import { useParams, useSearchParams } from 'react-router-dom';
 import PostItem from './PostItem';
 import './PostList.css';
 
+const API_BASE_URL = 'http://13.60.93.77/api';
+
 const PostList = () => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -14,7 +16,7 @@ const PostList = () => {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const response = await fetch(`/api/boards/${BRD_id}?page=${page}`);
+        const response = await fetch(`${API_BASE_URL}/boards/${BRD_id}?page=${page}`);
         if (!response.ok) throw new Error('서버 응답 오류');
         const data = await response.json();
         setPosts(data);
@@ -45,7 +47,7 @@ const PostList = () => {
           </tr>
         </thead>
         <tbody>
-          {posts.slice(0, 8).map((post) => (
+          {posts.map((post) => (
             <PostItem key={post.PST_id} post={post} />
           ))}
         </tbody>

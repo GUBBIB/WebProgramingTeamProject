@@ -3,7 +3,7 @@ import axios from 'axios';
 import CommentItem from './CommentItem';
 import './Comment.css';
 
-const CommentList = ($BRD_id, $PST_id) => { 
+const CommentList = ({ BRD_id, PST_id }) => {
   const [comments, setComments] = useState([]);
 
   useEffect(() => {
