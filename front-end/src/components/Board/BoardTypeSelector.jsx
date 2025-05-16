@@ -4,9 +4,8 @@ import PostList from '../Post/PostList';
 
 const API_BASE_URL = 'http://13.60.93.77/api'; // 실제 API 주소에 맞게 수정
 
-const BoardTypeSelector = () => {
+const BoardTypeSelector = ({ selectedBoard, onSelectedBoard}) => {
   const [boardTypes, setBoardTypes] = useState([]);
-  const [selectedBoard, setSelectedBoard] = useState(1);
 
   // API 호출로 게시판 목록 가져오기
   useEffect(() => {

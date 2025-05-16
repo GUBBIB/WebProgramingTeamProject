@@ -11,6 +11,7 @@ import BoardControls from '../components/Board/BoardControls';
 import BoardTypeSelector from '../components/Board/BoardTypeSelector';
 
 const MainPage = () => {
+  const [selectedBoard, setSelectedBoard] = useState(1);
   const [currentUser, setCurrentUser] = useState(null);
   const navigate = useNavigate();
 
@@ -46,10 +47,9 @@ const MainPage = () => {
       <div className="app-main-content">
         test
         <Routes>
-          {/* 홈 경로는 현재 아무 것도 렌더링하지 않음 */}
           <Route path="/" element={
             <div>
-              <BoardTypeSelector />
+              <BoardTypeSelector selectedBoard={selectedBoard} onSelectedBoard={setSelectedBoard}/>
               <BoardControls />
             </div>
             } />
