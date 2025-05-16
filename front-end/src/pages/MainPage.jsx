@@ -50,7 +50,6 @@ const MainPage = () => {
           <Route path="/" element={
             <div>
               <BoardTypeSelector />
-              <PostList />
               <BoardControls />
             </div>
             } />

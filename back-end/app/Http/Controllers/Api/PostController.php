@@ -31,19 +31,6 @@ class PostController extends Controller
         ], 201);
     }
 
-    // 게시글 목록 조회
-    public function post_List_Search(Board $BRD_id)
-    {
-        $posts = Post::with('user')
-                    ->where('BRD_id', $BRD_id)
-                    ->orderBy('created_at', 'desc')
-                    ->paginate(15); //15개씩 들고오기
-
-        return response()->json([
-            'data' => $posts
-        ]);
-    }
-
     // 게시글 상세 조회
     public function posts_Details_Search(Board $BRD_id, Post $PST_id)
     {
@@ -71,12 +58,25 @@ class PostController extends Controller
         ]);
     }
 
+    // 게시글 목록 조회
+    public function post_List_Search(Board $BRD_id)
+    {
+        $posts = Post::with('user')
+                    ->where('BRD_id', $BRD_id)
+                    ->orderBy('created_at', 'desc')
+                    ->paginate(15); //15개씩 들고오기
+
+        return response()->json([
+            'data' => $posts
+        ]);
+    }
+
     // 전체 게시글 목록 조회
     public function posts_All_List_Search(Request $request)
     {
         $posts = Post::with(['user', 'board']) // 관계 로딩
             ->orderBy('created_at', 'desc')
-            ->paginate(10); // 한 페이지당 10개
+            ->paginate(15); // 한 페이지당 15개
 
         return response()->json($posts);
     }
