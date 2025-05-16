@@ -21,7 +21,7 @@ const PostList = ({ BRD_id }) => {
         const url =
         BRD_id == '1'
             ? `${API_BASE_URL}/boards/postAll?page=${page}`
-            : `${API_BASE_URL}/boards/${BRD_id}/posts?page=${page}`;
+            : `${API_BASE_URL}/boards/${BRD_id}?page=${page}`;
 
         const response = await fetch(url, {
           credentials: 'include',
