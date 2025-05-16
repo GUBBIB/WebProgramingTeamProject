@@ -41,9 +41,10 @@ const MainPage = () => {
   };
 
   return (
-    <>
+    <div>
       <Header currentUser={currentUser} onLogout={handleLogout} />
-      <main className="app-main-content">
+      <div className="app-main-content">
+        test
         <Routes>
           {/* 홈 경로는 현재 아무 것도 렌더링하지 않음 */}
           <Route path="/" element={
@@ -62,8 +63,8 @@ const MainPage = () => {
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
         </Routes>
-      </main>
-    </>
+      </div>
+    </div>
   );
 };
 
