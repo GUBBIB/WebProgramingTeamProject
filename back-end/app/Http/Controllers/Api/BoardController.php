@@ -48,4 +48,23 @@ class BoardController extends Controller
             'results' => $results
         ]);
     }
+
+    // 게시판 생성 
+    public function store(Request $request)
+    {
+        // 유효성 검사
+        $validated = $request->validate([
+            'BRD_name' => 'required|string|max:255',
+        ]);
+
+        // 게시판 생성
+        $board = Board::create([
+            'BRD_name' => $validated['BRD_name'],
+        ]);
+
+        return response()->json([
+            'message' => '게시판이 생성되었습니다.',
+            'board' => $board,
+        ], 201);
+    }
 }

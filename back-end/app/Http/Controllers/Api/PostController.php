@@ -72,8 +72,13 @@ class PostController extends Controller
     }
 
     // 전체 게시글 목록 조회
-    public function posts_All_List_Search(){
-        
+    public function posts_All_List_Search(Request $request)
+    {
+        $posts = Post::with(['user', 'board']) // 관계 로딩
+            ->orderBy('created_at', 'desc')
+            ->paginate(10); // 한 페이지당 10개
+
+        return response()->json($posts);
     }
 
     // 게시글 조회수 증가 API
@@ -91,5 +96,4 @@ class PostController extends Controller
 
         return response()->json(['message' => '조회수 증가 완료', 'views' => $post->PST_views]);
     }
-
 }
