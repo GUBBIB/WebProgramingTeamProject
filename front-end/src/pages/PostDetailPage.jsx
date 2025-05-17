@@ -66,9 +66,9 @@ const PostDetailPage = ({ currentUser }) => {
     <div className="post-detail-container">
       <h1>{post.PST_title}</h1>
       <div className="post-meta">
-        <span>작성자: {post.user?.USR_nickname || '익명'}</span>
-        <span>작성일: {formatDate(post.created_at)}</span>
-        <span>조회수: {post.PST_views}</span>
+        <span>작성자: {post.data.user?.USR_nickname || '익명'}</span>
+        <span>작성일: {formatDate(post.data.created_at)}</span>
+        <span>조회수: {post.data.PST_views}</span>
         <span>게시판 ID: {BRD_id}</span>
       </div>
 
@@ -76,7 +76,7 @@ const PostDetailPage = ({ currentUser }) => {
 
       <div className="post-content markdown-body">
         <ReactMarkdown remarkPlugins={[remarkGfm]}>
-          {post.PST_content}
+          {post.data.PST_content}
         </ReactMarkdown>
       </div>
 
