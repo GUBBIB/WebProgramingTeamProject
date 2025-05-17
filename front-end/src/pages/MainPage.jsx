@@ -5,6 +5,7 @@ import PostDetailPage from "./PostDetailPage";
 import PostWritePage from "./PostWritePage";
 import SignupPage from "./SignupPage";
 import LoginPage from "./LoginPage";
+import ProfilePage from "./ProfilePage";
 import "./MainPage.css";
 import BoardControls from "../components/Board/BoardControls";
 import BoardTypeSelector from "../components/Board/BoardTypeSelector";
@@ -86,6 +87,16 @@ const MainPage = () => {
           />
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
+          <Route
+            path="/profile"
+            element={
+              currentUser?.isLoggedIn ? (
+                <ProfilePage currentUser={currentUser} />
+              ) : (
+                <LoginPage onLogin={handleLogin} />
+              )
+            }
+          />
         </Routes>
       </div>
     </div>
