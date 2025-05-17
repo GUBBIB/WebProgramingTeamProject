@@ -25,7 +25,9 @@ const PostList = ({ BRD_id }) => {
   
         const response = await fetch(url, {
           credentials: 'include',
-          headers: { Accept: 'application/json' },
+          headers: { 
+            Accept: 'application/json'
+          },
         });
   
         if (!response.ok) throw new Error('서버 응답 오류');

@@ -1,72 +1,88 @@
-import React, { useState, useEffect } from 'react';
-import { Routes, Route, useNavigate } from 'react-router-dom';
-import Header from '../components/Header/Header';
-import PostDetailPage from './PostDetailPage';
-import PostWritePage from './PostWritePage';
-import SignupPage from './SignupPage';
-import LoginPage from './LoginPage';
-import PostList from '../components/Post/PostList'
-import './MainPage.css';
-import BoardControls from '../components/Board/BoardControls';
-import BoardTypeSelector from '../components/Board/BoardTypeSelector';
+import React, { useState, useEffect } from "react";
+import { Routes, Route, useNavigate } from "react-router-dom";
+import Header from "../components/Header/Header";
+import PostDetailPage from "./PostDetailPage";
+import PostWritePage from "./PostWritePage";
+import SignupPage from "./SignupPage";
+import LoginPage from "./LoginPage";
+import "./MainPage.css";
+import BoardControls from "../components/Board/BoardControls";
+import BoardTypeSelector from "../components/Board/BoardTypeSelector";
 
 const MainPage = () => {
   const [selectedBoard, setSelectedBoard] = useState(1);
   const [currentUser, setCurrentUser] = useState(null);
   const navigate = useNavigate();
-
+  // 세션에서 로그인 유저 정보 받아오기
   useEffect(() => {
-    const storedUser = localStorage.getItem('currentUser');
-    if (storedUser) {
-      try {
-        const user = JSON.parse(storedUser);
-        if (user && user.USR_nickname) {
-          setCurrentUser(
-            { 
-              username: user.USR_nickname, 
-              isLoggedIn: true, 
-              details: user 
-            });
+    fetch("/api/user", { credentials: "include" })
+      .then((res) => (res.ok ? res.json() : Promise.reject()))
+      .then((data) => {
+        if (data.user) {
+          setCurrentUser({
+            username: data.user.USR_nickname || data.user.USR_email,
+            isLoggedIn: true,
+            details: data.user,
+          });
         } else {
-          localStorage.removeItem('currentUser');
+          setCurrentUser(null);
         }
-      } catch {
-        localStorage.removeItem('currentUser');
-      }
-    }
+      })
+      .catch(() => setCurrentUser(null));
   }, []);
 
-  const handleLogin = (username, userDetails) => {
-    setCurrentUser({ 
-      username, 
-      isLoggedIn: 
-      true, 
-      details: userDetails });
+  // 로그인 성공 시 호출
+  const handleLogin = (user) => {
+    setCurrentUser({
+      username: user.USR_nickname || user.USR_email,
+      isLoggedIn: true,
+      details: user,
+    });
+    // 필요시 navigate('/')
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem('currentUser');
+  // 로그아웃
+  const handleLogout = async () => {
+    await fetch("/api/logout", {
+      method: "POST",
+      credentials: "include",
+    });
     setCurrentUser(null);
-    navigate('/');
+    // 필요시 navigate('/')
   };
 
   return (
     <div>
       <Header currentUser={currentUser} onLogout={handleLogout} />
       <div className="app-main-content">
-        test
         <Routes>
-          <Route path="/" element={
-            <div>
-              <BoardTypeSelector selectedBoard={selectedBoard} onSelectedBoard={setSelectedBoard}/>
-              <BoardControls />
-            </div>
-            } />
+          <Route
+            path="/"
+            element={
+              <div>
+                <BoardTypeSelector
+                  selectedBoard={selectedBoard}
+                  onSelectedBoard={setSelectedBoard}
+                />
+                <BoardControls />
+              </div>
+            }
+          />
 
-          <Route path="/boards/:BRD_id/posts/:PST_id" element={<PostDetailPage currentUser={currentUser} />} />
+          <Route
+            path="/boards/:BRD_id/posts/:PST_id"
+            element={<PostDetailPage currentUser={currentUser} />}
+          />
 
-          <Route path="/write" element={currentUser?.isLoggedIn 
-          ? <PostWritePage currentUser={currentUser} /> : <LoginPage onLogin={handleLogin} />} 
+          <Route
+            path="/write"
+            element={
+              currentUser?.isLoggedIn ? (
+                <PostWritePage currentUser={currentUser} />
+              ) : (
+                <LoginPage onLogin={handleLogin} />
+              )
+            }
           />
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />

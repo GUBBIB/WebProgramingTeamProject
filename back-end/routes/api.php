@@ -8,22 +8,7 @@ use App\Http\Controllers\Api\PostController;
 use App\Http\Controllers\Api\CommentController;
 use Illuminate\Http\Request;
 
-Route::middleware('auth')->get('/user', function (Request $request) {
-    $user = $request->user();
-        return response()->json([
-        'USR_id' => $user->USR_id,
-        'USR_email' => $user->USR_email,
-        'USR_nickname' => $user->USR_nickname,
-    ]);
-});
-
 Route::middleware('auth:sanctum')->post('/posts', [PostController::class, 'store']);
-
-// 회원가입
-Route::post('/register', [RegisterController::class, 'register']);
-
-// 로그인
-Route::post('/login', [LoginController::class, 'login']);
 
 // 게시판 목록 조회
 Route::get('/boards', [BoardController::class, 'board_List_Search']);

@@ -11,6 +11,7 @@ const PostWritePage = ({ currentUser }) => {
   const [BRD_id, setSelectedBoard] = useState('');
   const [boardTypes, setBoardTypes] = useState([]);
   const [error, setError] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
 
   // 게시판 목록 로딩
@@ -20,10 +21,16 @@ const PostWritePage = ({ currentUser }) => {
         const response = await fetch(`${API_BASE_URL}/boards`, {
           credentials: 'include',
         });
+        
+        if (!response.ok) {
+          throw new Error(`서버 응답 오류: ${response.status}`);
+        }
+        
         const data = await response.json();
         setBoardTypes(data);
         if (data.length > 0) {
-          setSelectedBoard(data[0].BRD_id);
+          // 숫자형으로 저장
+          setSelectedBoard(Number(data[0].BRD_id));
         }
       } catch (err) {
         console.error('게시판 목록 불러오기 실패:', err);
@@ -34,21 +41,37 @@ const PostWritePage = ({ currentUser }) => {
     fetchBoards();
   }, []);
 
+  // 게시판 선택 핸들러
+  const handleBoardChange = (e) => {
+    // 문자열을 숫자로 변환하여 저장
+    setSelectedBoard(Number(e.target.value));
+  };
+
   const handlePostSubmit = async () => {
     setError('');
+    setIsSubmitting(true);
 
     if (!currentUser || !currentUser.isLoggedIn) {
       setError('게시글을 작성하려면 로그인이 필요합니다.');
       navigate('/login');
+      setIsSubmitting(false);
       return;
     }
 
     if (!PST_title.trim() || !PST_content.trim()) {
       setError('제목과 내용을 모두 입력해주세요.');
+      setIsSubmitting(false);
       return;
     }
 
     try {
+      // BRD_id가 문자열인 경우 숫자로 변환
+      const numericBRD_id = Number(BRD_id);
+      
+      if (isNaN(numericBRD_id)) {
+        throw new Error('게시판 ID가 올바르지 않습니다.');
+      }
+
       const response = await fetch(`${API_BASE_URL}/posts`, {
         method: 'POST',
         credentials: 'include',
@@ -57,7 +80,7 @@ const PostWritePage = ({ currentUser }) => {
           'Accept': 'application/json',
         },
         body: JSON.stringify({
-          BRD_id: BRD_id,
+          BRD_id: numericBRD_id,
           USR_id: currentUser.details?.USR_id,
           PST_title,
           PST_content,
@@ -68,13 +91,16 @@ const PostWritePage = ({ currentUser }) => {
 
       if (response.ok && data.PST_id) {
         alert('게시글이 성공적으로 등록되었습니다.');
-        navigate(`/boards/${BRD_id}/posts/${data.PST_id}`);
+        navigate(`/boards/${numericBRD_id}/posts/${data.PST_id}`);
       } else {
-        setError(data.message || '게시글 등록 실패');
+        console.error('서버 응답:', response.status, data);
+        setError(data.message || `게시글 등록 실패 (오류 코드: ${response.status})`);
       }
     } catch (err) {
       console.error('게시글 등록 실패:', err);
-      setError('게시글 등록 중 오류가 발생했습니다.');
+      setError(err.message || '게시글 등록 중 오류가 발생했습니다.');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -94,15 +120,20 @@ const PostWritePage = ({ currentUser }) => {
           <select
             id="boardType"
             value={BRD_id}
-            onChange={(e) => setSelectedBoard(e.target.value)}
+            onChange={handleBoardChange}
             className="form-control"
+            disabled={isSubmitting}
             required
           >
-            {boardTypes.map((board) => (
-              <option key={board.BRD_id} value={board.BRD_id}>
-                {board.BRD_name}
-              </option>
-            ))}
+            {boardTypes.length > 0 ? (
+              boardTypes.map((board) => (
+                <option key={board.BRD_id} value={board.BRD_id}>
+                  {board.BRD_name}
+                </option>
+              ))
+            ) : (
+              <option value="">게시판 로딩 중...</option>
+            )}
           </select>
         </div>
 
@@ -114,8 +145,9 @@ const PostWritePage = ({ currentUser }) => {
             value={PST_title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="제목을 입력하세요"
-            required
             className="form-control"
+            disabled={isSubmitting}
+            required
           />
         </div>
 
@@ -123,16 +155,27 @@ const PostWritePage = ({ currentUser }) => {
           <label htmlFor="content">내용 (Markdown)</label>
           <MDEditor
             value={PST_content}
-            onChange={setContent}
+            onChange={(value) => setContent(value || '')}
             height={400}
+            preview="edit"
           />
         </div>
 
         <div className="form-actions">
-          <button type="button" onClick={handlePostSubmit} className="submit-button">
-            등록
+          <button 
+            type="button" 
+            onClick={handlePostSubmit} 
+            className="submit-button"
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? '등록 중...' : '등록'}
           </button>
-          <button type="button" onClick={() => navigate(-1)} className="cancel-button">
+          <button 
+            type="button" 
+            onClick={() => navigate(-1)} 
+            className="cancel-button"
+            disabled={isSubmitting}
+          >
             취소
           </button>
         </div>

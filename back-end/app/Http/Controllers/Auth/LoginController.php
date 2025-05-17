@@ -17,13 +17,14 @@ class LoginController extends Controller
             'USR_pass' => 'required',
         ]);
 
-        $user = User::where('USR_email', $request->input('USR_email'))->first();
+        $user = User::where('USR_email', $request->USR_email)->first();
 
-        if (!$user || !Hash::check($request->input('USR_pass'), $user->USR_pass)) {
+        if (!$user || !Hash::check($request->USR_pass, $user->USR_pass)) {
             return response()->json(['message' => '이메일 또는 비밀번호가 틀렸습니다.'], 401);
         }
 
-        Auth::login($user); // 세션 로그인
+        Auth::login($user);
+        $request->session()->regenerate();
 
         return response()->json([
             'message' => '로그인 성공',
@@ -33,5 +34,14 @@ class LoginController extends Controller
                 'USR_nickname' => $user->USR_nickname,
             ]
         ]);
+    }
+
+    public function logout(Request $request)
+    {
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return response()->json(['message' => '로그아웃 완료']);
     }
 }

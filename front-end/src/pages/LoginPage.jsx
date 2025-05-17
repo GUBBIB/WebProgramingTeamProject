@@ -10,7 +10,8 @@ const LoginPage = ({ onLogin }) => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  const handleLoginClick = async () => {
+  const handleLoginClick = async (e) => {
+    e.preventDefault();
     setError('');
     if (!USR_email.trim() || !USR_pass.trim()) {
       setError('이메일과 비밀번호를 모두 입력해주세요.');
@@ -18,33 +19,22 @@ const LoginPage = ({ onLogin }) => {
     }
 
     try {
-      const response = await fetch(`${API_BASE_URL}/login`, {
+      const res = await fetch('/api/login', {
         method: 'POST',
-        credentials: 'include', 
         headers: {
           'Content-Type': 'application/json',
-          'Accept': 'application/json',
         },
+        credentials: 'include',
         body: JSON.stringify({ 
           USR_email, 
-          USR_pass 
-        }),
+          USR_pass }),
       });
 
-      const data = await response.json();
-
-      if (response.ok && data.user && data.user.USR_nickname) {
-        localStorage.setItem('currentUser', JSON.stringify(data.user)); // 유저 정보 저장
-        onLogin(data.user.USR_nickname, data.user);
-        alert('로그인 되었습니다.');
-        navigate('/');
-      } else {
-        setError(data.message || '로그인에 성공했으나, 사용자 정보를 받지 못했습니다.');
-      }
-
+      if (!res.ok) throw new Error('로그인 실패');
+      const data = await res.json();
+      onLogin(data.user);
     } catch (err) {
-      console.error('로그인 오류:', err);
-      setError('서버와의 통신에 실패했습니다.');
+      alert(err.message);
     }
   };
 
