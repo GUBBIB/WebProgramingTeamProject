@@ -15,43 +15,45 @@ const MainPage = () => {
   const [currentUser, setCurrentUser] = useState(null);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchCurrentUser = async () => {
-      try {
-        const res = await fetch('http://13.60.93.77/api/user', {
-          method: 'GET',
-          credentials: 'include',
-          headers: { Accept: 'application/json' }
-        });
+  const fetchCurrentUser = async () => {
+    try {
+      const res = await fetch('http://13.60.93.77/api/user', {
+        method: 'GET',
+        credentials: 'include',
+        headers: { Accept: 'application/json' }
+      });
   
-        if (!res.ok) throw new Error('세션 없음');
+      if (!res.ok) throw new Error('세션 없음');
   
-        const data = await res.json();
-        console.log('현재 로그인한 유저 ID:', data.USR_id); 
+      const data = await res.json();
+      console.log('현재 로그인한 유저 ID:', data.USR_id); 
   
-        setCurrentUser({
-          username: data.USR_nickname,
-          isLoggedIn: true,
-          details: data
-        });
+      setCurrentUser({
+        username: data.USR_nickname,
+        isLoggedIn: true,
+        details: data
+      });
   
-      } catch (err) {
-        console.error('세션 확인 실패:', err);
-        setCurrentUser(null);
-      }
-    };
-  
-    fetchCurrentUser(); 
-  }, []);
-  
-  
-  const handleLogin = (username, userDetails) => {
-    setCurrentUser({ 
-      username, 
-      isLoggedIn: true, 
-      details: userDetails 
-    });
+    } catch (err) {
+      console.error('세션 확인 실패:', err);
+      setCurrentUser(null);
+    }
   };
+  
+  useEffect(() => {
+    fetchCurrentUser();
+  }, []); 
+  
+  const handleLogin = async (username, userDetails) => {
+    setCurrentUser({
+      username,
+      isLoggedIn: true,
+      details: userDetails,
+    });
+  
+    await fetchCurrentUser();
+  };
+  
 
   const handleLogout = () => {
     localStorage.removeItem('currentUser');
