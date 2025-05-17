@@ -6,11 +6,11 @@ use App\Http\Controllers\Api\BoardController;
 use App\Http\Controllers\Api\PostController;
 use App\Http\Controllers\Api\CommentController;
 
-// 인증 관련 API
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
-Route::middleware('auth')->post('/logout', [AuthController::class, 'logout']);
-Route::middleware('auth')->get('/user', [AuthController::class, 'user']);
+Route::get('/user', [AuthController::class, 'getUser'])->middleware('auth:sanctum'); // 또는 'auth' 미들웨어
+Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
+
 
 // 게시판/게시글/댓글 관련 API
 Route::get('/boards', [BoardController::class, 'board_List_Search']);
