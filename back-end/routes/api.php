@@ -44,7 +44,7 @@ Route::post('/boards/{BRD_id}/posts/{PST_id}/view', [PostController::class, 'inc
 Route::post('/boards', [BoardController::class, 'store']);
 
 
-Route::post('/register', [AuthController::class, 'register']);
-Route::post('/login', [AuthController::class, 'login']);
-Route::post('/logout', [AuthController::class, 'logout']);
-Route::get('/user', [AuthController::class, 'user']);
+Route::middleware('auth')->get('/register', [AuthController::class, 'register']);
+Route::middleware('auth')->get('/login', [AuthController::class, 'login']);
+Route::middleware('auth')->get('/logout', [AuthController::class, 'logout']);
+Route::middleware('auth')->get('/user', [AuthController::class, 'user']);
