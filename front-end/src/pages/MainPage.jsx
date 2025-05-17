@@ -36,7 +36,7 @@ const MainPage = () => {
   const handleLogin = (user) => {
     console.log(user);
     setCurrentUser({
-      username: user.USR_nickname || user.USR_email,
+      USR_id: user.USR_email,
       isLoggedIn: true,
       details: user,
     });
