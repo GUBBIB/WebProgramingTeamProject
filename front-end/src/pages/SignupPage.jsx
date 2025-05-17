@@ -4,7 +4,7 @@ import './SignupPage.css';
 
 const API_BASE_URL = 'http://13.60.93.77/api';
 
-const SignupPage = ({ onSignupSuccess }) => {
+const SignupPage = ({ onRegister }) => {
   const [USR_nickname, setNickname] = useState('');
   const [USR_email, setEmail] = useState('');
   const [USR_pass, setPassword] = useState('');
