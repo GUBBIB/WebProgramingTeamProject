@@ -12,27 +12,23 @@ class PostController extends Controller
     // 게시글 생성
     public function store(Request $request)
     {
-        // ✅ 1. 로그인 사용자 확인
         if (!$request->user()) {
             return response()->json(['message' => '로그인이 필요합니다.'], 401);
         }
 
-        // ✅ 2. 유효성 검사 (USR_id 제거)
         $validated = $request->validate([
             'BRD_id' => 'required|exists:boards,BRD_id',
             'PST_title' => 'required|string',
             'PST_content' => 'required|string',
         ]);
 
-        // ✅ 3. 게시글 생성
         $post = Post::create([
             'BRD_id' => $validated['BRD_id'],
-            'USR_id' => $request->user()->USR_id, // 여기서 사용자 ID 지정
+            'USR_id' => $request->user()->USR_id,
             'PST_title' => $validated['PST_title'],
             'PST_content' => $validated['PST_content'],
         ]);
 
-        // ✅ 4. 응답 반환
         return response()->json([
             'message' => '게시글이 성공적으로 작성되었습니다.',
             'PST_id' => $post->PST_id,
@@ -40,7 +36,7 @@ class PostController extends Controller
         ], 201);
     }
 
-    // 아래 나머지 함수는 그대로 유지
+    // 게시글 상세 조회
     public function posts_Details_Search(Board $BRD_id, Post $PST_id)
     {
         $board = Board::find($BRD_id);
@@ -61,6 +57,7 @@ class PostController extends Controller
         return response()->json(['data' => $post]);
     }
 
+    // 특정 게시판의 게시글 목록
     public function post_List_Search($BRD_id)
     {
         $posts = Post::with('user')
@@ -71,6 +68,7 @@ class PostController extends Controller
         return response()->json($posts);
     }
 
+    // 전체 게시글 목록
     public function posts_All_List_Search(Request $request)
     {
         $posts = Post::with(['user', 'board'])
@@ -80,6 +78,7 @@ class PostController extends Controller
         return response()->json($posts);
     }
 
+    // 게시글 조회수 증가
     public function incrementViews($BRD_id, $PST_id)
     {
         $post = Post::where('BRD_id', $BRD_id)
@@ -95,6 +94,43 @@ class PostController extends Controller
         return response()->json([
             'message' => '조회수 증가 완료',
             'views' => $post->PST_views
+        ]);
+    }
+
+    // 게시글 검색 (제목 또는 작성자 닉네임 기준)
+    public function searchByField(Request $request)
+    {
+        $keyword = $request->input('keyword');
+        $field = $request->input('field'); // 'title' 또는 'user'
+
+        if (!$keyword || !$field) {
+            return response()->json([
+                'message' => '검색어와 검색 기준을 모두 입력해주세요.'
+            ], 400);
+        }
+
+        if ($field === 'title') {
+            $posts = Post::with(['user', 'board'])
+                         ->where('PST_title', 'like', "%{$keyword}%")
+                         ->orderBy('created_at', 'desc')
+                         ->paginate(15);
+        } elseif ($field === 'user') {
+            $posts = Post::with(['user', 'board'])
+                         ->whereHas('user', function ($query) use ($keyword) {
+                             $query->where('USR_nickname', 'like', "%{$keyword}%");
+                         })
+                         ->orderBy('created_at', 'desc')
+                         ->paginate(15);
+        } else {
+            return response()->json([
+                'message' => '검색 기준은 "title" 또는 "user"여야 합니다.'
+            ], 400);
+        }
+
+        return response()->json([
+            'message' => '검색 완료',
+            'count' => $posts->total(),
+            'data' => $posts
         ]);
     }
 }
