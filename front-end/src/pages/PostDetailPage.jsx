@@ -69,7 +69,7 @@ const PostDetailPage = ({ currentUser }) => {
         <span>작성자: {post.data.user?.USR_nickname || '익명'}</span>
         <span>작성일: {formatDate(post.data.created_at)}</span>
         <span>조회수: {post.data.PST_views}</span>
-        <span>게시판 ID: {BRD_id}</span>
+        <span>게시판 이름: {post.data.board.BRD_name}</span>
       </div>
 
       <hr />
