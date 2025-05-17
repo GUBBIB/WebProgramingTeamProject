@@ -5,11 +5,12 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 use App\Models\User;
 
 class AuthController extends Controller
 {
-    // 🔐 회원가입
+    // 회원가입
     public function register(Request $request)
     {
         $request->validate([
@@ -29,7 +30,7 @@ class AuthController extends Controller
         return response()->json(['message' => '회원가입 완료', 'user' => $user], 201);
     }
 
-    // 🔐 로그인
+    // 로그인
     public function login(Request $request)
     {
         $request->validate([
@@ -48,7 +49,7 @@ class AuthController extends Controller
         return response()->json(['message' => '로그인 성공', 'user' => $user]);
     }
 
-    // 🔓 로그아웃
+    // 로그아웃
     public function logout(Request $request)
     {
         Auth::logout(); // 세션 삭제
@@ -58,9 +59,43 @@ class AuthController extends Controller
         return response()->json(['message' => '로그아웃 완료']);
     }
 
-    // 👤 현재 로그인된 사용자 정보 확인
+    // 현재 로그인된 사용자 정보 확인
     public function user(Request $request)
     {
         return response()->json(Auth::user());
+    }
+
+    // 프로필 수정
+    public function updateProfile(Request $request)
+    {
+        $user = Auth::user();
+        if (!$user) {
+            return response()->json(['message' => '로그인이 필요합니다.'], 401);
+        }
+
+        $validator = Validator::make($request->all(), [
+            'USR_nickname' => 'required|string|max:255',
+            'USR_pass' => 'nullable|string|min:8|confirmed',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => '유효성 검사 실패',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        $user->USR_nickname = $request->USR_nickname;
+
+        if ($request->filled('USR_pass')) {
+            $user->USR_pass = Hash::make($request->USR_pass);
+        }
+
+        $user->save();
+
+        return response()->json([
+            'message' => '회원정보가 성공적으로 수정되었습니다.',
+            'user' => $user
+        ]);
     }
 }
