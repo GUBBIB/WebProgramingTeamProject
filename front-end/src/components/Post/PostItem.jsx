@@ -15,7 +15,7 @@ const PostItem = ({ post }) => {
 
   return (
     <tr className="post-item-row">
-      <td className='post-type'>{post.BRD_title}</td>
+      <td className='post-type'>{post.board.BRD_title}</td>
       <td className="post-title">
         {/* 상세 페이지 이동 시 boardType도 전달해야 PostDetailPage에서 API 호출 가능 */}
         <Link to={`/boards/${post.BRD_id}/posts/${post.PST_id}`}>{post.PST_title}</Link>
