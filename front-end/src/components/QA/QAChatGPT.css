@@ -1,0 +1,88 @@
+.qa-chatgpt-container {
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  padding: 16px;
+  margin: 16px 0;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.qa-title {
+  color: #343a40;
+  font-size: 18px;
+  margin-bottom: 8px;
+}
+
+.qa-description {
+  color: #6c757d;
+  font-size: 14px;
+  margin-bottom: 16px;
+}
+
+.qa-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.qa-input {
+  padding: 12px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  font-size: 14px;
+  resize: vertical;
+}
+
+.qa-submit-btn {
+  background-color: #0d6efd;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 10px 16px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  align-self: flex-end;
+}
+
+.qa-submit-btn:hover {
+  background-color: #0b5ed7;
+}
+
+.qa-submit-btn:disabled {
+  background-color: #6c757d;
+  cursor: not-allowed;
+}
+
+.qa-error {
+  color: #dc3545;
+  font-size: 14px;
+  margin: 10px 0;
+}
+
+.qa-answer {
+  background-color: white;
+  border-radius: 4px;
+  padding: 16px;
+  margin-top: 16px;
+  border-left: 4px solid #0d6efd;
+}
+
+.qa-answer h4 {
+  font-size: 16px;
+  margin-bottom: 10px;
+  color: #0d6efd;
+}
+
+.qa-answer p {
+  font-size: 14px;
+  line-height: 1.5;
+  color: #343a40;
+  white-space: pre-line;
+}
+
+.qa-disclaimer {
+  margin-top: 16px;
+  color: #6c757d;
+  font-size: 12px;
+  text-align: right;
+}

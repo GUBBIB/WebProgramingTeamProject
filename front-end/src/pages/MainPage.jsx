@@ -5,7 +5,8 @@ import PostDetailPage from './PostDetailPage';
 import PostWritePage from './PostWritePage';
 import SignupPage from './SignupPage';
 import LoginPage from './LoginPage';
-import PostList from '../components/Post/PostList'
+import PostList from '../components/Post/PostList';
+import QAChatGPT from '../components/QA/QAChatGPT'; // 새로운 QAChatGPT 컴포넌트 추가
 import './MainPage.css';
 import BoardControls from '../components/Board/BoardControls';
 import BoardTypeSelector from '../components/Board/BoardTypeSelector';
@@ -13,6 +14,7 @@ import BoardTypeSelector from '../components/Board/BoardTypeSelector';
 const MainPage = () => {
   const [selectedBoard, setSelectedBoard] = useState(1);
   const [currentUser, setCurrentUser] = useState(null);
+  const [searchType, setSearchType] = useState('title'); // 검색 유형 상태 추가
   const navigate = useNavigate();
 
   const fetchCurrentUser = async () => {
@@ -63,23 +65,34 @@ const MainPage = () => {
     navigate('/');
   };
 
+  const handleSearch = async (searchTerm, searchType) => {
+    console.log(`검색 실행: ${searchTerm}, 검색 유형: ${searchType}`);
+    // 여기에 검색 API 호출 로직 구현
+  };
+
   return (
     <div>
       <Header currentUser={currentUser} onLogout={handleLogout} />
       <div className="app-main-content">
-        test
         <Routes>
           <Route path="/" element={
             <div>
               <BoardTypeSelector selectedBoard={selectedBoard} onSelectedBoard={setSelectedBoard}/>
-              <BoardControls />
+              <BoardControls 
+                onSearch={handleSearch}
+                selectedSearchType={searchType}
+                onSelectSearchType={setSearchType}
+              />
+              {/* Q&A 게시판(ID=3)일 때만 QAChatGPT 컴포넌트 표시 */}
+              <QAChatGPT boardId={selectedBoard} />
             </div>
-            } />
+          } />
 
           <Route path="/boards/:BRD_id/posts/:PST_id" element={<PostDetailPage currentUser={currentUser} />} />
 
           <Route path="/write" element={currentUser?.isLoggedIn 
-          ? <PostWritePage currentUser={currentUser} /> : <LoginPage onLogin={handleLogin} />} 
+            ? <PostWritePage currentUser={currentUser} /> 
+            : <LoginPage onLogin={handleLogin} />} 
           />
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />

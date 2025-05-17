@@ -11,6 +11,7 @@ const PostWritePage = ({ currentUser }) => {
   const [BRD_id, setSelectedBoard] = useState('');
   const [boardTypes, setBoardTypes] = useState([]);
   const [error, setError] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
 
   // 게시판 목록 로딩
@@ -34,6 +35,14 @@ const PostWritePage = ({ currentUser }) => {
     fetchBoards();
   }, []);
 
+  // 로그인 여부 확인
+  useEffect(() => {
+    if (!currentUser || !currentUser.isLoggedIn) {
+      alert('게시글을 작성하려면 로그인이 필요합니다.');
+      navigate('/login');
+    }
+  }, [currentUser, navigate]);
+
   const handlePostSubmit = async () => {
     setError('');
 
@@ -43,18 +52,41 @@ const PostWritePage = ({ currentUser }) => {
       return;
     }
 
-    if (!PST_title.trim() || !PST_content.trim()) {
-      setError('제목과 내용을 모두 입력해주세요.');
+    if (!PST_title.trim()) {
+      setError('제목을 입력해주세요.');
       return;
     }
 
+    if (!PST_content.trim()) {
+      setError('내용을 입력해주세요.');
+      return;
+    }
+
+    if (!BRD_id) {
+      setError('게시판을 선택해주세요.');
+      return;
+    }
+
+    setIsSubmitting(true);
+
     try {
+      // USR_id를 현재 로그인한 사용자의 ID로 설정
+      const USR_id = currentUser.details.USR_id;
+      
+      console.log('Submitting post with data:', {
+        BRD_id,
+        USR_id,
+        PST_title,
+        PST_content,
+      });
+
       const response = await fetch(`${API_BASE_URL}/posts`, {
         method: 'POST',
         credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
+          'X-XSRF-TOKEN': getCookie('XSRF-TOKEN'),
         },
         body: JSON.stringify({
           BRD_id,
@@ -64,7 +96,11 @@ const PostWritePage = ({ currentUser }) => {
         }),
       });
 
+      // 응답 확인 로그
+      console.log('Response status:', response.status);
+      
       const data = await response.json();
+      console.log('Response data:', data);
 
       if (response.ok && data.PST_id) {
         alert('게시글이 성공적으로 등록되었습니다.');
@@ -74,9 +110,19 @@ const PostWritePage = ({ currentUser }) => {
       }
     } catch (err) {
       console.error('게시글 등록 실패:', err);
-      setError('게시글 등록 중 오류가 발생했습니다.');
+      setError('게시글 등록 중 오류가 발생했습니다. 네트워크 연결을 확인해주세요.');
+    } finally {
+      setIsSubmitting(false);
     }
   };
+
+  // CSRF 토큰 쿠키 획득
+  function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+    return '';
+  }
 
   return (
     <div className="post-write-container">
@@ -98,6 +144,7 @@ const PostWritePage = ({ currentUser }) => {
             className="form-control"
             required
           >
+            <option value="">게시판을 선택하세요</option>
             {boardTypes.map((board) => (
               <option key={board.BRD_id} value={board.BRD_id}>
                 {board.BRD_name}
@@ -129,10 +176,20 @@ const PostWritePage = ({ currentUser }) => {
         </div>
 
         <div className="form-actions">
-          <button type="button" onClick={handlePostSubmit} className="submit-button">
-            등록
+          <button 
+            type="button" 
+            onClick={handlePostSubmit} 
+            className="submit-button"
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? '등록 중...' : '등록'}
           </button>
-          <button type="button" onClick={() => navigate(-1)} className="cancel-button">
+          <button 
+            type="button" 
+            onClick={() => navigate(-1)} 
+            className="cancel-button"
+            disabled={isSubmitting}
+          >
             취소
           </button>
         </div>
