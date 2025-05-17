@@ -8,7 +8,6 @@ use App\Http\Controllers\Api\PostController;
 use App\Http\Controllers\Api\CommentController;
 use Illuminate\Http\Request;
 
-
 Route::middleware('auth')->get('/user', function (Request $request) {
     $user = $request->user();
         return response()->json([
@@ -17,6 +16,8 @@ Route::middleware('auth')->get('/user', function (Request $request) {
         'USR_nickname' => $user->USR_nickname,
     ]);
 });
+
+Route::middleware('auth:sanctum')->post('/posts', [PostController::class, 'store']);
 
 // 회원가입
 Route::post('/register', [RegisterController::class, 'register']);

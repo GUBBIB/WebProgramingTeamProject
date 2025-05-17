@@ -35,7 +35,7 @@ const LoginPage = ({ onLogin }) => {
 
       if (response.ok && data.user && data.user.USR_nickname) {
         localStorage.setItem('currentUser', JSON.stringify(data.user)); // 유저 정보 저장
-        onLogin(data.user.USR_nickname, data.user); // App.jsx에 로그인 콜백
+        onLogin(data.user.USR_nickname, data.user);
         alert('로그인 되었습니다.');
         navigate('/');
       } else {

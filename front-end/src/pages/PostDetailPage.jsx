@@ -29,8 +29,11 @@ const PostDetailPage = ({ currentUser }) => {
 
       // 게시글 가져오기
       const postRes = await fetch(`${API_BASE_URL}/boards/${BRD_id}/posts/${PST_id}`);
+      console.log("게시글 상세보기 1")
       if (!postRes.ok) throw new Error('게시글 조회 실패');
+      console.log("게시글 상세보기 2")
       const postData = await postRes.json();
+      
       setPost(postData);
     } catch (err) {
       setError(err.message || '게시글 로딩 실패');

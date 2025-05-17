@@ -37,7 +37,11 @@ const MainPage = () => {
   }, []);
 
   const handleLogin = (username, userDetails) => {
-    setCurrentUser({ username, isLoggedIn: true, details: userDetails });
+    setCurrentUser({ 
+      username, 
+      isLoggedIn: 
+      true, 
+      details: userDetails });
   };
 
   const handleLogout = () => {
