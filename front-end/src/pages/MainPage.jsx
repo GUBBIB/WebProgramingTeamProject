@@ -21,14 +21,13 @@ const MainPage = () => {
         const res = await fetch('http://13.60.93.77/api/user', {
           method: 'GET',
           credentials: 'include',
-          headers: { 
-            Accept: 'application/json' 
-          }
+          headers: { Accept: 'application/json' }
         });
   
         if (!res.ok) throw new Error('세션 없음');
   
         const data = await res.json();
+        console.log('현재 로그인한 유저 ID:', data.USR_id); 
   
         setCurrentUser({
           username: data.USR_nickname,
@@ -36,17 +35,15 @@ const MainPage = () => {
           details: data
         });
   
-        // 필요하면 localStorage에도 저장 (UI 상태 복구용)
-        localStorage.setItem('currentUser', JSON.stringify(data));
       } catch (err) {
-        // 인증 실패 시 localStorage 제거
-        localStorage.removeItem('currentUser');
+        console.error('세션 확인 실패:', err);
         setCurrentUser(null);
       }
     };
   
-    fetchCurrentUser();
+    fetchCurrentUser(); 
   }, []);
+  
   
   const handleLogin = (username, userDetails) => {
     setCurrentUser({ username, isLoggedIn: true, details: userDetails });
