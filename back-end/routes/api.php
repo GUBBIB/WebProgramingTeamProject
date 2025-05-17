@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Api\BoardController;
 use App\Http\Controllers\Api\PostController;
 use App\Http\Controllers\Api\CommentController;
+use App\Http\Controllers\AuthController;
 use Illuminate\Http\Request;
 
 Route::middleware('auth:sanctum')->post('/posts', [PostController::class, 'store']);
