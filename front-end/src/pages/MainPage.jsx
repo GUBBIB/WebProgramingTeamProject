@@ -17,25 +17,47 @@ const MainPage = () => {
   const [searchType, setSearchType] = useState('title'); // 검색 유형 상태 추가
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const storedUser = localStorage.getItem('currentUser');
-    if (storedUser) {
-      try {
-        const user = JSON.parse(storedUser);
-        if (user && user.USR_nickname) {
-          setCurrentUser({ username: user.USR_nickname, isLoggedIn: true, details: user });
-        } else {
-          localStorage.removeItem('currentUser');
+  const fetchCurrentUser = async () => {
+    try {
+      const res = await fetch('http://13.60.93.77/api/user', {
+        method: 'GET',
+        credentials: 'include',
+        headers: { 
+          Accept: 'application/json' 
         }
-      } catch {
-        localStorage.removeItem('currentUser');
-      }
+      });
+  
+      if (!res.ok) throw new Error('세션 없음');
+  
+      const data = await res.json();
+      console.log('현재 로그인한 유저 ID:', data.USR_id); 
+  
+      setCurrentUser({
+        username: data.USR_nickname,
+        isLoggedIn: true,
+        details: data
+      });
+  
+    } catch (err) {
+      console.error('세션 확인 실패:', err);
+      setCurrentUser(null);
     }
-  }, []);
-
-  const handleLogin = (username, userDetails) => {
-    setCurrentUser({ username, isLoggedIn: true, details: userDetails });
   };
+  
+  useEffect(() => {
+    fetchCurrentUser();
+  }, []); 
+  
+  const handleLogin = async (username, userDetails) => {
+    setCurrentUser({
+      username,
+      isLoggedIn: true,
+      details: userDetails,
+    });
+  
+    await fetchCurrentUser();
+  };
+  
 
   const handleLogout = () => {
     localStorage.removeItem('currentUser');

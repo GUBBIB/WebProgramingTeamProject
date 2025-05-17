@@ -29,18 +29,26 @@ const PostList = ({ BRD_id }) => {
     const fetchPosts = async () => {
       setLoading(true);
       setError(null);
-
+  
       try {
         // 게시판 ID에 따라 엔드포인트 결정
         const url =
+<<<<<<< HEAD
           String(BRD_id) === "1"
             ? `${API_BASE_URL}/boards/postAll?page=${page}`
             : `${API_BASE_URL}/boards/${BRD_id}?page=${page}`;
 
+=======
+          String(BRD_id) === '1'
+            ? `${API_BASE_URL}/boards/postAll?page=${page}`
+            : `${API_BASE_URL}/boards/${BRD_id}?page=${page}`;
+  
+>>>>>>> 0b246abd98b455a00050a5cc73f54b629058f1de
         const response = await fetch(url, {
           credentials: "include",
           headers: { Accept: "application/json" },
         });
+<<<<<<< HEAD
 
         if (!response.ok) {
           throw new Error("서버 응답 오류: " + response.status);
@@ -57,6 +65,15 @@ const PostList = ({ BRD_id }) => {
 
         // 총 페이지 수 설정 (API가 이 정보를 제공한다고 가정)
         setTotalPages(data.last_page || 1);
+=======
+  
+        if (!response.ok) throw new Error('서버 응답 오류');
+  
+        const data = await response.json();
+        console.log('API 응답:', data); 
+
+        setPosts(data.data || []);
+>>>>>>> 0b246abd98b455a00050a5cc73f54b629058f1de
       } catch (err) {
         console.error("게시글 로딩 실패:", err);
         setError(err.message || "게시글 로딩 실패");
@@ -64,11 +81,17 @@ const PostList = ({ BRD_id }) => {
         setLoading(false);
       }
     };
+<<<<<<< HEAD
 
     if (BRD_id) {
       fetchPosts();
     }
+=======
+  
+    fetchPosts();
+>>>>>>> 0b246abd98b455a00050a5cc73f54b629058f1de
   }, [BRD_id, page]);
+  
 
   // 페이지 변경 핸들러
   const handlePageChange = (newPage) => {

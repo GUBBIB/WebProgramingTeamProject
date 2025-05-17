@@ -24,6 +24,7 @@ class LoginController extends Controller
     }
 
     Auth::login($user); // 세션 로그인
+    $request->session()->regenerate(); // ← 이거 꼭 있어야 쿠키가 생김
 
     return response()->json([
         'message' => '로그인 성공',

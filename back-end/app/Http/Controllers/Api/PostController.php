@@ -59,16 +59,14 @@ class PostController extends Controller
     }
 
     // 게시글 목록 조회
-    public function post_List_Search(Board $BRD_id)
+    public function post_List_Search($BRD_id)
     {
         $posts = Post::with('user')
                     ->where('BRD_id', $BRD_id)
                     ->orderBy('created_at', 'desc')
                     ->paginate(15); //15개씩 들고오기
 
-        return response()->json([
-            'data' => $posts
-        ]);
+        return response()->json($posts);
     }
 
     // 전체 게시글 목록 조회

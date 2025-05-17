@@ -43,6 +43,10 @@ const BoardTypeSelector = ({ selectedBoard, onSelectedBoard}) => {
     // URL 변경 없이 상태만 업데이트하여 리렌더링 유도
     console.log(`선택된 게시판 ID: ${id}`);
   };
+  const handleSelectAllBoard = (id) => {
+    onSelectedBoard(id);
+    console.log(`선택된 게시판 ID: ${id}`);
+  };
 
   if (loading) return <div className="loading">게시판 목록을 불러오는 중...</div>;
   if (error) return <div className="error">{error}</div>;
