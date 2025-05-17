@@ -36,6 +36,7 @@ const PostList = ({ BRD_id }) => {
         const postsArray = Array.isArray(data.data) ? data.data
           : Array.isArray(data?.data?.data) ? data.data.data
             : [];  
+            
         setPosts(postsArray || []);
       } catch (err) {
         setError(err.message || '게시글 로딩 실패');
