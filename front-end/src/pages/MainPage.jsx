@@ -21,7 +21,10 @@ const MainPage = () => {
       try {
         const user = JSON.parse(storedUser);
         if (user && user.USR_nickname) {
-          setCurrentUser({ username: user.USR_nickname, isLoggedIn: true, details: user });
+          setCurrentUser({
+            username: user.USR_nickname, 
+            isLoggedIn: true, 
+            details: user });
         } else {
           localStorage.removeItem('currentUser');
         }
