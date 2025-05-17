@@ -20,7 +20,9 @@ const MainPage = () => {
       const res = await fetch('http://13.60.93.77/api/user', {
         method: 'GET',
         credentials: 'include',
-        headers: { Accept: 'application/json' }
+        headers: { 
+          Accept: 'application/json' 
+        }
       });
   
       if (!res.ok) throw new Error('세션 없음');
