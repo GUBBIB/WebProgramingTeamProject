@@ -66,9 +66,7 @@ class PostController extends Controller
                     ->orderBy('created_at', 'desc')
                     ->paginate(15); //15개씩 들고오기
 
-        return response()->json([
-            'data' => $posts
-        ]);
+        return response()->json([$posts]);
     }
 
     // 전체 게시글 목록 조회
