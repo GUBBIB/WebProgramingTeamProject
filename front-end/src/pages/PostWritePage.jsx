@@ -81,7 +81,7 @@ const PostWritePage = ({ currentUser }) => {
         },
         body: JSON.stringify({
           BRD_id: numericBRD_id,
-          USR_id: currentUser.details?.USR_id,
+          USR_id: currentUser?.USR_id,
           PST_title,
           PST_content,
         }),
