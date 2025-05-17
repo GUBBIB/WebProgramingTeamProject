@@ -1,3 +1,4 @@
+<?php
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\BoardController;
 use App\Http\Controllers\Api\PostController;
@@ -18,7 +19,7 @@ Route::post('/boards/{BRD_id}/posts/{PST_id}/view', [PostController::class, 'inc
 
 Route::get('/boards/search', [BoardController::class, 'board_Search_By_Keyword']);
 
-//  게시글 검색 API (제목 or 작성자 기준)
+// ✅ 게시글 검색 API (제목 or 작성자 기준)
 Route::get('/posts/search', [PostController::class, 'searchByField']);
 
 // 로그인 관련 API
