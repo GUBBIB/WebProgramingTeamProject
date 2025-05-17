@@ -57,8 +57,8 @@ const PostWritePage = ({ currentUser }) => {
           'Accept': 'application/json',
         },
         body: JSON.stringify({
-          BRD_id,
-          USR_id: currentUser.USR_id,
+          BRD_id: Number(BRD_id),
+          USR_id: currentUser.details?.USR_id,
           PST_title,
           PST_content,
         }),
