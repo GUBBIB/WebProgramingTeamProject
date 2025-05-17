@@ -29,6 +29,10 @@ const BoardTypeSelector = ({ selectedBoard, onSelectedBoard}) => {
     onSelectedBoard(id);
     console.log(`선택된 게시판 ID: ${id}`);
   };
+  const handleSelectAllBoard = (id) => {
+    onSelectedBoard(id);
+    console.log(`선택된 게시판 ID: ${id}`);
+  };
 
   return (
     <div>

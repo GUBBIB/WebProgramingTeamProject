@@ -18,8 +18,7 @@ const PostList = ({ BRD_id }) => {
       setError(null);
 
       try {
-        const url =
-        String(BRD_id) === '1'
+        const url = String(BRD_id) === '1'
             ? `${API_BASE_URL}/boards/postAll?page=${page}`
             : `${API_BASE_URL}/boards/${BRD_id}?page=${page}`;
         
@@ -29,8 +28,12 @@ const PostList = ({ BRD_id }) => {
         });
 
         if (!response.ok) throw new Error('서버 응답 오류');
+        console.log('API 응답:', data);
+
         const data = await response.json();
-        setPosts(data.data || []);
+        const postsArray = Array.isArray(data) ? data : data.data;
+
+        setPosts(postsArray || []);
       } catch (err) {
         setError(err.message || '게시글 로딩 실패');
       } finally {
