@@ -16,24 +16,38 @@ const MainPage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const storedUser = localStorage.getItem('currentUser');
-    if (storedUser) {
+    const fetchCurrentUser = async () => {
       try {
-        const user = JSON.parse(storedUser);
-        if (user && user.USR_nickname) {
-          setCurrentUser({
-            username: user.USR_nickname, 
-            isLoggedIn: true, 
-            details: user });
-        } else {
-          localStorage.removeItem('currentUser');
-        }
-      } catch {
+        const res = await fetch('http://13.60.93.77/api/user', {
+          method: 'GET',
+          credentials: 'include',
+          headers: { 
+            Accept: 'application/json' 
+          }
+        });
+  
+        if (!res.ok) throw new Error('세션 없음');
+  
+        const data = await res.json();
+  
+        setCurrentUser({
+          username: data.USR_nickname,
+          isLoggedIn: true,
+          details: data
+        });
+  
+        // 필요하면 localStorage에도 저장 (UI 상태 복구용)
+        localStorage.setItem('currentUser', JSON.stringify(data));
+      } catch (err) {
+        // 인증 실패 시 localStorage 제거
         localStorage.removeItem('currentUser');
+        setCurrentUser(null);
       }
-    }
+    };
+  
+    fetchCurrentUser();
   }, []);
-
+  
   const handleLogin = (username, userDetails) => {
     setCurrentUser({ username, isLoggedIn: true, details: userDetails });
   };
