@@ -16,23 +16,25 @@ const PostList = ({ BRD_id }) => {
     const fetchPosts = async () => {
       setLoading(true);
       setError(null);
-
+  
       try {
-        const url = String(BRD_id) === '1'
+        const url =
+          String(BRD_id) === '1'
             ? `${API_BASE_URL}/boards/postAll?page=${page}`
             : `${API_BASE_URL}/boards/${BRD_id}?page=${page}`;
-        
+  
         const response = await fetch(url, {
           credentials: 'include',
           headers: { Accept: 'application/json' },
         });
-
+  
         if (!response.ok) throw new Error('서버 응답 오류');
-        console.log('API 응답:', data);
-
+  
         const data = await response.json();
-        const postsArray = Array.isArray(data) ? data : data.data;
-
+        console.log('API 응답:', data); 
+  
+        const postsArray = Array.isArray(data) ? data : data.data?.data; // ← 중첩 구조 처리
+  
         setPosts(postsArray || []);
       } catch (err) {
         setError(err.message || '게시글 로딩 실패');
@@ -40,9 +42,10 @@ const PostList = ({ BRD_id }) => {
         setLoading(false);
       }
     };
-
+  
     fetchPosts();
   }, [BRD_id, page]);
+  
 
   if (loading) return <div className="loading">로딩 중...</div>;
   if (error) return <div className="error">에러 발생: {error}</div>;
