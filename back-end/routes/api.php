@@ -41,3 +41,9 @@ Route::post('/boards/{BRD_id}/posts/{PST_id}/view', [PostController::class, 'inc
 
 // 게시판 생성 
 Route::post('/boards', [BoardController::class, 'store']);
+
+
+Route::post('/api/register', [AuthController::class, 'register']);
+Route::post('/api/login', [AuthController::class, 'login']);
+Route::post('/api/logout', [AuthController::class, 'logout']);
+Route::get('/api/user', [AuthController::class, 'user']);
