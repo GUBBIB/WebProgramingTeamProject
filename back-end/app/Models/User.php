@@ -27,6 +27,8 @@ class User extends Authenticatable
         return 'USR_id';
     }
 
+    // app/Models/User.php
+
     public function getAuthPassword()
     {
         return $this->USR_pass;

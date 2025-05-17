@@ -33,22 +33,31 @@ class AuthController extends Controller
     // 로그인
     public function login(Request $request)
     {
-        $credentials = $request->validate([
-            'USR_email' => 'required|email',
-            'USR_pass' => 'required',
-        ]);
+        try {
+            $credentials = $request->validate([
+                'USR_email' => 'required|email',
+                'USR_pass' => 'required',
+            ]);
 
-        $user = User::where('USR_email', $credentials['USR_email'])->first();
+            $user = User::where('USR_email', $credentials['USR_email'])->first();
 
-        if (!$user || !Hash::check($credentials['USR_pass'], $user->USR_pass)) {
-            return response()->json(['error' => 'Invalid credentials'], 401);
+            if (!$user || !Hash::check($credentials['USR_pass'], $user->USR_pass)) {
+                return response()->json(['error' => 'Invalid credentials'], 401);
+            }
+
+            Auth::login($user);  // 여기에서 getAuthPassword() 호출됨
+            $request->session()->regenerate();
+
+            return response()->json(['user' => $user]);
+        } catch (\Throwable $e) {
+            return response()->json([
+                'message' => 'Login failed',
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ], 500);
         }
-
-        Auth::login($user);
-        $request->session()->regenerate();
-
-        return response()->json(['user' => $user]);
     }
+
 
     // 로그아웃
     public function logout(Request $request)
