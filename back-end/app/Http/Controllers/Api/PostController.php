@@ -12,10 +12,10 @@ class PostController extends Controller
     // 게시글 생성
     public function store(Request $request)
     {
-        // ✅ 1. 로그인 사용자 확인
-        if (!$request->user()) {
-            return response()->json(['message' => '로그인이 필요합니다.'], 401);
-        }
+        // // ✅ 1. 로그인 사용자 확인
+        // if (!$request->user()) {
+        //     return response()->json(['message' => '로그인이 필요합니다.'], 401);
+        // }
 
         // ✅ 2. 유효성 검사 (USR_id 제거)
         $validated = $request->validate([
