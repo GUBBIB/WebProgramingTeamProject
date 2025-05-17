@@ -20,6 +20,7 @@ class PostController extends Controller
         // ✅ 2. 유효성 검사 (USR_id 제거)
         $validated = $request->validate([
             'BRD_id' => 'required|exists:boards,BRD_id',
+            'USR_id' => 'required|exists:users,BRD_id',
             'PST_title' => 'required|string',
             'PST_content' => 'required|string',
         ]);
@@ -27,7 +28,7 @@ class PostController extends Controller
         // ✅ 3. 게시글 생성
         $post = Post::create([
             'BRD_id' => $validated['BRD_id'],
-            'USR_id' => $request->user()->USR_id, // 여기서 사용자 ID 지정
+            'USR_id' => $validated['USR_id'], // 여기서 사용자 ID 지정
             'PST_title' => $validated['PST_title'],
             'PST_content' => $validated['PST_content'],
         ]);
