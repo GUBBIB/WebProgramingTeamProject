@@ -34,6 +34,7 @@ const MainPage = () => {
 
   // 로그인 성공 시 호출
   const handleLogin = (user) => {
+    console.log(user);
     setCurrentUser({
       username: user.USR_nickname || user.USR_email,
       isLoggedIn: true,
@@ -85,6 +86,7 @@ const MainPage = () => {
               )
             }
           />
+
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
           <Route

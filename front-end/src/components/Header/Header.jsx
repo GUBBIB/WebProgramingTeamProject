@@ -15,6 +15,7 @@ const Header = ({ currentUser, onLogout }) => {
           <button onClick={onLogout}>로그아웃</button>
         ) : (
           <>
+            
             <Link to="/login"><button>로그인</button></Link>
             <Link to="/signup"><button>회원가입</button></Link>
           </>

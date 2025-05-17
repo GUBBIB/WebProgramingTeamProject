@@ -4,8 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\BoardController;
 use App\Http\Controllers\Api\PostController;
 use App\Http\Controllers\Api\CommentController;
-
-
+use App\Http\Controllers\AuthController;
 
 // 게시판/게시글/댓글 관련 API
 Route::get('/boards', [BoardController::class, 'board_List_Search']);
@@ -21,9 +20,7 @@ Route::post('/boards/{BRD_id}/posts/{PST_id}/view', [PostController::class, 'inc
 
 Route::get('/boards/search', [BoardController::class, 'board_Search_By_Keyword']);
 
-
-use App\Http\Controllers\AuthController;
-
+// 로그인 관련 api
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
