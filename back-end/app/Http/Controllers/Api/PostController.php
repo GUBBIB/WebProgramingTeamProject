@@ -20,7 +20,7 @@ class PostController extends Controller
         // ✅ 2. 유효성 검사 (USR_id 제거)
         $validated = $request->validate([
             'BRD_id' => 'required|exists:boards,BRD_id',
-            'USR_id' => 'required|exists:users,BRD_id',
+            'USR_id' => 'required|exists:users,USR_id',
             'PST_title' => 'required|string',
             'PST_content' => 'required|string',
         ]);
