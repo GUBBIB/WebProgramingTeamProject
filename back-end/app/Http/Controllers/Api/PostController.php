@@ -42,7 +42,7 @@ class PostController extends Controller
     }
 
     // 게시글 상세 조회
-    public function posts_Details_Search(Board $BRD_id, Post $PST_id)
+    public function posts_Details_Search($BRD_id, $PST_id)
     {
         $board = Board::find($BRD_id);
 
