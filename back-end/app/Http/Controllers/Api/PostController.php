@@ -50,7 +50,7 @@ class PostController extends Controller
             return response()->json(['message' => '해당 게시글을 찾을 수 없습니다.'], 404);
         }
 
-        $post = Post::with('user')
+        $post = Post::with('user', 'board')
                     ->where('PST_id', $PST_id)
                     ->where('BRD_id', $BRD_id)
                     ->first();
