@@ -41,7 +41,7 @@ class PostController extends Controller
         ], 201);
     }
 
-    // 아래 나머지 함수는 그대로 유지
+    // 게시글 상세 조회
     public function posts_Details_Search(Board $BRD_id, Post $PST_id)
     {
         $board = Board::find($BRD_id);
@@ -59,9 +59,13 @@ class PostController extends Controller
             return response()->json(['message' => '해당 게시글을 찾을 수 없습니다.'], 404);
         }
 
-        return response()->json(['data' => $post]);
+        return response()->json([
+            'data' => $post,
+            'BRD_title' => $board->BRD_title,
+        ]);
     }
 
+    // 특정 게시판 게시글 목록 조회
     public function post_List_Search($BRD_id)
     {
         $posts = Post::with('user')
@@ -72,6 +76,7 @@ class PostController extends Controller
         return response()->json($posts);
     }
 
+    // 전체 게시글 목록 조회
     public function posts_All_List_Search(Request $request)
     {
         $posts = Post::with(['user', 'board'])
@@ -81,6 +86,7 @@ class PostController extends Controller
         return response()->json($posts);
     }
 
+    // 조회수 api
     public function incrementViews($BRD_id, $PST_id)
     {
         $post = Post::where('BRD_id', $BRD_id)
@@ -98,4 +104,7 @@ class PostController extends Controller
             'views' => $post->PST_views
         ]);
     }
+
+
+
 }
