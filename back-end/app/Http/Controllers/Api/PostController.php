@@ -59,7 +59,7 @@ class PostController extends Controller
     }
 
     // 게시글 목록 조회
-    public function post_List_Search(Board $BRD_id)
+    public function post_List_Search($BRD_id)
     {
         $posts = Post::with('user')
                     ->where('BRD_id', $BRD_id)
