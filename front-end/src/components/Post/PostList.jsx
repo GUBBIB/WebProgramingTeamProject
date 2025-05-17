@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useSearchParams, useNavigate } from 'react-router-dom';
 import PostItem from './PostItem';
-import Pagination from '../Pagination/Pagination';
+import Pagination from '../Board/Pagination';
 import './PostList.css';
 
 const API_BASE_URL = 'http://13.60.93.77/api';

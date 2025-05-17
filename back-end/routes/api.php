@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Api\BoardController;
 use App\Http\Controllers\Api\PostController;
 use App\Http\Controllers\Api\CommentController;
+use App\Http\Controllers\Api\OpenAIController;
 use Illuminate\Http\Request;
 
 
@@ -55,3 +56,6 @@ Route::post('/boards/{BRD_id}/posts/{PST_id}/view', [PostController::class, 'inc
 
 // 게시판 생성 
 Route::post('/boards', [BoardController::class, 'store']);
+
+// OpenAI API 연동
+Route::post('/ask-openai', [OpenAIController::class, 'askOpenAI']);
