@@ -33,8 +33,9 @@ const PostList = ({ BRD_id }) => {
         const data = await response.json();
         console.log('API 응답:', data); 
   
-        const postsArray = Array.isArray(data) ? data : data.data?.data; // ← 중첩 구조 처리
-  
+        const postsArray = Array.isArray(data.data) ? data.data
+          : Array.isArray(data?.data?.data) ? data.data.data
+            : [];  
         setPosts(postsArray || []);
       } catch (err) {
         setError(err.message || '게시글 로딩 실패');
