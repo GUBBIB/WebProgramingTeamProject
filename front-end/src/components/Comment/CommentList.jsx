@@ -45,8 +45,12 @@ const CommentList = ({ BRD_id, PST_id, currentUser }) => {
           COM_content: COM_content,
         }),
       });
+      const data = await res.json();
 
-      if (!res.ok) throw new Error('댓글 작성 실패');
+      if (!res.ok){
+        console.error('에러 응답:', data); // 🔥 이거 꼭 추가
+        throw new Error('댓글 작성 실패');
+      } 
       await fetchComments(); // 새 댓글 작성 후 목록 갱신
     } catch (err) {
       alert(err.message);
