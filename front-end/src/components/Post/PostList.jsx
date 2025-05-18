@@ -12,6 +12,7 @@ const PostList = ({ BRD_id }) => {
   const [error, setError] = useState(null);
   const [searchParam] = useSearchParams();
   const pageParam = parseInt(searchParam.get('page') || '1', 10);
+  const navigate = useNavigate(); 
 
   const [pagination, setPagination] = useState({
     currentPage: pageParam,
