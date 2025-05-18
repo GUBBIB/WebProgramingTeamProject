@@ -8,6 +8,7 @@ import LoginPage from "./LoginPage";
 import "./MainPage.css";
 import BoardControls from "../components/Board/BoardControls";
 import BoardTypeSelector from "../components/Board/BoardTypeSelector";
+import ProfilePage from "../pages/ProfilePage"
 
 const MainPage = () => {
   const [selectedBoard, setSelectedBoard] = useState(1);
