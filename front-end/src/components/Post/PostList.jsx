@@ -82,7 +82,13 @@ const PostList = ({ BRD_id }) => {
         </thead>
         <tbody>
           {posts.map((post) => (
-            <PostItem key={post.PST_id} post={post} />
+            <tr
+              key={post.PST_id}
+              className="post-row"
+              onClick={() => navigate('/')}
+            >
+              <PostItem post={post} />
+            </tr>
           ))}
         </tbody>
       </table>
