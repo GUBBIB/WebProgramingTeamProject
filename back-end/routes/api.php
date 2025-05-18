@@ -30,3 +30,9 @@ Route::get('/user', [AuthController::class, 'user'])->middleware('auth:sanctum')
 
 // 회원정보 수정 API
 Route::post('/profile/update', [AuthController::class, 'updateProfile'])->middleware('auth:sanctum');
+
+// 게시글 수정
+Route::put('/posts/{PST_id}', [PostController::class, 'update']);
+
+// 게시글 삭제
+Route::delete('/posts/{PST_id}', [PostController::class, 'destroy']);
