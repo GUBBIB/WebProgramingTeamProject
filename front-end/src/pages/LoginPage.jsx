@@ -33,6 +33,7 @@ const LoginPage = ({ onLogin }) => {
       if (!res.ok) throw new Error('로그인 실패');
       const data = await res.json();
       onLogin(data.user);
+      navigate('/'); // 로그인 성공 후 메인페이지로 이동
     } catch (err) {
       alert(err.message);
     }
