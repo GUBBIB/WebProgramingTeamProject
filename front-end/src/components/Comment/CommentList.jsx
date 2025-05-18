@@ -40,8 +40,8 @@ const CommentList = ({ BRD_id, PST_id, currentUser }) => {
           'Content-Type': 'application/json',q
         },
         body: JSON.stringify({
-          BRD_id,
-          PST_id,
+          USR_id: currentUser?.USR_id,
+          PST_id: PST_id,
           COM_content: COM_content,
         }),
       });
