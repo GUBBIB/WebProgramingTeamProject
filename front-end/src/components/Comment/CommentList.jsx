@@ -31,6 +31,9 @@ const CommentList = ({ BRD_id, PST_id, currentUser }) => {
   // 댓글 작성 후 콜백
   const onSubmitComment = async (COM_content) => {
     if (!currentUser?.isLoggedIn) return;
+    console.log('COM_content: ', COM_content);
+    console.log('PST_id: ', PST_id);
+    console.log('USR_id: ', currentUser?.USR_id);
     
     try {
       const res = await fetch(`${API_BASE_URL}/comments`, {
