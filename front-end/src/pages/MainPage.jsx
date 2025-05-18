@@ -14,6 +14,7 @@ const MainPage = () => {
   const [selectedBoard, setSelectedBoard] = useState(1);
   const [currentUser, setCurrentUser] = useState(null);
   const navigate = useNavigate();
+
   // 세션에서 로그인 유저 정보 받아오기
   useEffect(() => {
     fetch("/api/user", { credentials: "include" })
@@ -34,13 +35,23 @@ const MainPage = () => {
 
   // 로그인 성공 시 호출
   const handleLogin = (user) => {
-    console.log(user);
+    console.log("로그인 성공:", user);
     setCurrentUser({
       USR_id: user.USR_id,
       isLoggedIn: true,
       details: user,
     });
-    // 필요시 navigate('/')
+  };
+
+  // 회원가입 성공 시 호출
+  const handleRegister = (user) => {
+    console.log("회원가입 성공:", user);
+    setCurrentUser({
+      USR_id: user.USR_id,
+      isLoggedIn: true,
+      details: user,
+    });
+    navigate("/"); // 회원가입 후 메인 페이지로 이동
   };
 
   // 로그아웃
@@ -50,7 +61,6 @@ const MainPage = () => {
       credentials: "include",
     });
     setCurrentUser(null);
-    // 필요시 navigate('/')
   };
 
   return (
@@ -87,7 +97,9 @@ const MainPage = () => {
             }
           />
 
-          <Route path="/signup" element={<SignupPage />} />
+          {/* ✅ 회원가입 시 handleRegister 전달 */}
+          <Route path="/signup" element={<SignupPage onRegister={handleRegister} />} />
+
           <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
           <Route
             path="/profile"
