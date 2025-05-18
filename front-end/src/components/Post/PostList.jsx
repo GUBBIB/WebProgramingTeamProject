@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, useNavigate } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import PostItem from './PostItem';
 import './PostList.css';
