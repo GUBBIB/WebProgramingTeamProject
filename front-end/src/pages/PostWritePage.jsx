@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MDEditor from '@uiw/react-md-editor';
+import '@uiw/react-md-editor/dist/mdeditor.css';
 import './PostWritePage.css';
 
 const API_BASE_URL = 'http://13.60.93.77/api';
