@@ -11,7 +11,7 @@ Route::get('/boards', [BoardController::class, 'board_List_Search']);
 Route::get('/boards/postAll', [PostController::class, 'posts_All_List_Search']);
 Route::get('/boards/{BRD_id}', [PostController::class, 'post_List_Search']);
 Route::get('/boards/{BRD_id}/posts/{PST_id}', [PostController::class, 'posts_Details_Search']);
-Route::get('/boards/{BRD_id}/posts/{PST_id}/comments', [CommentController::class, 'comments_List_Search']);
+Route::get('/boards/{BRD_id}/posts/{PST_id}/comments', [CommentController::class, 'coments_List_Search']);
 
 Route::post('/boards', [BoardController::class, 'store']);
 Route::post('/posts', [PostController::class, 'store']);

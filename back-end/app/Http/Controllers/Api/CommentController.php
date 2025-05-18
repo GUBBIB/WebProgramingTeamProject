@@ -11,7 +11,7 @@ use App\Models\Post;
 class CommentController extends Controller
 {
     // 특정 게시글의 댓글 목록 조회
-    public function comemnts_List_Search($BRD_id, $PST_id)
+    public function coments_List_Search($BRD_id, $PST_id)
     {
         $post = Post::with(['comments.user']) // 댓글 + 작성자까지 eager load
             ->where('BRD_id', $BRD_id)
