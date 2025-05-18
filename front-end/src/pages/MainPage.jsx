@@ -23,7 +23,7 @@ const MainPage = () => {
       .then((data) => {
         if (data.user) {
           setCurrentUser({
-            username: data.user.USR_nickname || data.user.USR_email,
+            USR_id: data.user.USR_id,
             isLoggedIn: true,
             details: data.user,
           });
@@ -36,11 +36,13 @@ const MainPage = () => {
 
   // 로그인 성공 시 호출
   const handleLogin = (user) => {
+    console.log(user);
     setCurrentUser({
-      username: user.USR_nickname || user.USR_email,
+      USR_id: user.USR_id,
       isLoggedIn: true,
       details: user,
     });
+    // 필요시 navigate('/')
   };
 
   // 로그아웃
