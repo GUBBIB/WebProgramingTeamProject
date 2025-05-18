@@ -64,7 +64,7 @@ const CommentList = ({ BRD_id, PST_id, currentUser }) => {
       )}
 
       {comments?.map((comment) => (
-        <CommentItem key={comment.CMT_id} comment={comment} />
+        <CommentItem key={comment.COM_id} comment={comment} />
       ))}
 
       {/* 댓글 작성 폼 */}
