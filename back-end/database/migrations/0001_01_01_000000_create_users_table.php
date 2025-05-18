@@ -9,18 +9,17 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
+    // database/migrations/xxxx_xx_xx_create_users_table.php
     public function up(): void
-{
-    Schema::create('users', function (Blueprint $table) {
-        $table->id('USR_id'); // primary key
-
-        $table->string('USR_email')->unique();
-        $table->string('USR_pass');
-        $table->string('USR_nickname')->nullable(); //닉네임 컬럼 추가
-        
-        $table->timestamps();
-    });
-}
+    {
+        Schema::create('users', function (Blueprint $table) {
+            $table->id('USR_id'); // primary key
+            $table->string('USR_email')->unique();
+            $table->string('USR_pass');
+            $table->string('USR_nickname')->nullable();
+            $table->timestamps();
+        });
+    }
 
 
     /**

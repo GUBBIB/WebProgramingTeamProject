@@ -45,8 +45,15 @@ const PostList = ({ BRD_id }) => {
   
 >>>>>>> 0b246abd98b455a00050a5cc73f54b629058f1de
         const response = await fetch(url, {
+<<<<<<< HEAD
           credentials: "include",
           headers: { Accept: "application/json" },
+=======
+          credentials: 'include',
+          headers: { 
+            Accept: 'application/json'
+          },
+>>>>>>> e5bc4f91a15caed096135e1c9c5491a5b5ca2689
         });
 <<<<<<< HEAD
 

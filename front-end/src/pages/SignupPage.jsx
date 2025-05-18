@@ -4,7 +4,7 @@ import './SignupPage.css';
 
 const API_BASE_URL = 'http://13.60.93.77/api';
 
-const SignupPage = ({ onSignupSuccess }) => {
+const SignupPage = ({ onRegister }) => {
   const [USR_nickname, setNickname] = useState('');
   const [USR_email, setEmail] = useState('');
   const [USR_pass, setPassword] = useState('');
@@ -26,40 +26,18 @@ const SignupPage = ({ onSignupSuccess }) => {
     }
 
     try {
-      const response = await fetch(`${API_BASE_URL}/register`, {
+      const res = await fetch('/api/register', {
         method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
-        body: JSON.stringify({
-          USR_nickname,
-          USR_email,
-          USR_pass,
-          USR_pass_confirmation
-        }),
+        body: JSON.stringify({ USR_email, USR_pass, USR_nickname }),
       });
 
-      const data = await response.json();
-
-      if (response.ok && data.user) {
-        alert('회원가입이 완료되었습니다.');
-        if (onSignupSuccess) {
-          onSignupSuccess(data.user.USR_nickname); // 필요 시 전체 user 객체 전달
-        }
-        navigate('/login');
-      } else {
-        if (data.errors) {
-          const errorMessages = Object.values(data.errors).flat().join('\n');
-          setError(errorMessages);
-        } else {
-          setError(data.message || '회원가입에 실패했습니다.');
-        }
-      }
+      if (!res.ok) throw new Error('회원가입 실패');
+      const data = await res.json();
+      onRegister(data.user);
     } catch (err) {
-      console.error('회원가입 오류:', err);
-      setError('회원가입 중 네트워크 오류가 발생했습니다.');
+      alert(err.message);
     }
   };
 

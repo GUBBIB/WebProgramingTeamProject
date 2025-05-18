@@ -1,5 +1,5 @@
 <?php
-
+// app/Models/User.php
 namespace App\Models;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -27,18 +27,10 @@ class User extends Authenticatable
         return 'USR_id';
     }
 
+    // app/Models/User.php
+
     public function getAuthPassword()
     {
         return $this->USR_pass;
-    }
-
-    public function posts()
-    {
-        return $this->hasMany(Post::class, 'USR_id');
-    }
-
-    public function comments()
-    {
-        return $this->hasMany(Comments::class, 'USR_id');
     }
 }
