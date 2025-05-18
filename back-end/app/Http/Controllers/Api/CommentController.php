@@ -13,7 +13,7 @@ class CommentController extends Controller
     // 특정 게시글의 댓글 목록 조회
     public function coments_List_Search($BRD_id, $PST_id)
     {
-        $post = \App\Models\Post::with(['comments.user']) // 댓글 + 작성자까지 eager load
+        $post = Post::with(['comments.user']) // 댓글 + 작성자까지 eager load
             ->where('BRD_id', $BRD_id)
             ->where('PST_id', $PST_id)
             ->first();
