@@ -1,15 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import { Routes, Route, useNavigate } from 'react-router-dom';
-import Header from '../components/Header/Header';
-import PostDetailPage from './PostDetailPage';
-import PostWritePage from './PostWritePage';
-import SignupPage from './SignupPage';
-import LoginPage from './LoginPage';
-import PostList from '../components/Post/PostList';
-import QAChatGPT from '../components/QA/QAChatGPT'; // 새로운 QAChatGPT 컴포넌트 추가
-import './MainPage.css';
-import BoardControls from '../components/Board/BoardControls';
-import BoardTypeSelector from '../components/Board/BoardTypeSelector';
+import React, { useState, useEffect } from "react";
+import { Routes, Route, useNavigate } from "react-router-dom";
+import Header from "../components/Header/Header";
+import PostDetailPage from "./PostDetailPage";
+import PostWritePage from "./PostWritePage";
+import SignupPage from "./SignupPage";
+import LoginPage from "./LoginPage";
+import ProfilePage from "./ProfilePage";
+import "./MainPage.css";
+import BoardControls from "../components/Board/BoardControls";
+import BoardTypeSelector from "../components/Board/BoardTypeSelector";
 
 const MainPage = () => {
   const [selectedBoard, setSelectedBoard] = useState(1);
@@ -59,10 +58,14 @@ const MainPage = () => {
   };
   
 
-  const handleLogout = () => {
-    localStorage.removeItem('currentUser');
+  // 로그아웃
+  const handleLogout = async () => {
+    await fetch("/api/logout", {
+      method: "POST",
+      credentials: "include",
+    });
     setCurrentUser(null);
-    navigate('/');
+    // 필요시 navigate('/')
   };
 
   const handleSearch = async (searchTerm, searchType) => {
@@ -94,8 +97,35 @@ const MainPage = () => {
             ? <PostWritePage currentUser={currentUser} /> 
             : <LoginPage onLogin={handleLogin} />} 
           />
+
+          <Route
+            path="/boards/:BRD_id/posts/:PST_id"
+            element={<PostDetailPage currentUser={currentUser} />}
+          />
+
+          <Route
+            path="/write"
+            element={
+              currentUser?.isLoggedIn ? (
+                <PostWritePage currentUser={currentUser} />
+              ) : (
+                <LoginPage onLogin={handleLogin} />
+              )
+            }
+          />
+
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
+          <Route
+            path="/profile"
+            element={
+              currentUser?.isLoggedIn ? (
+                <ProfilePage currentUser={currentUser} />
+              ) : (
+                <LoginPage onLogin={handleLogin} />
+              )
+            }
+          />
         </Routes>
       </div>
     </div>

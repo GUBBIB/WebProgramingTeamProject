@@ -21,10 +21,16 @@ const PostWritePage = ({ currentUser }) => {
         const response = await fetch(`${API_BASE_URL}/boards`, {
           credentials: 'include',
         });
+        
+        if (!response.ok) {
+          throw new Error(`서버 응답 오류: ${response.status}`);
+        }
+        
         const data = await response.json();
         setBoardTypes(data);
         if (data.length > 0) {
-          setSelectedBoard(data[0].BRD_id);
+          // 숫자형으로 저장
+          setSelectedBoard(Number(data[0].BRD_id));
         }
       } catch (err) {
         console.error('게시판 목록 불러오기 실패:', err);
@@ -35,50 +41,36 @@ const PostWritePage = ({ currentUser }) => {
     fetchBoards();
   }, []);
 
-  // 로그인 여부 확인
-  useEffect(() => {
-    if (!currentUser || !currentUser.isLoggedIn) {
-      alert('게시글을 작성하려면 로그인이 필요합니다.');
-      navigate('/login');
-    }
-  }, [currentUser, navigate]);
+  // 게시판 선택 핸들러
+  const handleBoardChange = (e) => {
+    // 문자열을 숫자로 변환하여 저장
+    setSelectedBoard(Number(e.target.value));
+  };
 
   const handlePostSubmit = async () => {
     setError('');
+    setIsSubmitting(true);
 
     if (!currentUser || !currentUser.isLoggedIn) {
       setError('게시글을 작성하려면 로그인이 필요합니다.');
       navigate('/login');
+      setIsSubmitting(false);
       return;
     }
 
-    if (!PST_title.trim()) {
-      setError('제목을 입력해주세요.');
+    if (!PST_title.trim() || !PST_content.trim()) {
+      setError('제목과 내용을 모두 입력해주세요.');
+      setIsSubmitting(false);
       return;
     }
-
-    if (!PST_content.trim()) {
-      setError('내용을 입력해주세요.');
-      return;
-    }
-
-    if (!BRD_id) {
-      setError('게시판을 선택해주세요.');
-      return;
-    }
-
-    setIsSubmitting(true);
 
     try {
-      // USR_id를 현재 로그인한 사용자의 ID로 설정
-      const USR_id = currentUser.details.USR_id;
+      // BRD_id가 문자열인 경우 숫자로 변환
+      const numericBRD_id = Number(BRD_id);
       
-      console.log('Submitting post with data:', {
-        BRD_id,
-        USR_id,
-        PST_title,
-        PST_content,
-      });
+      if (isNaN(numericBRD_id)) {
+        throw new Error('게시판 ID가 올바르지 않습니다.');
+      }
 
       const response = await fetch(`${API_BASE_URL}/posts`, {
         method: 'POST',
@@ -86,51 +78,31 @@ const PostWritePage = ({ currentUser }) => {
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
-          'X-XSRF-TOKEN': getCookie('XSRF-TOKEN'),
         },
         body: JSON.stringify({
-          BRD_id,
-<<<<<<< HEAD
-          USR_id: currentUser.details?.USR_id,
-=======
-<<<<<<< HEAD
-          USR_id,
-=======
-          USR_id: currentUser.details?.USR_id,
->>>>>>> 0b246abd98b455a00050a5cc73f54b629058f1de
->>>>>>> 836ae6175864b9fe0358c533b231fc7a138fca8a
+          BRD_id: numericBRD_id,
+          USR_id: currentUser?.USR_id,
           PST_title,
           PST_content,
         }),
       });
 
-      // 응답 확인 로그
-      console.log('Response status:', response.status);
-      
       const data = await response.json();
-      console.log('Response data:', data);
 
       if (response.ok && data.PST_id) {
         alert('게시글이 성공적으로 등록되었습니다.');
-        navigate(`/boards/${BRD_id}/posts/${data.PST_id}`);
+        navigate(`/boards/${numericBRD_id}/posts/${data.PST_id}`);
       } else {
-        setError(data.message || '게시글 등록 실패');
+        console.error('서버 응답:', response.status, data);
+        setError(data.message || `게시글 등록 실패 (오류 코드: ${response.status})`);
       }
     } catch (err) {
       console.error('게시글 등록 실패:', err);
-      setError('게시글 등록 중 오류가 발생했습니다. 네트워크 연결을 확인해주세요.');
+      setError(err.message || '게시글 등록 중 오류가 발생했습니다.');
     } finally {
       setIsSubmitting(false);
     }
   };
-
-  // CSRF 토큰 쿠키 획득
-  function getCookie(name) {
-    const value = `; ${document.cookie}`;
-    const parts = value.split(`; ${name}=`);
-    if (parts.length === 2) return parts.pop().split(';').shift();
-    return '';
-  }
 
   return (
     <div className="post-write-container">
@@ -148,16 +120,20 @@ const PostWritePage = ({ currentUser }) => {
           <select
             id="boardType"
             value={BRD_id}
-            onChange={(e) => setSelectedBoard(e.target.value)}
+            onChange={handleBoardChange}
             className="form-control"
+            disabled={isSubmitting}
             required
           >
-            <option value="">게시판을 선택하세요</option>
-            {boardTypes.map((board) => (
-              <option key={board.BRD_id} value={board.BRD_id}>
-                {board.BRD_name}
-              </option>
-            ))}
+            {boardTypes.length > 0 ? (
+              boardTypes.map((board) => (
+                <option key={board.BRD_id} value={board.BRD_id}>
+                  {board.BRD_name}
+                </option>
+              ))
+            ) : (
+              <option value="">게시판 로딩 중...</option>
+            )}
           </select>
         </div>
 
@@ -169,19 +145,20 @@ const PostWritePage = ({ currentUser }) => {
             value={PST_title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="제목을 입력하세요"
-            required
             className="form-control"
+            disabled={isSubmitting}
+            required
           />
         </div>
 
-        <div className="form-group" data-color-mode="light">
-          <label htmlFor="content">내용 (Markdown)</label>
-          <MDEditor
-            value={PST_content}
-            onChange={setContent}
-            height={400}
-          />
-        </div>
+        <div className="form-group">
+  <label htmlFor="content">내용 (Markdown)</label>
+  <MDEditor
+    value={PST_content}
+    onChange={setContent}
+    height={400}
+  />
+</div>
 
         <div className="form-actions">
           <button 

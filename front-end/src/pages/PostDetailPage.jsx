@@ -29,8 +29,11 @@ const PostDetailPage = ({ currentUser }) => {
 
       // 게시글 가져오기
       const postRes = await fetch(`${API_BASE_URL}/boards/${BRD_id}/posts/${PST_id}`);
+      console.log("게시글 상세보기 1")
       if (!postRes.ok) throw new Error('게시글 조회 실패');
+      console.log("게시글 상세보기 2")
       const postData = await postRes.json();
+      
       setPost(postData);
     } catch (err) {
       setError(err.message || '게시글 로딩 실패');
@@ -63,17 +66,17 @@ const PostDetailPage = ({ currentUser }) => {
     <div className="post-detail-container">
       <h1>{post.PST_title}</h1>
       <div className="post-meta">
-        <span>작성자: {post.user?.USR_nickname || '익명'}</span>
-        <span>작성일: {formatDate(post.created_at)}</span>
-        <span>조회수: {post.PST_views}</span>
-        <span>게시판 ID: {BRD_id}</span>
+        <span>작성자: {post.data.user?.USR_nickname || '익명'}</span>
+        <span>작성일: {formatDate(post.data.created_at)}</span>
+        <span>조회수: {post.data.PST_views}</span>
+        <span>게시판 이름: {post.data.board.BRD_name}</span>
       </div>
 
       <hr />
 
       <div className="post-content markdown-body">
         <ReactMarkdown remarkPlugins={[remarkGfm]}>
-          {post.PST_content}
+          {post.data.PST_content}
         </ReactMarkdown>
       </div>
 
