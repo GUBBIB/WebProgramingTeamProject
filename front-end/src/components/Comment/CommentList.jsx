@@ -37,7 +37,7 @@ const CommentList = ({ BRD_id, PST_id, currentUser }) => {
         method: 'POST',
         credentials: 'include',
         headers: {
-          'Content-Type': 'application/json',q
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           USR_id: currentUser?.USR_id,
