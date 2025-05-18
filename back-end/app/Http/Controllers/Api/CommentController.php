@@ -38,30 +38,59 @@ class CommentController extends Controller
         ]);
     }
 
-
-    public function store(Request $request, $PST_id){
+    // 댓글 작성 및 전체 목록 반환
+    public function store(Request $request)
+    {
         $request->validate([
             'USR_id' => 'required|exists:users,USR_id',
+            'PST_id' => 'required|exists:posts,PST_id',
             'COM_content' => 'required|string',
         ]);
 
-        $post = Post::find($PST_id);
-        if(!$post){
-            return response() -> json([
-                'message' => '해당 게시글을 찾을 수 없습니다.'
+        $USR_id = $request->input('USR_id');
+        $PST_id = $request->input('PST_id');
+
+        // 게시글 존재 확인
+        $postExists = Post::where('PST_id', $PST_id)->exists();
+
+        if (!$postExists) {
+            return response()->json([
+                'message' => '해당 게시글이 존재하지 않습니다.'
             ], 404);
         }
 
+        // 댓글 저장
         $comment = Comments::create([
-            'USR_id' => $request->input('USR_id'),
+            'USR_id' => $USR_id,
             'PST_id' => $PST_id,
             'COM_content' => $request->input('COM_content'),
         ]);
+        $comment->load('user');
+
+        // 전체 댓글 조회
+        $allComments = Comments::with('user')
+            ->where('PST_id', $PST_id)
+            ->orderBy('created_at', 'asc')
+            ->get();
 
         return response()->json([
             'message' => '댓글이 성공적으로 작성되었습니다.',
-            'data' => $comment
+            'new_comment' => [
+                'COM_id' => $comment->COM_id,
+                'USR_id' => $comment->USR_id,
+                'USR_nickname' => $comment->user->USR_nickname ?? '알 수 없음',
+                'COM_content' => $comment->COM_content,
+                'created_at' => $comment->created_at,
+            ],
+            'all_comments' => $allComments->map(function ($comment) {
+                return [
+                    'COM_id' => $comment->COM_id,
+                    'USR_id' => $comment->USR_id,
+                    'USR_nickname' => $comment->user->USR_nickname ?? '알 수 없음',
+                    'COM_content' => $comment->COM_content,
+                    'created_at' => $comment->created_at,
+                ];
+            }),
         ], 201);
-
     }
 }
