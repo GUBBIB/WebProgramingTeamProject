@@ -136,4 +136,6 @@ class PostController extends Controller
 
         return response()->json(['message' => '게시글이 성공적으로 삭제되었습니다.']);
     }
+
+    
 }

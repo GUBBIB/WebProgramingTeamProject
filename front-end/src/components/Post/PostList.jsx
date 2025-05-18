@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 import PostItem from './PostItem';
 import './PostList.css';
+import Pagination from "../Board/Pagination"
 
 const API_BASE_URL = 'http://13.60.93.77/api';
 
@@ -11,6 +12,11 @@ const PostList = ({ BRD_id }) => {
   const [error, setError] = useState(null); 
   const [searchParam] = useSearchParams();
   const page = searchParam.get('page') || 1;
+  const [pagination, setPagination] = useState({
+    currentPage: 1,
+    totalPages: 1,
+    total: 0,
+  });
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -36,6 +42,11 @@ const PostList = ({ BRD_id }) => {
         console.log('API 응답:', data); 
 
         setPosts(data.data || []);
+        setPagination({
+          currentPage: data.current_page,
+          totalPages: data.last_page,
+          total: data.total,
+        });
       } catch (err) {
         setError(err.message || '게시글 로딩 실패');
       } finally {
@@ -46,6 +57,13 @@ const PostList = ({ BRD_id }) => {
     fetchPosts();
   }, [BRD_id, page]);
   
+  useEffect(() => {
+    fetchPosts();
+  }, [pagination.currentPage]);
+
+  const handlePageChange = (page) => {
+    setPagination(prev => ({ ...prev, currentPage: page }));
+  }
 
   if (loading) return <div className="loading">로딩 중...</div>;
   if (error) return <div className="error">에러 발생: {error}</div>;
@@ -69,6 +87,9 @@ const PostList = ({ BRD_id }) => {
           ))}
         </tbody>
       </table>
+      <Pagination currentPage={pagination.currentPage}
+      totalPages={pagination.totalPages}
+      onPageChange={handlePageChange}/>
     </div>
   );
 };

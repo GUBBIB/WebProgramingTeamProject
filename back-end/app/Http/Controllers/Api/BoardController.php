@@ -67,4 +67,43 @@ class BoardController extends Controller
             'board' => $board,
         ], 201);
     }
+
+    // 게시글 검색 (제목 또는 작성자 이름 기준)
+    public function board_Search_By_Keyword(Request $request)
+    {
+        $keyword = $request->input('keyword');
+        $field = $request->input('field'); // 'title' 또는 'user'
+
+        if (!$keyword || !$field) {
+            return response()->json([
+                'message' => '검색어와 검색 기준을 모두 입력해주세요.'
+            ], 400);
+        }
+
+        if ($field === 'title') {
+            $results = Post::where('title', 'like', "%{$keyword}%")->get();
+        } elseif ($field === 'user') {
+            $results = Board::whereHas('user', function ($query) use ($keyword) {
+                $query->where('name', 'like', "%{$keyword}%");
+            })->get();
+        } else {
+            return response()->json([
+                'message' => '검색 기준은 title 또는 user 중 하나여야 합니다.'
+            ], 400);
+        }
+
+        return response()->json([
+            'field' => $field,
+            'keyword' => $keyword,
+            'results' => $results
+        ]);
+    }
+
+
+
+
+
+
+
+    
 }
