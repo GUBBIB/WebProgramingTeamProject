@@ -38,17 +38,6 @@ class PostController extends Controller
         ], 201);
     }
 
-    // 게시글 목록 조회
-    public function post_List_Search(Board $BRD_id)
-    {
-        $posts = Post::with('user')
-                    ->where('BRD_id', $BRD_id)
-                    ->orderBy('created_at', 'desc')
-                    ->paginate(15);
-
-        return response()->json(['data' => $posts]);
-    }
-
     // 게시글 상세 조회
     public function posts_Details_Search($BRD_id, $PST_id)
     {
@@ -69,6 +58,46 @@ class PostController extends Controller
 
         return response()->json([
             'data' => $post,
+        ]);
+    }
+
+    // 특정 게시판 게시글 목록 조회
+    public function post_List_Search($BRD_id)
+    {
+        $posts = Post::with('user', 'board')
+                     ->where('BRD_id', $BRD_id)
+                     ->orderBy('created_at', 'desc')
+                     ->paginate(15);
+
+        return response()->json($posts);
+    }
+
+    // 전체 게시글 목록 조회
+    public function posts_All_List_Search(Request $request)
+    {
+        $posts = Post::with(['user', 'board'])
+                     ->orderBy('created_at', 'desc')
+                     ->paginate(15);
+
+        return response()->json($posts);
+    }
+
+    // 조회수 api
+    public function incrementViews($BRD_id, $PST_id)
+    {
+        $post = Post::where('BRD_id', $BRD_id)
+                    ->where('PST_id', $PST_id)
+                    ->first();
+
+        if (!$post) {
+            return response()->json(['message' => '게시글을 찾을 수 없습니다.'], 404);
+        }
+
+        $post->increment('PST_views');
+
+        return response()->json([
+            'message' => '조회수 증가 완료',
+            'views' => $post->PST_views
         ]);
     }
 
