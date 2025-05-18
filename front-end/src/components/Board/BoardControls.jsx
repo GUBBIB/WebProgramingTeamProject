@@ -52,6 +52,7 @@ const BoardControls = ({
           <button type="button" onClick={handleSearchSubmit} className="search-button">검색</button>
         </div>
       </div>
+      
       <button onClick={handleWritePost} className="write-post-button">
         게시글 작성
       </button>

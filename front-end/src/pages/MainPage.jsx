@@ -96,6 +96,16 @@ const MainPage = () => {
           />
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
+          <Route
+            path="/profile"
+            element={
+              currentUser?.isLoggedIn ? (
+                <ProfilePage currentUser={currentUser} />
+              ) : (
+                <LoginPage onLogin={handleLogin} />
+              )
+            }
+          />
         </Routes>
       </div>
     </div>
