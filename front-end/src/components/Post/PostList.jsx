@@ -1,18 +1,17 @@
-import React, { useEffect, useState, useCallback } from 'react';
-import { useSearchParams, useNavigate } from 'react-router-dom';
-import PostItem from './PostItem';
-import './PostList.css';
+import React, { useEffect, useState, useCallback } from "react";
+import { useSearchParams } from "react-router-dom";
+import PostItem from "./PostItem";
+import "./PostList.css";
 import Pagination from "../Board/Pagination";
 
-const API_BASE_URL = 'http://13.60.93.77/api';
+const API_BASE_URL = "http://13.60.93.77/api";
 
 const PostList = ({ BRD_id }) => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchParam] = useSearchParams();
-  const pageParam = parseInt(searchParam.get('page') || '1', 10);
-  const navigate = useNavigate(); 
+  const pageParam = parseInt(searchParam.get("page") || "1", 10);
 
   const [pagination, setPagination] = useState({
     currentPage: pageParam,
@@ -27,21 +26,21 @@ const PostList = ({ BRD_id }) => {
 
     try {
       const url =
-        String(BRD_id) === '1'
+        String(BRD_id) === "1"
           ? `${API_BASE_URL}/boards/postAll?page=${pagination.currentPage}`
           : `${API_BASE_URL}/boards/${BRD_id}?page=${pagination.currentPage}`;
 
       const response = await fetch(url, {
-        credentials: 'include',
+        credentials: "include",
         headers: {
-          Accept: 'application/json',
+          Accept: "application/json",
         },
       });
 
-      if (!response.ok) throw new Error('서버 응답 오류');
+      if (!response.ok) throw new Error("서버 응답 오류");
 
       const data = await response.json();
-      console.log('API 응답:', data);
+      console.log("API 응답:", data);
 
       setPosts(data.data || []);
       setPagination({
@@ -50,7 +49,7 @@ const PostList = ({ BRD_id }) => {
         total: data.total,
       });
     } catch (err) {
-      setError(err.message || '게시글 로딩 실패');
+      setError(err.message || "게시글 로딩 실패");
     } finally {
       setLoading(false);
     }
@@ -83,13 +82,7 @@ const PostList = ({ BRD_id }) => {
         </thead>
         <tbody>
           {posts.map((post) => (
-            <tr
-              key={post.PST_id}
-              className="post-row"
-              onClick={() => navigate('/')}
-            >
-              <PostItem post={post} />
-            </tr>
+            <PostItem key={post.PST_id} post={post} />
           ))}
         </tbody>
       </table>
