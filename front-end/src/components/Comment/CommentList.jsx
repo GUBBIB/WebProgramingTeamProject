@@ -29,7 +29,7 @@ const CommentList = ({ BRD_id, PST_id, currentUser }) => {
   }, [fetchComments]);
 
   // 댓글 작성 후 콜백
-  const onSubmitComment = async (commentText) => {
+  const onSubmitComment = async (CMT_content) => {
     if (!currentUser?.isLoggedIn) return;
 
     try {
@@ -42,7 +42,7 @@ const CommentList = ({ BRD_id, PST_id, currentUser }) => {
         body: JSON.stringify({
           BRD_id,
           PST_id,
-          CMT_content: commentText,
+          CMT_content: CMT_content,
         }),
       });
 
