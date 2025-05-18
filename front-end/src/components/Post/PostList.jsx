@@ -1,5 +1,5 @@
-import React, { useEffect, useState, useCallback, useNavigate } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import React, { useEffect, useState, useCallback } from 'react';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import PostItem from './PostItem';
 import './PostList.css';
 import Pagination from "../Board/Pagination";
