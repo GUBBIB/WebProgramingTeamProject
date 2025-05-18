@@ -1,5 +1,7 @@
 .post-list-container {
   margin-top: 1rem;
+  width: 100%;
+  overflow-x: auto;
 }
 
 .post-table {
