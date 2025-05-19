@@ -1,17 +1,3 @@
-/* MainPage.css */
-/* 기본 레이아웃 */
-.app-main-content {
-  padding: 1rem 2rem; /* 헤더와의 간격 및 좌우 여백 */
-  max-width: 1200px; /* 최대 너비 설정 */
-  margin: 0 auto; /* 중앙 정렬 */
-}
-/*
-.main-page-container {
-  /* 메인 페이지 컨테이너에 필요한 추가 스타일이 있다면 여기에 작성합니다. */
-  /* 예를 들어, 게시판 섹션과 하단 컨트롤 섹션 사이의 구분선 등 */
-/*}
-
-/* 검색 기능 스타일 */
 .search-container {
   margin: 20px 0;
   background-color: #fff;
@@ -19,13 +5,11 @@
   border-radius: 8px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
-
 .search-bar {
   display: flex;
   gap: 8px;
   max-width: 600px;
 }
-
 .search-select {
   min-width: 100px;
   padding: 8px 12px;
@@ -34,7 +18,6 @@
   background-color: #fff;
   font-family: inherit;
 }
-
 .search-input {
   flex: 1;
   padding: 8px 12px;
@@ -42,7 +25,6 @@
   border: 1px solid #ddd;
   font-family: inherit;
 }
-
 .search-button {
   padding: 8px 16px;
   background-color: #4a6ea9;
@@ -53,17 +35,13 @@
   transition: background-color 0.2s;
   font-family: inherit;
 }
-
 .search-button:hover {
   background-color: #3a5a8c;
 }
-
 .search-button:disabled {
   background-color: #cccccc;
   cursor: not-allowed;
 }
-
-/* 오류 메시지 */
 .error-message {
   color: #e53935;
   margin: 10px 0;
@@ -71,25 +49,20 @@
   background-color: #ffebee;
   border-radius: 4px;
 }
-
-/* 검색 결과 스타일 */
 .search-results {
   margin-top: 20px;
 }
-
 .search-results h3 {
   margin-bottom: 16px;
   color: #333;
   border-bottom: 1px solid #eee;
   padding-bottom: 8px;
 }
-
 .results-container {
   display: grid;
   gap: 16px;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
 }
-
 .search-result-item {
   border: 1px solid #e0e0e0;
   border-radius: 4px;
@@ -99,37 +72,32 @@
   transition: transform 0.2s;
   cursor: pointer;
 }
-
 .search-result-item:hover {
   transform: translateY(-2px);
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
 }
-
 .search-result-item h4 {
   margin-top: 0;
   margin-bottom: 8px;
   color: #333;
 }
-
 .post-content {
   color: #555;
   margin-bottom: 12px;
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 2; /* 벤더 프리픽스 */
   -webkit-box-orient: vertical;
-  line-clamp: 2;          /* 표준 속성 */
+  line-clamp: 2;         /* 표준 속성 */
+  box-orient: vertical;  /* 일부 브라우저 호환 */
 }
-
 .post-meta {
   display: flex;
   justify-content: space-between;
   color: #777;
   font-size: 0.9em;
 }
-
-/* 검색 결과 없음 메시지 */
 .no-results {
   padding: 20px;
   text-align: center;
@@ -137,34 +105,4 @@
   border-radius: 4px;
   color: #666;
   margin-top: 20px;
-}
-
-/* 전역 스타일 (index.css 또는 App.css에 위치하는 것이 더 일반적일 수 있습니다) */
-body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  background-color: #f4f6f8; /* 전체 페이지 배경색 */
-  color: #333; /* 기본 텍스트 색상 */
-  margin: 0;
-}
-
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
-}
-
-button {
-  font-family: inherit; /* 버튼 폰트를 body와 동일하게 */
-}
-
-* {
-  box-sizing: border-box; /* 모든 요소에 border-box 적용 */
-}
-
-a {
-  text-decoration: none; /* 기본 링크 밑줄 제거 */
-  color: inherit; /* 링크 색상 상속 */
 }
