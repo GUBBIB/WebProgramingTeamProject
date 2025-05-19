@@ -50,11 +50,11 @@ class BoardController extends Controller
         }
 
         if ($field === 'title') {
-            $results = Post::with('user')
+            $results = Post::with('user', 'board')
                 ->where('PST_title', 'like', "%{$keyword}%")
                 ->get();
         } elseif ($field === 'user') {
-            $results = Post::with('user')
+            $results = Post::with('user', 'board')
                 ->whereHas('user', function ($query) use ($keyword) {
                     $query->where('USR_nickname', 'like', "%{$keyword}%");
                 })
