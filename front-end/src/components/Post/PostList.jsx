@@ -56,7 +56,7 @@ const PostList = ({ BRD_id, onSelectedBoard, searchedPosts }) => { // (변경됨
   // 🔧 검색 결과 우선 적용
   useEffect(() => {
     if (searchedPosts) {
-      setPosts(searchedPosts);
+      setPosts(searchedPosts.results);
       setLoading(false);
     } else {
       fetchPosts();
@@ -66,10 +66,6 @@ const PostList = ({ BRD_id, onSelectedBoard, searchedPosts }) => { // (변경됨
   const handlePageChange = (page) => {
     setPagination((prev) => ({ ...prev, currentPage: page }));
   };
-
-  useEffect(() => {
-    setPosts(searchParam.results);
-  }, [searchedPosts]);
 
   if (loading) return <div className="loading">로딩 중...</div>;
   if (error) return <div className="error">에러 발생: {error}</div>;
