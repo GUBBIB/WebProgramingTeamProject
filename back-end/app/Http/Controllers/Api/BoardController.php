@@ -50,8 +50,7 @@ class BoardController extends Controller
         }
 
         if ($field === 'title') {
-            $results = Post::with('user')
-                ->whereRaw('LOWER(PST_title) LIKE ?', ['%' . strtolower($keyword) . '%'])
+            $results = Post::whereRaw('LOWER(PST_title) LIKE ?', ['%' . strtolower($keyword) . '%'])
                 ->paginate(15);
         } elseif ($field === 'user') {
             $results = Post::with('user')
