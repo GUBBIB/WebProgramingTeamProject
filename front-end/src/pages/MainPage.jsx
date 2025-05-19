@@ -13,6 +13,9 @@ import BoardTypeSelector from "../components/Board/BoardTypeSelector";
 const MainPage = () => {
   const [selectedBoard, setSelectedBoard] = useState(1);
   const [currentUser, setCurrentUser] = useState(null);
+  const [searchedPosts, setSearchedPosts ] = useState(null);
+  const [searchType, setSearchType ] = useState('title');
+  const [searchTerm, setSearchTerm ] = useState(null);
   const navigate = useNavigate();
 
   // 세션에서 로그인 유저 정보 받아오기
@@ -63,6 +66,13 @@ const MainPage = () => {
     setCurrentUser(null);
   };
 
+  // 검색
+  const handleSearch = async ((searchType, searchTerm)) => {
+    await fetch(`/api/boards/search?field=${searchType}&keyword=${encodeURIComponent(searchTerm)}`)
+    .then((res) => (res.ok ? res.json() : Promise.reject()))
+    .then((data) => setSearchedPosts(data))
+  }
+
   return (
     <div>
       <Header currentUser={currentUser} onLogout={handleLogout} />
@@ -75,10 +85,9 @@ const MainPage = () => {
                 <BoardTypeSelector
                   selectedBoard={selectedBoard}
                   onSelectedBoard={setSelectedBoard}
+                  searchedPosts={searchedPosts}
                 />
                 <BoardControls onSearch={handleSearch} // (추가됨)
-                  selectedSearchType={searchType} // (추가됨)
-                  onSelectSearchType={setSearchType} // (추가됨)
                 />
               </div>
             }
