@@ -18,7 +18,7 @@ const CommentList = ({ BRD_id, PST_id, currentUser }) => {
 
       if (!res.ok) throw new Error('댓글 조회 실패');
       const data = await res.json();
-      setComments(data);
+      setComments(data.comments);
     } catch (err) {
       setError(err.message || '댓글 로딩 중 오류 발생');
     }
