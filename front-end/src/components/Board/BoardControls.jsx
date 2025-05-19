@@ -48,7 +48,7 @@ const handleSearch = async () => {
       throw new Error(data.message || '검색 실패');
     }
 
-    setResults(data.results || []);
+    setResults(data.data || []);
   } catch (err) {
     console.error('검색 오류:', err);
     setError('서버 오류가 발생했습니다.');
