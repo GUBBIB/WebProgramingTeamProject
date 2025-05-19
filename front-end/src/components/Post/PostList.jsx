@@ -67,6 +67,10 @@ const PostList = ({ BRD_id, onSelectedBoard, searchedPosts }) => { // (변경됨
     setPagination((prev) => ({ ...prev, currentPage: page }));
   };
 
+  useEffect(() => {
+    setPosts(searchParam.results);
+  }, [searchedPosts]);
+
   if (loading) return <div className="loading">로딩 중...</div>;
   if (error) return <div className="error">에러 발생: {error}</div>;
   if (!posts || posts.length === 0)
