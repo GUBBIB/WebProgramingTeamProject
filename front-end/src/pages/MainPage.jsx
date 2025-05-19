@@ -13,6 +13,9 @@ import BoardTypeSelector from "../components/Board/BoardTypeSelector";
 const MainPage = () => {
   const [selectedBoard, setSelectedBoard] = useState(1);
   const [currentUser, setCurrentUser] = useState(null);
+  const [searchedPosts, setSearchedPosts] = useState(null);
+  const [searchType, setSearchType] = useState("title");
+  const [searchTerm, setSearchTerm] = useState(null);
   const navigate = useNavigate();
 
   // 세션에서 로그인 유저 정보 받아오기
@@ -63,6 +66,39 @@ const MainPage = () => {
     setCurrentUser(null);
   };
 
+  // 검색
+  const handleSearch = async (searchType, searchTerm) => {
+    if (!searchTerm.trim()) {
+      setSearchedPosts(null); // ✅ 검색어 없으면 검색 상태 해제
+      return;
+    }
+    try {
+      const response = await fetch("/api/boards/search", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include", // 세션 인증 사용하는 경우
+        body: JSON.stringify({
+          field: searchType,
+          keyword: searchTerm,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error("검색 실패:", errorData.message);
+        return;
+      }
+
+      const data = await response.json();
+      console.log("검색 결과:", data);
+      setSearchedPosts(data);
+      // 여기서 data.results를 사용하여 화면에 출력하거나 상태 저장 가능
+    } catch (error) {
+    }
+  };
+
   return (
     <div>
       <Header currentUser={currentUser} onLogout={handleLogout} />
@@ -75,8 +111,11 @@ const MainPage = () => {
                 <BoardTypeSelector
                   selectedBoard={selectedBoard}
                   onSelectedBoard={setSelectedBoard}
+                  searchedPosts={searchedPosts}
                 />
-                <BoardControls />
+                <BoardControls
+                  onSearch={handleSearch} // (추가됨)
+                />
               </div>
             }
           />
@@ -111,7 +150,10 @@ const MainPage = () => {
           />
 
           {/* ✅ 회원가입 시 handleRegister 전달 */}
-          <Route path="/signup" element={<SignupPage onRegister={handleRegister} />} />
+          <Route
+            path="/signup"
+            element={<SignupPage onRegister={handleRegister} />}
+          />
 
           <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
           <Route

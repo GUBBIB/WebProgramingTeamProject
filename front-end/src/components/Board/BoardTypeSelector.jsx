@@ -3,9 +3,9 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import './BoardTypeSelector.css';
 import PostList from '../Post/PostList';
 
-const API_BASE_URL = '/api';
+const API_BASE_URL = '/api';// 실제 API 주소에 맞게 수정
 
-const BoardTypeSelector = ({ selectedBoard, onSelectedBoard}) => {
+const BoardTypeSelector = ({ selectedBoard, onSelectedBoard, searchedPosts}) => {
   const [boardTypes, setBoardTypes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -76,7 +76,7 @@ const BoardTypeSelector = ({ selectedBoard, onSelectedBoard}) => {
         ))}
       </div>
       {/* 선택된 게시판에 따라 PostList를 조건부 렌더링 */}
-      {selectedBoard && <PostList BRD_id={selectedBoard} key={selectedBoard} />}
+      {selectedBoard && <PostList BRD_id={selectedBoard} searchedPosts={searchedPosts} />}
     </div>
   );
 };

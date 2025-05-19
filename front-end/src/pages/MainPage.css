@@ -4,10 +4,10 @@
   margin: 0 auto; /* 중앙 정렬 */
 }
 
-.main-page-container {
+/*.main-page-container {
   /* 메인 페이지 컨테이너에 필요한 추가 스타일이 있다면 여기에 작성합니다. */
   /* 예를 들어, 게시판 섹션과 하단 컨트롤 섹션 사이의 구분선 등 */
-}
+/*}
 
 /* 전역 스타일 (index.css 또는 App.css에 위치하는 것이 더 일반적일 수 있습니다) */
 body {
