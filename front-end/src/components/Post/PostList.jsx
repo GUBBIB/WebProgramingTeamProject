@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import PostItem from './PostItem';
+import "./PostList.css";
 import Pagination from '../Board/Pagination'; // 실제 경로 확인 필요
 
 const API_BASE_URL = '/api'; // 예시 URL
