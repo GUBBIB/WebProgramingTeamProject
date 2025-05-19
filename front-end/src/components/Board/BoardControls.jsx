@@ -1,6 +1,6 @@
 // BoardController.jsx (예시)
 import React, { useState } from "react";
-import "./BoardController.css"; // 스타일 파일 경로 주의
+import "./BoardControls.css"; // 스타일 파일 경로 주의
 
 const BoardController = ({ onResultClick }) => {
   const [keyword, setKeyword] = useState('');
