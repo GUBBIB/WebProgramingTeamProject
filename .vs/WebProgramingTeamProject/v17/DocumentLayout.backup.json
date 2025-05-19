@@ -3,14 +3,6 @@
   "WorkspaceRootPath": "C:\\Users\\hyeop\\Desktop\\vscode\\WebProgramingTeamProject\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\hyeop\\Desktop\\vscode\\WebProgramingTeamProject\\front-end\\src\\pages\\LoginPage.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:front-end\\src\\pages\\LoginPage.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\hyeop\\Desktop\\vscode\\WebProgramingTeamProject\\back-end\\routes\\api.php||{3B902123-F8A7-4915-9F01-361F908088D0}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:back-end\\routes\\api.php||{3B902123-F8A7-4915-9F01-361F908088D0}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\hyeop\\Desktop\\vscode\\WebProgramingTeamProject\\front-end\\src\\components\\Board\\Pagination.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:front-end\\src\\components\\Board\\Pagination.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
     },
@@ -35,32 +27,6 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "LoginPage.jsx",
-              "DocumentMoniker": "C:\\Users\\hyeop\\Desktop\\vscode\\WebProgramingTeamProject\\front-end\\src\\pages\\LoginPage.jsx",
-              "RelativeDocumentMoniker": "front-end\\src\\pages\\LoginPage.jsx",
-              "ToolTip": "C:\\Users\\hyeop\\Desktop\\vscode\\WebProgramingTeamProject\\front-end\\src\\pages\\LoginPage.jsx",
-              "RelativeToolTip": "front-end\\src\\pages\\LoginPage.jsx",
-              "ViewState": "AgIAAE4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003663|",
-              "WhenOpened": "2025-05-16T15:31:03.432Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "api.php",
-              "DocumentMoniker": "C:\\Users\\hyeop\\Desktop\\vscode\\WebProgramingTeamProject\\back-end\\routes\\api.php",
-              "RelativeDocumentMoniker": "back-end\\routes\\api.php",
-              "ToolTip": "C:\\Users\\hyeop\\Desktop\\vscode\\WebProgramingTeamProject\\back-end\\routes\\api.php",
-              "RelativeToolTip": "back-end\\routes\\api.php",
-              "ViewState": "AgIAAAMAAAAAAAAAAADwvwAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
-              "WhenOpened": "2025-05-16T15:30:53.427Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
               "Title": "Pagination.jsx",
               "DocumentMoniker": "C:\\Users\\hyeop\\Desktop\\vscode\\WebProgramingTeamProject\\front-end\\src\\components\\Board\\Pagination.jsx",
               "RelativeDocumentMoniker": "front-end\\src\\components\\Board\\Pagination.jsx",
@@ -73,7 +39,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 1,
               "Title": "BoardTypeSelector.jsx",
               "DocumentMoniker": "C:\\Users\\hyeop\\Desktop\\vscode\\WebProgramingTeamProject\\front-end\\src\\components\\Board\\BoardTypeSelector.jsx",
               "RelativeDocumentMoniker": "front-end\\src\\components\\Board\\BoardTypeSelector.jsx",
@@ -81,11 +47,12 @@
               "RelativeToolTip": "front-end\\src\\components\\Board\\BoardTypeSelector.jsx",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003663|",
-              "WhenOpened": "2025-05-15T15:49:20.864Z"
+              "WhenOpened": "2025-05-15T15:49:20.864Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 2,
               "Title": "BoardControls.jsx",
               "DocumentMoniker": "C:\\Users\\hyeop\\Desktop\\vscode\\WebProgramingTeamProject\\front-end\\src\\components\\Board\\BoardControls.jsx",
               "RelativeDocumentMoniker": "front-end\\src\\components\\Board\\BoardControls.jsx",
@@ -93,7 +60,8 @@
               "RelativeToolTip": "front-end\\src\\components\\Board\\BoardControls.jsx",
               "ViewState": "AgIAAAYAAAAAAAAAAAAAAAkAAAAHAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003663|",
-              "WhenOpened": "2025-05-15T15:49:03.726Z"
+              "WhenOpened": "2025-05-15T15:49:03.726Z",
+              "EditorCaption": ""
             }
           ]
         }

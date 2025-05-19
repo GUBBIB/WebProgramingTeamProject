@@ -3,9 +3,9 @@ import './Pagination.css';
 
 const Pagination = ({ currentPage, totalPages, onPageChange }) => {
   const pageNumbers = [];
-  const maxPageButtonsToShow = 5; // 한 번에 보여줄 최대 페이지 버튼 수
+  const maxPageButtonsToShow = 5;
 
-  if (totalPages <= 1) return null; // 페이지가 1개 이하면 페이지네이션을 보여주지 않음
+  if (totalPages <= 1) return null;
 
   let startPage = Math.max(1, currentPage - Math.floor(maxPageButtonsToShow / 2));
   let endPage = Math.min(totalPages, startPage + maxPageButtonsToShow - 1);
@@ -30,7 +30,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
           </li>
         )}
 
-        {/* 첫 페이지로 이동 버튼 (옵션) */}
+        {/* 첫 페이지로 이동 */}
         {startPage > 1 && (
           <li className="page-item">
             <button onClick={() => onPageChange(1)} className="page-link">
@@ -38,9 +38,13 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
             </button>
           </li>
         )}
-        {startPage > 2 && <li className="page-item disabled"><span className="page-link">...</span></li>}
+        {startPage > 2 && (
+          <li className="page-item disabled">
+            <span className="page-link">...</span>
+          </li>
+        )}
 
-        {/* 페이지 번호 버튼 */}
+        {/* 페이지 번호들 */}
         {pageNumbers.map(number => (
           <li key={number} className={`page-item ${currentPage === number ? 'active' : ''}`}>
             <button onClick={() => onPageChange(number)} className="page-link">
@@ -49,8 +53,12 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
           </li>
         ))}
 
-        {/* 마지막 페이지로 이동 버튼 (옵션) */}
-        {endPage < totalPages -1 && <li className="page-item disabled"><span className="page-link">...</span></li>}
+        {/* 마지막 페이지로 이동 */}
+        {endPage < totalPages - 1 && (
+          <li className="page-item disabled">
+            <span className="page-link">...</span>
+          </li>
+        )}
         {endPage < totalPages && (
           <li className="page-item">
             <button onClick={() => onPageChange(totalPages)} className="page-link">

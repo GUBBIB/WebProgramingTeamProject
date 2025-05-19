@@ -1,8 +1,11 @@
 .post-list-container {
   margin-top: 1rem;
   padding: 1rem;
+<<<<<<< HEAD
   width: 100%;
   overflow-x: auto;
+=======
+>>>>>>> d31105bd25ce59fcbca9b76d83ac04598bc48357
 }
 
 .post-table {
@@ -60,4 +63,8 @@
   text-align: center;
   padding: 2rem;
   color: #6c757d;
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> d31105bd25ce59fcbca9b76d83ac04598bc48357
