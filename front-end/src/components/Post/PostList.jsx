@@ -56,7 +56,7 @@ const PostList = ({ BRD_id, onSelectedBoard, searchedPosts }) => { // (변경됨
   // 🔧 검색 결과 우선 적용
   useEffect(() => {
     if (searchedPosts) {
-      setPosts(searchedPosts.results);
+      setPosts(searchedPosts.results || []);
       setLoading(false);
     } else {
       fetchPosts();
