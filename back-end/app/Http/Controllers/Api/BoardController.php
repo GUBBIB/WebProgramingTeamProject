@@ -50,29 +50,21 @@ class BoardController extends Controller
         }
 
         if ($field === 'title') {
-            $results = Post::where('title', 'like', "%{$keyword}%")->get();
+            $results = Post::with('user')
+                ->whereRaw('LOWER(PST_title) LIKE ?', ['%' . strtolower($keyword) . '%'])
+                ->paginate(15);
         } elseif ($field === 'user') {
-            $results = Board::whereHas('user', function ($query) use ($keyword) {
-                $query->where('name', 'like', "%{$keyword}%");
-            })->get();
+            $results = Post::with('user')
+                ->whereHas('user', function ($query) use ($keyword) {
+                    $query->whereRaw('LOWER(USR_nickname) LIKE ?', ['%' . strtolower($keyword) . '%']);
+                })
+                ->paginate(15);
         } else {
             return response()->json([
                 'message' => '검색 기준은 title 또는 user 중 하나여야 합니다.'
             ], 400);
         }
 
-        return response()->json([
-            'field' => $field,
-            'keyword' => $keyword,
-            'results' => $results
-        ]);
+        return response()->json($results);
     }
-
-
-
-
-
-
-
-    
 }
