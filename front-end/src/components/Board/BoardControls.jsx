@@ -85,7 +85,7 @@ const BoardControls = ({ onSearch }) => {
         />
 
         <button
-          onClick={() => onSearch(field, keyword)}
+          onClick={onSearch(field, keyword)}
           className="search-button"
           disabled={isLoading || !keyword.trim()}
         >
