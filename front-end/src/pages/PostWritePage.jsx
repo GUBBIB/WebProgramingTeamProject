@@ -126,7 +126,7 @@ const PostWritePage = ({ currentUser }) => {
           navigate(`/boards/${numericBRD_id}/posts/${PST_id}`);
         } else {
           // 등록일 때는 메인 페이지(게시글 리스트 등)로 이동
-          navigate(`/boards/${numericBRD_id}`);
+          navigate(`/`);
         }
         return;
       } else {
