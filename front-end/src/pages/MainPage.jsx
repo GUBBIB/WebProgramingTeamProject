@@ -5,15 +5,17 @@ import PostDetailPage from "./PostDetailPage";
 import PostWritePage from "./PostWritePage";
 import SignupPage from "./SignupPage";
 import LoginPage from "./LoginPage";
+import ProfilePage from "./ProfilePage";
 import "./MainPage.css";
 import BoardControls from "../components/Board/BoardControls";
 import BoardTypeSelector from "../components/Board/BoardTypeSelector";
-import ProfilePage from "../pages/ProfilePage"
 
 const MainPage = () => {
   const [selectedBoard, setSelectedBoard] = useState(1);
   const [currentUser, setCurrentUser] = useState(null);
-  const [searchType, setSearchType] = useState("title"); // (추가됨) 검색 유형 상태
+  const [searchedPosts, setSearchedPosts] = useState(null);
+  const [searchType, setSearchType] = useState("title");
+  const [searchTerm, setSearchTerm] = useState(null);
   const navigate = useNavigate();
 
   // 세션에서 로그인 유저 정보 받아오기
@@ -64,7 +66,12 @@ const MainPage = () => {
     setCurrentUser(null);
   };
 
-const handleSearch = async (searchType, searchTerm) => {
+  // 검색
+  const handleSearch = async (searchType, searchTerm) => {
+    if (!searchTerm.trim()) {
+      setSearchedPosts(null); // ✅ 검색어 없으면 검색 상태 해제
+      return;
+    }
     try {
       const response = await fetch("/api/boards/search", {
         method: "POST",
@@ -86,11 +93,12 @@ const handleSearch = async (searchType, searchTerm) => {
 
       const data = await response.json();
       console.log("검색 결과:", data);
+      setSearchedPosts(data);
       // 여기서 data.results를 사용하여 화면에 출력하거나 상태 저장 가능
     } catch (error) {
-      console.error("에러 발생:", error);
     }
   };
+
   return (
     <div>
       <Header currentUser={currentUser} onLogout={handleLogout} />
@@ -103,11 +111,10 @@ const handleSearch = async (searchType, searchTerm) => {
                 <BoardTypeSelector
                   selectedBoard={selectedBoard}
                   onSelectedBoard={setSelectedBoard}
+                  searchedPosts={searchedPosts}
                 />
                 <BoardControls
                   onSearch={handleSearch} // (추가됨)
-                  selectedSearchType={searchType} // (추가됨)
-                  onSelectSearchType={setSearchType} // (추가됨)
                 />
               </div>
             }
@@ -118,6 +125,7 @@ const handleSearch = async (searchType, searchTerm) => {
             element={<PostDetailPage currentUser={currentUser} />}
           />
 
+          {/* ✅ 게시글 작성 */}
           <Route
             path="/write"
             element={
@@ -128,7 +136,25 @@ const handleSearch = async (searchType, searchTerm) => {
               )
             }
           />
-          <Route path="/signup" element={<SignupPage />} />
+
+          {/* ✅ 게시글 수정 (PST_id 존재 시 수정 모드로 PostWritePage 재사용) */}
+          <Route
+            path="/boards/:BRD_id/posts/:PST_id/edit"
+            element={
+              currentUser?.isLoggedIn ? (
+                <PostWritePage currentUser={currentUser} />
+              ) : (
+                <LoginPage onLogin={handleLogin} />
+              )
+            }
+          />
+
+          {/* ✅ 회원가입 시 handleRegister 전달 */}
+          <Route
+            path="/signup"
+            element={<SignupPage onRegister={handleRegister} />}
+          />
+
           <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
           <Route
             path="/profile"
