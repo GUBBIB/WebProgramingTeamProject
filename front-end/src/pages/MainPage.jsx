@@ -13,50 +13,46 @@ import BoardTypeSelector from "../components/Board/BoardTypeSelector";
 const MainPage = () => {
   const [selectedBoard, setSelectedBoard] = useState(1);
   const [currentUser, setCurrentUser] = useState(null);
-  const [searchType, setSearchType] = useState('title'); // 검색 유형 상태 추가
   const navigate = useNavigate();
 
-  const fetchCurrentUser = async () => {
-    try {
-      const res = await fetch('http://13.60.93.77/api/user', {
-        method: 'GET',
-        credentials: 'include',
-        headers: { 
-          Accept: 'application/json' 
-        }
-      });
-  
-      if (!res.ok) throw new Error('세션 없음');
-  
-      const data = await res.json();
-      console.log('현재 로그인한 유저 ID:', data.USR_id); 
-  
-      setCurrentUser({
-        username: data.USR_nickname,
-        isLoggedIn: true,
-        details: data
-      });
-  
-    } catch (err) {
-      console.error('세션 확인 실패:', err);
-      setCurrentUser(null);
-    }
-  };
-  
+  // 세션에서 로그인 유저 정보 받아오기
   useEffect(() => {
-    fetchCurrentUser();
-  }, []); 
-  
-  const handleLogin = async (username, userDetails) => {
+    fetch("/api/user", { credentials: "include" })
+      .then((res) => (res.ok ? res.json() : Promise.reject()))
+      .then((data) => {
+        if (data.user) {
+          setCurrentUser({
+            USR_id: data.user.USR_id,
+            isLoggedIn: true,
+            details: data.user,
+          });
+        } else {
+          setCurrentUser(null);
+        }
+      })
+      .catch(() => setCurrentUser(null));
+  }, []);
+
+  // 로그인 성공 시 호출
+  const handleLogin = (user) => {
+    console.log("로그인 성공:", user);
     setCurrentUser({
-      username,
+      USR_id: user.USR_id,
       isLoggedIn: true,
-      details: userDetails,
+      details: user,
     });
-  
-    await fetchCurrentUser();
   };
-  
+
+  // 회원가입 성공 시 호출
+  const handleRegister = (user) => {
+    console.log("회원가입 성공:", user);
+    setCurrentUser({
+      USR_id: user.USR_id,
+      isLoggedIn: true,
+      details: user,
+    });
+    navigate("/"); // 회원가입 후 메인 페이지로 이동
+  };
 
   // 로그아웃
   const handleLogout = async () => {
@@ -65,12 +61,6 @@ const MainPage = () => {
       credentials: "include",
     });
     setCurrentUser(null);
-    // 필요시 navigate('/')
-  };
-
-  const handleSearch = async (searchTerm, searchType) => {
-    console.log(`검색 실행: ${searchTerm}, 검색 유형: ${searchType}`);
-    // 여기에 검색 API 호출 로직 구현
   };
 
   return (
@@ -78,22 +68,17 @@ const MainPage = () => {
       <Header currentUser={currentUser} onLogout={handleLogout} />
       <div className="app-main-content">
         <Routes>
-          <Route path="/" element={
-            <div>
-              <BoardTypeSelector selectedBoard={selectedBoard} onSelectedBoard={setSelectedBoard}/>
-              <BoardControls 
-                onSearch={handleSearch}
-                selectedSearchType={searchType}
-                onSelectSearchType={setSearchType}
-              />
-            </div>
-          } />
-
-          <Route path="/boards/:BRD_id/posts/:PST_id" element={<PostDetailPage currentUser={currentUser} />} />
-
-          <Route path="/write" element={currentUser?.isLoggedIn 
-            ? <PostWritePage currentUser={currentUser} /> 
-            : <LoginPage onLogin={handleLogin} />} 
+          <Route
+            path="/"
+            element={
+              <div>
+                <BoardTypeSelector
+                  selectedBoard={selectedBoard}
+                  onSelectedBoard={setSelectedBoard}
+                />
+                <BoardControls />
+              </div>
+            }
           />
 
           <Route
@@ -112,7 +97,9 @@ const MainPage = () => {
             }
           />
 
-          <Route path="/signup" element={<SignupPage />} />
+          {/* ✅ 회원가입 시 handleRegister 전달 */}
+          <Route path="/signup" element={<SignupPage onRegister={handleRegister} />} />
+
           <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
           <Route
             path="/profile"
