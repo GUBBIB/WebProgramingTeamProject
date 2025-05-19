@@ -6,7 +6,7 @@ import CommentList from "../components/Comment/CommentList";
 import "../components/Comment/Comment.css";
 import "./PostDetailPage.css";
 
-const API_BASE_URL = "http://13.60.93.77/api";
+const API_BASE_URL = '/api';
 
 const PostDetailPage = ({ currentUser }) => {
   const { BRD_id, PST_id } = useParams();

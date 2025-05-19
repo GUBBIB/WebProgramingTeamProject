@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import './SignupPage.css';
 
-const API_BASE_URL = 'http://13.60.93.77/api';
+const API_BASE_URL = '/api';
 
 const SignupPage = ({ onRegister }) => {
   const [USR_nickname, setNickname] = useState('');

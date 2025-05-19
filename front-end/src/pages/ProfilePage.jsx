@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './ProfilePage.css'; // 필요시 별도 스타일링
 
-const API_BASE_URL = 'http://13.60.93.77/api';
+const API_BASE_URL = '/api';
 
 const ProfilePage = ({ currentUser, onProfileUpdate }) => {
     const [USR_nickname, setNickname] = useState(currentUser?.USR_nickname || '');

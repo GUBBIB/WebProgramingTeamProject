@@ -4,7 +4,7 @@ import PostItem from "./PostItem";
 import "./PostList.css";
 import Pagination from "../Board/Pagination";
 
-const API_BASE_URL = "http://13.60.93.77/api";
+const API_BASE_URL = '/api';
 
 const PostList = ({ BRD_id }) => {
   const [posts, setPosts] = useState([]);
