@@ -21,73 +21,60 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
   return (
     <nav className="pagination-container">
       <ul className="pagination">
-        {/* === 이전 페이지 버튼 === */}
-        <div className="pagination-prev-next">
-          {currentPage > 1 && (
-            <li className="page-item">
-              <button onClick={() => onPageChange(currentPage - 1)} className="page-link">
-                이전
-              </button>
-            </li>
-          )}
-        </div>
+        {/* 이전 페이지 버튼 */}
+        {currentPage > 1 && (
+          <li className="page-item">
+            <button onClick={() => onPageChange(currentPage - 1)} className="page-link">
+              이전
+            </button>
+          </li>
+        )}
 
-        {/* === 첫 페이지 및 ... 표시 === */}
-        <div className="pagination-first">
-          {startPage > 1 && (
-            <li className="page-item">
-              <button onClick={() => onPageChange(1)} className="page-link">
-                1
-              </button>
-            </li>
-          )}
-          {startPage > 2 && (
-            <li className="page-item disabled">
-              <span className="page-link">...</span>
-            </li>
-          )}
-        </div>
+        {/* 첫 페이지로 이동 */}
+        {startPage > 1 && (
+          <li className="page-item">
+            <button onClick={() => onPageChange(1)} className="page-link">
+              1
+            </button>
+          </li>
+        )}
+        {startPage > 2 && (
+          <li className="page-item disabled">
+            <span className="page-link">...</span>
+          </li>
+        )}
 
-        {/* === 가운데 페이지 번호들 === */}
-        <div className="pagination-numbers">
-          {pageNumbers.map(number => (
-            <li
-              key={number}
-              className={`page-item ${currentPage === number ? 'active' : ''}`}
-            >
-              <button onClick={() => onPageChange(number)} className="page-link">
-                {number}
-              </button>
-            </li>
-          ))}
-        </div>
+        {/* 페이지 번호들 */}
+        {pageNumbers.map(number => (
+          <li key={number} className={`page-item ${currentPage === number ? 'active' : ''}`}>
+            <button onClick={() => onPageChange(number)} className="page-link">
+              {number}
+            </button>
+          </li>
+        ))}
 
-        {/* === ... 및 마지막 페이지 === */}
-        <div className="pagination-last">
-          {endPage < totalPages - 1 && (
-            <li className="page-item disabled">
-              <span className="page-link">...</span>
-            </li>
-          )}
-          {endPage < totalPages && (
-            <li className="page-item">
-              <button onClick={() => onPageChange(totalPages)} className="page-link">
-                {totalPages}
-              </button>
-            </li>
-          )}
-        </div>
+        {/* 마지막 페이지로 이동 */}
+        {endPage < totalPages - 1 && (
+          <li className="page-item disabled">
+            <span className="page-link">...</span>
+          </li>
+        )}
+        {endPage < totalPages && (
+          <li className="page-item">
+            <button onClick={() => onPageChange(totalPages)} className="page-link">
+              {totalPages}
+            </button>
+          </li>
+        )}
 
-        {/* === 다음 페이지 버튼 === */}
-        <div className="pagination-prev-next">
-          {currentPage < totalPages && (
-            <li className="page-item">
-              <button onClick={() => onPageChange(currentPage + 1)} className="page-link">
-                다음
-              </button>
-            </li>
-          )}
-        </div>
+        {/* 다음 페이지 버튼 */}
+        {currentPage < totalPages && (
+          <li className="page-item">
+            <button onClick={() => onPageChange(currentPage + 1)} className="page-link">
+              다음
+            </button>
+          </li>
+        )}
       </ul>
     </nav>
   );
