@@ -33,10 +33,10 @@ const BoardControls = ({ onResultClick }) => {
       setError(null);
 
       const query = new URLSearchParams({ field, keyword }).toString();
-      console.log('요청 URL:', `/api/boards/search?${query}`);
+      console.log('요청 URL:', `/api/boards/search`);
 
-      const response = await fetch(`/api/boards/search?${query}`, {
-        method: 'GET',
+      const response = await fetch(`/api/boards/search`, {
+        method: 'POST',
       });
 
       const data = await response.json();
@@ -47,7 +47,7 @@ const BoardControls = ({ onResultClick }) => {
         throw new Error(data.message || '검색 실패');
       }
 
-      setResults(data.data || []);
+      setResults(data.results || []);
     } catch (err) {
       console.error('검색 오류:', err);
       setError('서버 오류가 발생했습니다.');
@@ -100,8 +100,7 @@ const BoardControls = ({ onResultClick }) => {
 
       <button
         onClick={handleWritePost}
-        className="write-post-button"
-      >
+        className="write-post-button">
         게시글 작성
       </button>
 
