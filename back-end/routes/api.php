@@ -18,10 +18,7 @@ Route::post('/posts', [PostController::class, 'store']);
 Route::post('/comments', [CommentController::class, 'store']);
 Route::post('/boards/{BRD_id}/posts/{PST_id}/view', [PostController::class, 'incrementViews']);
 
-Route::get('/boards/search', [BoardController::class, 'board_Search_By_Keyword']);
-
-// ✅ 게시글 검색 API (제목 or 작성자 기준)
-Route::get('/posts/search', [PostController::class, 'searchByField']);
+Route::post('/boards/search', [BoardController::class, 'board_Search_By_Keyword']);
 
 // 로그인 관련 API
 Route::post('/register', [AuthController::class, 'register']);

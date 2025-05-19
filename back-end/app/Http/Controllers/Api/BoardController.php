@@ -41,7 +41,7 @@ class BoardController extends Controller
     public function board_Search_By_Keyword(Request $request)
     {
         $keyword = $request->input('keyword');
-        $field = $request->input('field'); // 'title' 또는 'user'
+        $field = $request->input('field');
 
         if (!$keyword || !$field) {
             return response()->json([
@@ -50,11 +50,15 @@ class BoardController extends Controller
         }
 
         if ($field === 'title') {
-            $results = Post::where('title', 'like', "%{$keyword}%")->get();
+            $results = Post::with('user')
+                ->where('PST_title', 'like', "%{$keyword}%")
+                ->get();
         } elseif ($field === 'user') {
-            $results = Board::whereHas('user', function ($query) use ($keyword) {
-                $query->where('name', 'like', "%{$keyword}%");
-            })->get();
+            $results = Post::with('user')
+                ->whereHas('user', function ($query) use ($keyword) {
+                    $query->where('USR_nickname', 'like', "%{$keyword}%");
+                })
+                ->get();
         } else {
             return response()->json([
                 'message' => '검색 기준은 title 또는 user 중 하나여야 합니다.'
@@ -67,12 +71,4 @@ class BoardController extends Controller
             'results' => $results
         ]);
     }
-
-
-
-
-
-
-
-    
 }
