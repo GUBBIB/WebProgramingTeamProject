@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import MDEditor from "@uiw/react-md-editor";
 import "./PostWritePage.css";
 
-const API_BASE_URL = "http://13.60.93.77/api";
+const API_BASE_URL = '/api';
 
 const PostWritePage = ({ currentUser }) => {
   const navigate = useNavigate();

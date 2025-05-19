@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import './LoginPage.css';
 
-const API_BASE_URL = 'http://13.60.93.77/api';
+const API_BASE_URL = '/api';
 
 const LoginPage = ({ onLogin }) => {
   const [USR_email, setEmail] = useState('');

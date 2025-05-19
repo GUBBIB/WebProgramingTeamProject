@@ -90,7 +90,6 @@
   -webkit-line-clamp: 2; /* 벤더 프리픽스 */
   -webkit-box-orient: vertical;
   line-clamp: 2;         /* 표준 속성 */
-  box-orient: vertical;  /* 일부 브라우저 호환 */
 }
 .post-meta {
   display: flex;
@@ -106,3 +105,8 @@
   color: #666;
   margin-top: 20px;
 }
+
+ .write-post-button {
+    width: 100%;
+    margin-top: 0.5rem; /* 검색/필터 그룹과 작성 버튼 사이 간격 */
+  }
