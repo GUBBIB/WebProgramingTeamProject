@@ -5,14 +5,15 @@ import PostDetailPage from "./PostDetailPage";
 import PostWritePage from "./PostWritePage";
 import SignupPage from "./SignupPage";
 import LoginPage from "./LoginPage";
-import ProfilePage from "./ProfilePage";
 import "./MainPage.css";
 import BoardControls from "../components/Board/BoardControls";
 import BoardTypeSelector from "../components/Board/BoardTypeSelector";
+import ProfilePage from "../pages/ProfilePage"
 
 const MainPage = () => {
   const [selectedBoard, setSelectedBoard] = useState(1);
   const [currentUser, setCurrentUser] = useState(null);
+  const [searchType, setSearchType] = useState("title"); // (추가됨) 검색 유형 상태
   const navigate = useNavigate();
 
   // 세션에서 로그인 유저 정보 받아오기
@@ -63,6 +64,12 @@ const MainPage = () => {
     setCurrentUser(null);
   };
 
+  // (추가됨) 검색 핸들러
+  const handleSearch = (term, type) => {
+    console.log(`🔍 검색어: ${term}, 종류: ${type}`);
+    // 여기에 게시글 검색 API 호출을 넣으면 됨
+  };
+
   return (
     <div>
       <Header currentUser={currentUser} onLogout={handleLogout} />
@@ -76,7 +83,8 @@ const MainPage = () => {
                   selectedBoard={selectedBoard}
                   onSelectedBoard={setSelectedBoard}
                 />
-                <BoardControls onSearch={handleSearch} // (추가됨)
+                <BoardControls
+                  onSearch={handleSearch} // (추가됨)
                   selectedSearchType={searchType} // (추가됨)
                   onSelectSearchType={setSearchType} // (추가됨)
                 />
@@ -84,52 +92,36 @@ const MainPage = () => {
             }
           />
 
-      <Route
-        path="/boards/:BRD_id/posts/:PST_id"
-        element={<PostDetailPage currentUser={currentUser} />}
-      />
+          <Route
+            path="/boards/:BRD_id/posts/:PST_id"
+            element={<PostDetailPage currentUser={currentUser} />}
+          />
 
-      {/* ✅ 게시글 작성 */}
-      <Route
-        path="/write"
-        element={
-          currentUser?.isLoggedIn ? (
-            <PostWritePage currentUser={currentUser} />
-          ) : (
-            <LoginPage onLogin={handleLogin} />
-          )
-        }
-      />
-
-      {/* ✅ 게시글 수정 (PST_id 존재 시 수정 모드로 PostWritePage 재사용) */}
-      <Route
-        path="/boards/:BRD_id/posts/:PST_id/edit"
-        element={
-          currentUser?.isLoggedIn ? (
-            <PostWritePage currentUser={currentUser} />
-          ) : (
-            <LoginPage onLogin={handleLogin} />
-          )
-        }
-      />
-
-      {/* ✅ 회원가입 시 handleRegister 전달 */}
-      <Route path="/signup" element={<SignupPage onRegister={handleRegister} />} />
-
-      <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
-      <Route
-        path="/profile"
-        element={
-          currentUser?.isLoggedIn ? (
-            <ProfilePage currentUser={currentUser} />
-          ) : (
-            <LoginPage onLogin={handleLogin} />
-          )
-        }
-      />
-    </Routes>
-      </div >
-    </div >
+          <Route
+            path="/write"
+            element={
+              currentUser?.isLoggedIn ? (
+                <PostWritePage currentUser={currentUser} />
+              ) : (
+                <LoginPage onLogin={handleLogin} />
+              )
+            }
+          />
+          <Route path="/signup" element={<SignupPage />} />
+          <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
+          <Route
+            path="/profile"
+            element={
+              currentUser?.isLoggedIn ? (
+                <ProfilePage currentUser={currentUser} />
+              ) : (
+                <LoginPage onLogin={handleLogin} />
+              )
+            }
+          />
+        </Routes>
+      </div>
+    </div>
   );
 };
 
