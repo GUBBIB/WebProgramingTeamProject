@@ -84,50 +84,50 @@ const MainPage = () => {
             }
           />
 
-          <Route
-            path="/boards/:BRD_id/posts/:PST_id"
-            element={<PostDetailPage currentUser={currentUser} />}
-          />
+      <Route
+        path="/boards/:BRD_id/posts/:PST_id"
+        element={<PostDetailPage currentUser={currentUser} />}
+      />
 
-          {/* ✅ 게시글 작성 */}
-          <Route
-            path="/write"
-            element={
-              currentUser?.isLoggedIn ? (
-                <PostWritePage currentUser={currentUser} />
-              ) : (
-                <LoginPage onLogin={handleLogin} />
-              )
-            }
-          />
+      {/* ✅ 게시글 작성 */}
+      <Route
+        path="/write"
+        element={
+          currentUser?.isLoggedIn ? (
+            <PostWritePage currentUser={currentUser} />
+          ) : (
+            <LoginPage onLogin={handleLogin} />
+          )
+        }
+      />
 
-          {/* ✅ 게시글 수정 (PST_id 존재 시 수정 모드로 PostWritePage 재사용) */}
-          <Route
-            path="/boards/:BRD_id/posts/:PST_id/edit"
-            element={
-              currentUser?.isLoggedIn ? (
-                <PostWritePage currentUser={currentUser} />
-              ) : (
-                <LoginPage onLogin={handleLogin} />
-              )
-            }
-          />
+      {/* ✅ 게시글 수정 (PST_id 존재 시 수정 모드로 PostWritePage 재사용) */}
+      <Route
+        path="/boards/:BRD_id/posts/:PST_id/edit"
+        element={
+          currentUser?.isLoggedIn ? (
+            <PostWritePage currentUser={currentUser} />
+          ) : (
+            <LoginPage onLogin={handleLogin} />
+          )
+        }
+      />
 
-          {/* ✅ 회원가입 시 handleRegister 전달 */}
-          <Route path="/signup" element={<SignupPage onRegister={handleRegister} />} />
+      {/* ✅ 회원가입 시 handleRegister 전달 */}
+      <Route path="/signup" element={<SignupPage onRegister={handleRegister} />} />
 
-          <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
-          <Route
-            path="/profile"
-            element={
-              currentUser?.isLoggedIn ? (
-                <ProfilePage currentUser={currentUser} />
-              ) : (
-                <LoginPage onLogin={handleLogin} />
-              )
-            }
-          />
-        </Routes>
+      <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
+      <Route
+        path="/profile"
+        element={
+          currentUser?.isLoggedIn ? (
+            <ProfilePage currentUser={currentUser} />
+          ) : (
+            <LoginPage onLogin={handleLogin} />
+          )
+        }
+      />
+    </Routes>
       </div >
     </div >
   );

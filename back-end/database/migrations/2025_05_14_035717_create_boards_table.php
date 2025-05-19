@@ -16,7 +16,14 @@ return new class extends Migration
             $table->string('BRD_name')->unique();
             $table->timestamps();
         });
-    }    
+        
+        DB::table('boards')->insert([
+            ['BRD_name' => '전체', 'created_at' => now(), 'updated_at' => now()],
+            ['BRD_name' => '자유 게시판', 'created_at' => now(), 'updated_at' => now()],
+            ['BRD_name' => '코드 게시판', 'created_at' => now(), 'updated_at' => now()],
+            ['BRD_name' => '질문 게시판', 'created_at' => now(), 'updated_at' => now()],
+        ]);
+    }
 
     /**
      * Reverse the migrations.
