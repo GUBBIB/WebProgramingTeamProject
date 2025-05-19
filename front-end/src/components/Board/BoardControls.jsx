@@ -14,7 +14,7 @@ const BoardControls = ({ onResultClick }) => {
   // 검색어 입력 핸들링
   const handleKeywordChange = (e) => setKeyword(e.target.value);
 
-  // 검색 기준 변경 (title / user)
+  // 검색 기준(제목/작성자) 변경
   const handleFieldChange = (e) => setField(e.target.value);
 
   // 검색 실행
@@ -24,11 +24,16 @@ const BoardControls = ({ onResultClick }) => {
       return;
     }
 
+    console.log('검색 실행됨');
+    console.log('field:', field);
+    console.log('keyword:', keyword);
+
     try {
       setIsLoading(true);
       setError(null);
 
       const query = new URLSearchParams({ field, keyword }).toString();
+      console.log('요청 URL:', `/api/boards/search?${query}`);
 
       const response = await fetch(`/api/boards/search?${query}`, {
         method: 'GET',
@@ -36,11 +41,13 @@ const BoardControls = ({ onResultClick }) => {
 
       const data = await response.json();
 
+      console.log('서버 응답:', data);
+
       if (!response.ok) {
         throw new Error(data.message || '검색 실패');
       }
 
-      setResults(data.results || []);
+      setResults(data.data || []);
     } catch (err) {
       console.error('검색 오류:', err);
       setError('서버 오류가 발생했습니다.');
@@ -53,19 +60,13 @@ const BoardControls = ({ onResultClick }) => {
   // 엔터키 입력 시 검색 실행
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') {
-      e.preventDefault(); // form 제출 방지용
       handleSearch();
     }
   };
 
-  // 게시글 작성 페이지 이동
-  const handleWritePost = () => {
-    navigate('/write');
-  };
-
   return (
-    <div className="board-controls-container">
-      <div className="search-and-filter-container">
+    <div className="search-container">
+      <div className="search-bar">
         <select
           value={field}
           onChange={handleFieldChange}
@@ -80,7 +81,7 @@ const BoardControls = ({ onResultClick }) => {
           placeholder={`${field === 'title' ? '제목' : '작성자'}으로 검색...`}
           value={keyword}
           onChange={handleKeywordChange}
-          onKeyDown={handleKeyDown}
+          onKeyDown={handleKeyDown} // 엔터키 검색 지원
           className="search-input"
         />
 
