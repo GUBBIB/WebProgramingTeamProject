@@ -62,7 +62,7 @@ const PostList = ({ BRD_id, onSelectedBoard, searchedPosts }) => { // (변경됨
     } else {
       fetchPosts();
     }
-  }, [fetchPosts, searchedPosts]); // (변경됨)
+  }, [fetchPosts]); // (변경됨)
 
   const handlePageChange = (page) => {
     setPagination((prev) => ({ ...prev, currentPage: page }));
