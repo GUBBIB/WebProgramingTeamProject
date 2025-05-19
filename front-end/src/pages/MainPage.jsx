@@ -68,6 +68,10 @@ const MainPage = () => {
 
   // 검색
   const handleSearch = async (searchType, searchTerm) => {
+    if (!searchTerm.trim()) {
+      setSearchedPosts(null); // ✅ 검색어 없으면 검색 상태 해제
+      return;
+    }
     try {
       const response = await fetch("/api/boards/search", {
         method: "POST",
