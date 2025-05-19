@@ -86,8 +86,6 @@ const MainPage = () => {
                 selectedSearchType={searchType}
                 onSelectSearchType={setSearchType}
               />
-              {/* Q&A 게시판(ID=3)일 때만 QAChatGPT 컴포넌트 표시 */}
-              <QAChatGPT boardId={selectedBoard} />
             </div>
           } />
 

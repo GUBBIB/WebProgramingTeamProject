@@ -3,12 +3,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\BoardController;
 use App\Http\Controllers\Api\PostController;
 use App\Http\Controllers\Api\CommentController;
-<<<<<<< HEAD
-use App\Http\Controllers\Api\OpenAIController;
-use Illuminate\Http\Request;
-=======
 use App\Http\Controllers\AuthController;
->>>>>>> e5bc4f91a15caed096135e1c9c5491a5b5ca2689
 
 // 게시판/게시글/댓글 관련 API
 Route::get('/boards', [BoardController::class, 'board_List_Search']);
@@ -22,13 +17,6 @@ Route::post('/posts', [PostController::class, 'store']);
 Route::post('/comments', [CommentController::class, 'store']);
 Route::post('/boards/{BRD_id}/posts/{PST_id}/view', [PostController::class, 'incrementViews']);
 
-<<<<<<< HEAD
-// 게시판 생성 
-Route::post('/boards', [BoardController::class, 'store']);
-
-// OpenAI API 연동
-Route::post('/ask-openai', [OpenAIController::class, 'askOpenAI']);
-=======
 Route::get('/boards/search', [BoardController::class, 'board_Search_By_Keyword']);
 
 // ✅ 게시글 검색 API (제목 or 작성자 기준)
@@ -48,4 +36,3 @@ Route::put('/posts/{PST_id}', [PostController::class, 'update']);
 
 // 게시글 삭제
 Route::delete('/posts/{PST_id}', [PostController::class, 'destroy']);
->>>>>>> e5bc4f91a15caed096135e1c9c5491a5b5ca2689
