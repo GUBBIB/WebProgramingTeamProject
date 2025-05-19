@@ -17,7 +17,6 @@ const PostWritePage = ({ currentUser }) => {
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // 게시판 목록 로딩
   useEffect(() => {
     const fetchBoards = async () => {
       try {
@@ -30,12 +29,10 @@ const PostWritePage = ({ currentUser }) => {
         }
 
         const data = await response.json();
-
-        // '전체' 게시판 제외
         const filteredBoards = data.filter(board => board.BRD_name !== '전체');
         setBoardTypes(filteredBoards);
 
-        if (filteredBoards.length > 0) {
+        if (filteredBoards.length > 0 && !isEditMode) {
           setSelectedBoard(Number(filteredBoards[0].BRD_id));
         }
       } catch (err) {
@@ -47,7 +44,6 @@ const PostWritePage = ({ currentUser }) => {
     fetchBoards();
   }, [isEditMode]);
 
-  // 수정 모드일 경우 게시글 데이터 불러오기
   useEffect(() => {
     const fetchPost = async () => {
       if (!isEditMode) return;
@@ -92,14 +88,11 @@ const PostWritePage = ({ currentUser }) => {
 
     try {
       const numericBRD_id = Number(BRD_id);
-
-      if (isNaN(numericBRD_id)) {
-        throw new Error('게시판 ID가 올바르지 않습니다.');
-      }
+      if (isNaN(numericBRD_id)) throw new Error('게시판 ID가 올바르지 않습니다.');
 
       const method = isEditMode ? 'PUT' : 'POST';
       const url = isEditMode
-        ? `${API_BASE_URL}/boards/${paramBRDId}/posts/${PST_id}`
+        ? `${API_BASE_URL}/posts/${PST_id}` // ✅ 수정용 경로
         : `${API_BASE_URL}/posts`;
 
       const response = await fetch(url, {
@@ -119,10 +112,10 @@ const PostWritePage = ({ currentUser }) => {
 
       const data = await response.json();
 
-      if (response.ok && data.PST_id) {
-        alert('게시글이 성공적으로 등록되었습니다.');
-        // 게시글 등록 후 메인페이지로 이동
-        navigate('/');
+      if (response.ok && (data.PST_id || isEditMode)) {
+        alert(isEditMode ? '게시글이 수정되었습니다.' : '게시글이 등록되었습니다.');
+        navigate(`/boards/${numericBRD_id}/posts/${isEditMode ? PST_id : data.PST_id}`);
+        return;
       } else {
         throw new Error(data.message || `오류 코드: ${response.status}`);
       }
@@ -132,14 +125,12 @@ const PostWritePage = ({ currentUser }) => {
     } finally {
       setIsSubmitting(false);
     }
-
-    navigate('/');
   };
 
   return (
     <div className="post-write-container">
       <h1 className="page-title">{isEditMode ? '게시글 수정' : '새 게시글 작성'}</h1>
-      
+
       {error && (
         <p className="error-message">
           {error.split('\n').map((line, i) => (
@@ -156,7 +147,7 @@ const PostWritePage = ({ currentUser }) => {
             value={BRD_id}
             onChange={handleBoardChange}
             className="form-control"
-            disabled={isSubmitting || isEditMode} // 수정 모드에서는 게시판 선택 비활성화
+            disabled={isSubmitting || isEditMode}
             required
           >
             {boardTypes.length > 0 ? (
