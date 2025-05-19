@@ -117,16 +117,12 @@ const PostWritePage = ({ currentUser }) => {
 
       const data = await response.json();
 
-      if (response.ok && (data.PST_id || isEditMode)) {
-        alert(
-          isEditMode ? "게시글이 수정되었습니다." : "게시글이 등록되었습니다."
-        );
+      if (response.ok) {
+        alert(isEditMode ? '게시글이 수정되었습니다.' : '게시글이 등록되었습니다.');
         if (isEditMode) {
-          // 수정일 때는 상세보기 페이지로 이동
           navigate(`/boards/${numericBRD_id}/posts/${PST_id}`);
         } else {
-          // 등록일 때는 메인 페이지(게시글 리스트 등)로 이동
-          navigate(-1);
+          navigate('/'); // 이게 무조건 실행됨
         }
         return;
       } else {
