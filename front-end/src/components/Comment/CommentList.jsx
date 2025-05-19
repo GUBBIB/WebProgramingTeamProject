@@ -40,9 +40,9 @@ const CommentList = ({ BRD_id, PST_id, currentUser }) => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          BRD_id,
-          PST_id,
-          CMT_content: commentText,
+          USR_id: currentUser?.USR_id,
+          PST_id: PST_id,
+          COM_content: commentText,
         }),
       });
 
@@ -64,7 +64,7 @@ const CommentList = ({ BRD_id, PST_id, currentUser }) => {
       )}
 
       {comments?.map((comment) => (
-        <CommentItem key={comment.CMT_id} comment={comment} />
+        <CommentItem key={comment.COM_id} comment={comment} />
       ))}
 
       {/* 댓글 작성 폼 */}
