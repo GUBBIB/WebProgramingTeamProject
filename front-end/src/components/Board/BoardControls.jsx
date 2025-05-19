@@ -64,6 +64,10 @@ const BoardControls = ({ onResultClick }) => {
     }
   };
 
+  const handleWritePost = () => {
+  navigate('/write');
+  }
+  
   return (
     <div className="search-container">
       <div className="search-bar">
