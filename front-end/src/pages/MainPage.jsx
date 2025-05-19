@@ -1,73 +1,69 @@
-import React, { useState, useEffect } from "react";
-import { Routes, Route, useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Route, Routes, useNavigate } from "react-router-dom";
 import Header from "../components/Header/Header";
+import BoardTypeSelector from "../components/Board/BoardTypeSelector";
+import BoardControls from "../components/Board/BoardControls";
 import PostDetailPage from "./PostDetailPage";
 import PostWritePage from "./PostWritePage";
-import SignupPage from "./SignupPage";
-import LoginPage from "./LoginPage";
-import "./MainPage.css";
-import BoardControls from "../components/Board/BoardControls";
-import BoardTypeSelector from "../components/Board/BoardTypeSelector";
-import ProfilePage from "../pages/ProfilePage"
+import MyPage from "./MyPage";
 
 const MainPage = () => {
   const [selectedBoard, setSelectedBoard] = useState(1);
   const [currentUser, setCurrentUser] = useState(null);
-  const [searchType, setSearchType] = useState("title"); // (추가됨) 검색 유형 상태
+  const [searchType, setSearchType] = useState("title");
+  const [searchedPosts, setSearchedPosts] = useState(null); // 🔧 (변경됨)
   const navigate = useNavigate();
 
-  // 세션에서 로그인 유저 정보 받아오기
+  const fetchCurrentUser = async () => {
+    try {
+      const response = await fetch("/api/user", {
+        credentials: "include",
+        headers: { Accept: "application/json" },
+      });
+      if (!response.ok) throw new Error("사용자 정보 불러오기 실패");
+
+      const data = await response.json();
+      setCurrentUser(data);
+    } catch (err) {
+      console.error("로그인된 사용자 없음");
+      setCurrentUser(null);
+    }
+  };
+
   useEffect(() => {
-    fetch("/api/user", { credentials: "include" })
-      .then((res) => (res.ok ? res.json() : Promise.reject()))
-      .then((data) => {
-        if (data.user) {
-          setCurrentUser({
-            USR_id: data.user.USR_id,
-            isLoggedIn: true,
-            details: data.user,
-          });
-        } else {
-          setCurrentUser(null);
-        }
-      })
-      .catch(() => setCurrentUser(null));
+    fetchCurrentUser();
   }, []);
 
-  // 로그인 성공 시 호출
-  const handleLogin = (user) => {
-    console.log("로그인 성공:", user);
-    setCurrentUser({
-      USR_id: user.USR_id,
-      isLoggedIn: true,
-      details: user,
-    });
-  };
-
-  // 회원가입 성공 시 호출
-  const handleRegister = (user) => {
-    console.log("회원가입 성공:", user);
-    setCurrentUser({
-      USR_id: user.USR_id,
-      isLoggedIn: true,
-      details: user,
-    });
-    navigate("/"); // 회원가입 후 메인 페이지로 이동
-  };
-
-  // 로그아웃
   const handleLogout = async () => {
-    await fetch("/api/logout", {
-      method: "POST",
-      credentials: "include",
-    });
-    setCurrentUser(null);
+    try {
+      await fetch("/api/logout", {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          Accept: "application/json",
+        },
+      });
+      setCurrentUser(null);
+      navigate("/");
+    } catch (error) {
+      console.error("로그아웃 실패:", error);
+    }
   };
 
-  // (추가됨) 검색 핸들러
-  const handleSearch = (term, type) => {
+  const handleSearch = async (term, type) => {
     console.log(`🔍 검색어: ${term}, 종류: ${type}`);
-    // 여기에 게시글 검색 API 호출을 넣으면 됨
+    try {
+      const response = await fetch(
+        `/api/posts/search?term=${encodeURIComponent(term)}&type=${type}&BRD_id=${selectedBoard}`,
+        { credentials: "include" }
+      );
+      if (!response.ok) throw new Error("검색 실패");
+      const data = await response.json();
+      setSearchedPosts(data); // 🔧 (변경됨)
+    } catch (error) {
+      console.error("검색 중 오류 발생:", error);
+      setSearchedPosts([]); // 오류 발생 시 빈 배열로 초기화
+    }
   };
 
   return (
@@ -81,44 +77,23 @@ const MainPage = () => {
               <div>
                 <BoardTypeSelector
                   selectedBoard={selectedBoard}
-                  onSelectedBoard={setSelectedBoard}
+                  onSelectedBoard={(brdId) => {
+                    setSelectedBoard(brdId);
+                    setSearchedPosts(null); // 🔧 (변경됨) 게시판 변경 시 검색 초기화
+                  }}
+                  searchedPosts={searchedPosts} // 🔧 (변경됨)
                 />
                 <BoardControls
-                  onSearch={handleSearch} // (추가됨)
-                  selectedSearchType={searchType} // (추가됨)
-                  onSelectSearchType={setSearchType} // (추가됨)
+                  onSearch={handleSearch}
+                  selectedSearchType={searchType}
+                  onSelectSearchType={setSearchType}
                 />
               </div>
             }
           />
-
-          <Route
-            path="/boards/:BRD_id/posts/:PST_id"
-            element={<PostDetailPage currentUser={currentUser} />}
-          />
-
-          <Route
-            path="/write"
-            element={
-              currentUser?.isLoggedIn ? (
-                <PostWritePage currentUser={currentUser} />
-              ) : (
-                <LoginPage onLogin={handleLogin} />
-              )
-            }
-          />
-          <Route path="/signup" element={<SignupPage />} />
-          <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
-          <Route
-            path="/profile"
-            element={
-              currentUser?.isLoggedIn ? (
-                <ProfilePage currentUser={currentUser} />
-              ) : (
-                <LoginPage onLogin={handleLogin} />
-              )
-            }
-          />
+          <Route path="/mypage" element={<MyPage />} />
+          <Route path="/boards/:boardId/posts/:postId" element={<PostDetailPage />} />
+          <Route path="/boards/:boardId/write" element={<PostWritePage />} />
         </Routes>
       </div>
     </div>

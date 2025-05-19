@@ -1,3 +1,5 @@
+BoardTypeSelector.jsx
+
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import './BoardTypeSelector.css';
@@ -76,7 +78,7 @@ const BoardTypeSelector = ({ selectedBoard, onSelectedBoard}) => {
         ))}
       </div>
       {/* 선택된 게시판에 따라 PostList를 조건부 렌더링 */}
-      {selectedBoard && <PostList BRD_id={selectedBoard} key={selectedBoard} />}
+      {selectedBoard && <PostList BRD_id={selectedBoardId} searchedPosts={searchedPosts} />}
     </div>
   );
 };
