@@ -30,20 +30,12 @@ const PostWritePage = ({ currentUser }) => {
         }
 
         const data = await response.json();
-<<<<<<< HEAD
 
         // '전체' 게시판 제외
         const filteredBoards = data.filter(board => board.BRD_name !== '전체');
         setBoardTypes(filteredBoards);
 
         if (filteredBoards.length > 0) {
-=======
-        const filteredBoards = data.filter(board => board.BRD_name !== '전체');
-        setBoardTypes(filteredBoards);
-
-        // 기본 선택값 설정
-        if (filteredBoards.length > 0 && !isEditMode) {
->>>>>>> d31105bd25ce59fcbca9b76d83ac04598bc48357
           setSelectedBoard(Number(filteredBoards[0].BRD_id));
         }
       } catch (err) {
@@ -100,14 +92,10 @@ const PostWritePage = ({ currentUser }) => {
 
     try {
       const numericBRD_id = Number(BRD_id);
-<<<<<<< HEAD
 
       if (isNaN(numericBRD_id)) {
         throw new Error('게시판 ID가 올바르지 않습니다.');
       }
-=======
-      if (isNaN(numericBRD_id)) throw new Error('게시판 ID가 올바르지 않습니다.');
->>>>>>> d31105bd25ce59fcbca9b76d83ac04598bc48357
 
       const method = isEditMode ? 'PUT' : 'POST';
       const url = isEditMode
@@ -131,17 +119,10 @@ const PostWritePage = ({ currentUser }) => {
 
       const data = await response.json();
 
-<<<<<<< HEAD
       if (response.ok && data.PST_id) {
         alert('게시글이 성공적으로 등록되었습니다.');
         // 게시글 등록 후 메인페이지로 이동
         navigate('/');
-=======
-      if (response.ok && (data.PST_id || isEditMode)) {
-        alert(isEditMode ? '게시글이 수정되었습니다.' : '게시글이 등록되었습니다.');
-        navigate(`/boards/${numericBRD_id}/posts/${isEditMode ? PST_id : data.PST_id}`);
-        return;
->>>>>>> d31105bd25ce59fcbca9b76d83ac04598bc48357
       } else {
         throw new Error(data.message || `오류 코드: ${response.status}`);
       }

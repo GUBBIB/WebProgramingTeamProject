@@ -62,15 +62,12 @@ const MainPage = () => {
       credentials: "include",
     });
     setCurrentUser(null);
-<<<<<<< HEAD
   };
 
   // (추가됨) 검색 핸들러
   const handleSearch = (term, type) => {
     console.log(`🔍 검색어: ${term}, 종류: ${type}`);
     // 여기에 게시글 검색 API 호출을 넣으면 됨
-=======
->>>>>>> d31105bd25ce59fcbca9b76d83ac04598bc48357
   };
 
   return (
@@ -110,14 +107,7 @@ const MainPage = () => {
               )
             }
           />
-<<<<<<< HEAD
           <Route path="/signup" element={<SignupPage />} />
-=======
-
-          {/* ✅ 회원가입 시 handleRegister 전달 */}
-          <Route path="/signup" element={<SignupPage onRegister={handleRegister} />} />
-
->>>>>>> d31105bd25ce59fcbca9b76d83ac04598bc48357
           <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
           <Route
             path="/profile"
