@@ -1,18 +1,17 @@
-// BoardController.jsx (예시)
 import React, { useState } from "react";
-import "./BoardControls.css"; // 스타일 파일 경로 주의
+import "./BoardControls.css";
 
-const BoardController = ({ onResultClick }) => {
+const BoardControls = ({ onResultClick }) => {
   const [keyword, setKeyword] = useState('');
   const [field, setField] = useState('title');
   const [results, setResults] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // 키워드 입력 변경
+  // 검색어 입력 핸들링
   const handleKeywordChange = (e) => setKeyword(e.target.value);
 
-  // 검색 필드 변경
+  // 검색 기준(제목/작성자) 변경
   const handleFieldChange = (e) => setField(e.target.value);
 
   // 검색 실행
@@ -21,13 +20,27 @@ const BoardController = ({ onResultClick }) => {
       setError('검색어를 입력해주세요.');
       return;
     }
+
     try {
       setIsLoading(true);
       setError(null);
-      // axios 등으로 API 호출
-      // 예시: const response = await axios.get('/api/posts/search', { params: { field, keyword } });
-      // setResults(response.data.results || []);
+
+      const query = new URLSearchParams({ field, keyword }).toString();
+
+      const response = await fetch(`/api/boards/search?${query}`, {
+        method: 'GET',
+        credentials: 'include',
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || '검색 실패');
+      }
+
+      setResults(data.results || []);
     } catch (err) {
+      console.error('검색 오류:', err);
       setError('서버 오류가 발생했습니다.');
       setResults([]);
     } finally {
@@ -35,26 +48,34 @@ const BoardController = ({ onResultClick }) => {
     }
   };
 
-  // 엔터키 처리
-  const handleKeyPress = (e) => {
-    if (e.key === 'Enter') handleSearch();
+  // 엔터키 입력 시 검색 실행
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      handleSearch();
+    }
   };
 
   return (
     <div className="search-container">
       <div className="search-bar">
-        <select value={field} onChange={handleFieldChange} className="search-select">
+        <select
+          value={field}
+          onChange={handleFieldChange}
+          className="search-select"
+        >
           <option value="title">제목</option>
           <option value="user">작성자</option>
         </select>
+
         <input
           type="text"
           placeholder={`${field === 'title' ? '제목' : '작성자'}으로 검색...`}
           value={keyword}
           onChange={handleKeywordChange}
-          onKeyPress={handleKeyPress}
+          onKeyDown={handleKeyDown} // 엔터키 검색 지원
           className="search-input"
         />
+
         <button
           onClick={handleSearch}
           className="search-button"
@@ -63,8 +84,9 @@ const BoardController = ({ onResultClick }) => {
           {isLoading ? '검색 중...' : '검색'}
         </button>
       </div>
+
       {error && <div className="error-message">{error}</div>}
-      {/* 검색 결과 렌더링 */}
+
       {results.length > 0 && (
         <div className="search-results">
           <h3>검색 결과 ({results.length}건)</h3>
@@ -88,6 +110,7 @@ const BoardController = ({ onResultClick }) => {
           </div>
         </div>
       )}
+
       {!isLoading && results.length === 0 && keyword.trim() && !error && (
         <div className="no-results">검색 결과가 없습니다.</div>
       )}
@@ -95,4 +118,4 @@ const BoardController = ({ onResultClick }) => {
   );
 };
 
-export default BoardController;
+export default BoardControls;
