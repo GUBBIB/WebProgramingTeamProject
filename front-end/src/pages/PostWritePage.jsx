@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useNavigate } from 'react-router-dom';
 import MDEditor from '@uiw/react-md-editor';
 import './PostWritePage.css';
 
@@ -128,6 +128,8 @@ const PostWritePage = ({ currentUser }) => {
     } finally {
       setIsSubmitting(false);
     }
+
+    navigate('/');
   };
 
   return (
