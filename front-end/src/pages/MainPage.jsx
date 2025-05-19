@@ -13,9 +13,9 @@ import BoardTypeSelector from "../components/Board/BoardTypeSelector";
 const MainPage = () => {
   const [selectedBoard, setSelectedBoard] = useState(1);
   const [currentUser, setCurrentUser] = useState(null);
-  const [searchedPosts, setSearchedPosts ] = useState(null);
-  const [searchType, setSearchType ] = useState('title');
-  const [searchTerm, setSearchTerm ] = useState(null);
+  const [searchedPosts, setSearchedPosts] = useState(null);
+  const [searchType, setSearchType] = useState("title");
+  const [searchTerm, setSearchTerm] = useState(null);
   const navigate = useNavigate();
 
   // 세션에서 로그인 유저 정보 받아오기
@@ -67,11 +67,33 @@ const MainPage = () => {
   };
 
   // 검색
-  const handleSearch = async ((searchType, searchTerm)) => {
-    await fetch(`/api/boards/search?field=${searchType}&keyword=${encodeURIComponent(searchTerm)}`)
-    .then((res) => (res.ok ? res.json() : Promise.reject()))
-    .then((data) => setSearchedPosts(data))
-  }
+  const handleSearch = async (searchType, searchTerm) => {
+    try {
+      const response = await fetch("/api/boards/search", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include", // 세션 인증 사용하는 경우
+        body: JSON.stringify({
+          field: searchType,
+          keyword: searchTerm,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error("검색 실패:", errorData.message);
+        return;
+      }
+
+      const data = await response.json();
+      console.log("검색 결과:", data);
+      // 여기서 data.results를 사용하여 화면에 출력하거나 상태 저장 가능
+    } catch (error) {
+      console.error("에러 발생:", error);
+    }
+  };
 
   return (
     <div>
@@ -87,58 +109,62 @@ const MainPage = () => {
                   onSelectedBoard={setSelectedBoard}
                   searchedPosts={searchedPosts}
                 />
-                <BoardControls onSearch={handleSearch} // (추가됨)
+                <BoardControls
+                  onSearch={handleSearch} // (추가됨)
                 />
               </div>
             }
           />
 
-      <Route
-        path="/boards/:BRD_id/posts/:PST_id"
-        element={<PostDetailPage currentUser={currentUser} />}
-      />
+          <Route
+            path="/boards/:BRD_id/posts/:PST_id"
+            element={<PostDetailPage currentUser={currentUser} />}
+          />
 
-      {/* ✅ 게시글 작성 */}
-      <Route
-        path="/write"
-        element={
-          currentUser?.isLoggedIn ? (
-            <PostWritePage currentUser={currentUser} />
-          ) : (
-            <LoginPage onLogin={handleLogin} />
-          )
-        }
-      />
+          {/* ✅ 게시글 작성 */}
+          <Route
+            path="/write"
+            element={
+              currentUser?.isLoggedIn ? (
+                <PostWritePage currentUser={currentUser} />
+              ) : (
+                <LoginPage onLogin={handleLogin} />
+              )
+            }
+          />
 
-      {/* ✅ 게시글 수정 (PST_id 존재 시 수정 모드로 PostWritePage 재사용) */}
-      <Route
-        path="/boards/:BRD_id/posts/:PST_id/edit"
-        element={
-          currentUser?.isLoggedIn ? (
-            <PostWritePage currentUser={currentUser} />
-          ) : (
-            <LoginPage onLogin={handleLogin} />
-          )
-        }
-      />
+          {/* ✅ 게시글 수정 (PST_id 존재 시 수정 모드로 PostWritePage 재사용) */}
+          <Route
+            path="/boards/:BRD_id/posts/:PST_id/edit"
+            element={
+              currentUser?.isLoggedIn ? (
+                <PostWritePage currentUser={currentUser} />
+              ) : (
+                <LoginPage onLogin={handleLogin} />
+              )
+            }
+          />
 
-      {/* ✅ 회원가입 시 handleRegister 전달 */}
-      <Route path="/signup" element={<SignupPage onRegister={handleRegister} />} />
+          {/* ✅ 회원가입 시 handleRegister 전달 */}
+          <Route
+            path="/signup"
+            element={<SignupPage onRegister={handleRegister} />}
+          />
 
-      <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
-      <Route
-        path="/profile"
-        element={
-          currentUser?.isLoggedIn ? (
-            <ProfilePage currentUser={currentUser} />
-          ) : (
-            <LoginPage onLogin={handleLogin} />
-          )
-        }
-      />
-    </Routes>
-      </div >
-    </div >
+          <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
+          <Route
+            path="/profile"
+            element={
+              currentUser?.isLoggedIn ? (
+                <ProfilePage currentUser={currentUser} />
+              ) : (
+                <LoginPage onLogin={handleLogin} />
+              )
+            }
+          />
+        </Routes>
+      </div>
+    </div>
   );
 };
 
