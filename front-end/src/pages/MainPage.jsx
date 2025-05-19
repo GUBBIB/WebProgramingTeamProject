@@ -76,7 +76,10 @@ const MainPage = () => {
                   selectedBoard={selectedBoard}
                   onSelectedBoard={setSelectedBoard}
                 />
-                <BoardControls />
+                <BoardControls onSearch={handleSearch} // (추가됨)
+                  selectedSearchType={searchType} // (추가됨)
+                  onSelectSearchType={setSearchType} // (추가됨)
+                />
               </div>
             }
           />
@@ -125,8 +128,8 @@ const MainPage = () => {
             }
           />
         </Routes>
-      </div>
-    </div>
+      </div >
+    </div >
   );
 };
 
