@@ -5,7 +5,8 @@ import BoardTypeSelector from "../components/Board/BoardTypeSelector";
 import BoardControls from "../components/Board/BoardControls";
 import PostDetailPage from "./PostDetailPage";
 import PostWritePage from "./PostWritePage";
-import MyPage from "./MyPage";
+import ProfilePage from "../pages/ProfilePage"
+
 
 const MainPage = () => {
   const [selectedBoard, setSelectedBoard] = useState(1);
@@ -91,7 +92,7 @@ const MainPage = () => {
               </div>
             }
           />
-          <Route path="/mypage" element={<MyPage />} />
+          <Route path="/mypage" element={<ProfilePage />} /> {/* (변경됨) */}
           <Route path="/boards/:boardId/posts/:postId" element={<PostDetailPage />} />
           <Route path="/boards/:boardId/write" element={<PostWritePage />} />
         </Routes>
