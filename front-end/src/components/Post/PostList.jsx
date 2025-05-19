@@ -1,6 +1,11 @@
-postlist.jsx
+import React, { useState, useEffect, useCallback } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import PostItem from './PostItem';
+import Pagination from '../Board/Pagination'; // 실제 경로 확인 필요
 
-const PostList = ({ BRD_id, searchedPosts }) => { // (변경됨)
+const API_BASE_URL = '/api'; // 예시 URL
+
+const PostList = ({ BRD_id, onSelectedBoard, searchedPosts }) => { // (변경됨)
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -97,3 +102,5 @@ const PostList = ({ BRD_id, searchedPosts }) => { // (변경됨)
     </div>
   );
 };
+
+export default PostList;

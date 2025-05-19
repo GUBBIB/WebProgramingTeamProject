@@ -89,9 +89,9 @@ const MainPage = () => {
 
       const data = await response.json();
       console.log("검색 결과:", data);
+      setSearchedPosts(data);
       // 여기서 data.results를 사용하여 화면에 출력하거나 상태 저장 가능
     } catch (error) {
-      console.error("에러 발생:", error);
     }
   };
 

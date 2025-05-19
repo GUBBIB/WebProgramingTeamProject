@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 import "./BoardControls.css";
 
-const BoardControls = ({ onResultClick }) => {
+const BoardControls = ({ onSearch }) => {
   const [keyword, setKeyword] = useState('');
   const [field, setField] = useState('title');
   const [results, setResults] = useState([]);
@@ -85,7 +85,7 @@ const BoardControls = ({ onResultClick }) => {
         />
 
         <button
-          onClick={handleSearch}
+          onClick={onSearch(field, keyword)}
           className="search-button"
           disabled={isLoading || !keyword.trim()}
         >
@@ -101,34 +101,6 @@ const BoardControls = ({ onResultClick }) => {
       </button>
 
       {error && <div className="error-message">{error}</div>}
-
-      {results.length > 0 && (
-        <div className="search-results">
-          <h3>검색 결과 ({results.length}건)</h3>
-          <div className="results-container">
-            {results.map((post) => (
-              <div
-                key={post.PST_id || post.id}
-                className="search-result-item"
-                onClick={() => onResultClick(post.BRD_id, post.PST_id)}
-              >
-                <h4>{post.title}</h4>
-                {post.content && <p className="post-content">{post.content}</p>}
-                <div className="post-meta">
-                  <span>{post.author || post.username || '익명'}</span>
-                  {post.created_at && (
-                    <span>{new Date(post.created_at).toLocaleDateString()}</span>
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {!isLoading && results.length === 0 && keyword.trim() && !error && (
-        <div className="no-results">검색 결과가 없습니다.</div>
-      )}
     </div>
   );
 };
