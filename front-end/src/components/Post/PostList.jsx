@@ -1,4 +1,12 @@
-const PostList = ({ BRD_id, searchedPosts }) => { // (변경됨)
+import React, { useEffect, useState, useCallback } from "react";
+import { useSearchParams } from "react-router-dom";
+import PostItem from "./PostItem";
+import Pagination from "../Board/Pagination";
+import "./PostList.css";
+
+const API_BASE_URL = "http://13.60.93.77/api";
+
+const PostList = ({ BRD_id, posts: propPosts, isSearchResult }) => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -11,7 +19,14 @@ const PostList = ({ BRD_id, searchedPosts }) => { // (변경됨)
     total: 0,
   });
 
+  // 검색 결과가 prop으로 들어오면 그냥 그것을 표시하고, 아니면 API 호출
   const fetchPosts = useCallback(async () => {
+    if (isSearchResult) {
+      setPosts(propPosts || []);
+      setLoading(false);
+      return;
+    }
+
     setLoading(true);
     setError(null);
 
@@ -31,8 +46,6 @@ const PostList = ({ BRD_id, searchedPosts }) => { // (변경됨)
       if (!response.ok) throw new Error("서버 응답 오류");
 
       const data = await response.json();
-      console.log("API 응답:", data);
-
       setPosts(data.data || []);
       setPagination({
         currentPage: data.current_page,
@@ -44,17 +57,11 @@ const PostList = ({ BRD_id, searchedPosts }) => { // (변경됨)
     } finally {
       setLoading(false);
     }
-  }, [BRD_id, pagination.currentPage]);
+  }, [BRD_id, pagination.currentPage, isSearchResult, propPosts]);
 
-  // 🔧 검색 결과 우선 적용
   useEffect(() => {
-    if (searchedPosts) {
-      setPosts(searchedPosts);
-      setLoading(false);
-    } else {
-      fetchPosts();
-    }
-  }, [fetchPosts, searchedPosts]); // (변경됨)
+    fetchPosts();
+  }, [fetchPosts]);
 
   const handlePageChange = (page) => {
     setPagination((prev) => ({ ...prev, currentPage: page }));
@@ -84,8 +91,7 @@ const PostList = ({ BRD_id, searchedPosts }) => { // (변경됨)
         </tbody>
       </table>
 
-      {/* 🔧 검색 시에는 페이지네이션 숨김 */}
-      {!searchedPosts && (
+      {!isSearchResult && (
         <Pagination
           currentPage={pagination.currentPage}
           totalPages={pagination.totalPages}
@@ -96,4 +102,4 @@ const PostList = ({ BRD_id, searchedPosts }) => { // (변경됨)
   );
 };
 
-export default PostList; // ✅ 이렇게 고치면 오류 해결
+export default PostList;
