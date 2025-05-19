@@ -95,3 +95,5 @@ const PostList = ({ BRD_id, searchedPosts }) => { // (변경됨)
     </div>
   );
 };
+
+export default PostList; // ✅ 이렇게 고치면 오류 해결
