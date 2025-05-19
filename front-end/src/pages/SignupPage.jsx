@@ -26,7 +26,7 @@ const SignupPage = ({ onRegister }) => {
     }
 
     try {
-      const res = await fetch('/api/register', {
+        const res = await fetch(`${API_BASE_URL}/register`, { //api 경로 `${API_BASE_URL} 추가
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',

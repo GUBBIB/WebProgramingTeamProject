@@ -36,13 +36,23 @@ const MainPage = () => {
 
   // 로그인 성공 시 호출
   const handleLogin = (user) => {
-    console.log(user);
+    console.log("로그인 성공:", user);
     setCurrentUser({
       USR_id: user.USR_id,
       isLoggedIn: true,
       details: user,
     });
-    // 필요시 navigate('/')
+  };
+
+  // 회원가입 성공 시 호출
+  const handleRegister = (user) => {
+    console.log("회원가입 성공:", user);
+    setCurrentUser({
+      USR_id: user.USR_id,
+      isLoggedIn: true,
+      details: user,
+    });
+    navigate("/"); // 회원가입 후 메인 페이지로 이동
   };
 
   // 로그아웃

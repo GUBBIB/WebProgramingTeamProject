@@ -14,10 +14,17 @@ const BoardControls = ({
     setSearchTerm(event.target.value);
   };
 
-  // Removed event parameter as it's no longer a form submission event
   const handleSearchSubmit = async () => { 
-    // event.preventDefault(); // Removed, not a form submission
-    await onSearch(searchTerm, selectedSearchType);
+    if (searchTerm.trim()) {
+      await onSearch(searchTerm, selectedSearchType);
+    }
+  };
+
+  // 엔터 키 입력 시 검색 실행
+  const handleKeyPress = (event) => {
+    if (event.key === 'Enter') {
+      handleSearchSubmit();
+    }
   };
 
   const handleWritePost = () => {
@@ -31,7 +38,6 @@ const BoardControls = ({
   return (
     <div className="board-controls-container">
       <div className="search-and-filter-container">
-        {/* Changed form to div */}
         <div className="search-form"> 
           <select 
             value={selectedSearchType} 
@@ -46,10 +52,17 @@ const BoardControls = ({
             placeholder={selectedSearchType === 'title' ? "제목으로 검색..." : "작성자명으로 검색..."}
             value={searchTerm}
             onChange={handleSearchChange}
+            onKeyPress={handleKeyPress}
             className="search-input"
           />
-          {/* Changed button type to button and added onClick */}
-          <button type="button" onClick={handleSearchSubmit} className="search-button">검색</button>
+          <button 
+            type="button" 
+            onClick={handleSearchSubmit} 
+            className="search-button"
+            disabled={!searchTerm.trim()}
+          >
+            검색
+          </button>
         </div>
       </div>
       
@@ -61,4 +74,3 @@ const BoardControls = ({
 };
 
 export default BoardControls;
-
