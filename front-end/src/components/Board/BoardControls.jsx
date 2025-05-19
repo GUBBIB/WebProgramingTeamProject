@@ -1,76 +1,98 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import './BoardControls.css';
+// BoardController.jsx (예시)
+import React, { useState } from "react";
+import "./BoardControls.css"; // 스타일 파일 경로 주의
 
-const BoardControls = ({ 
-  onSearch, 
-  selectedSearchType, 
-  onSelectSearchType 
-}) => {
-  const [searchTerm, setSearchTerm] = useState('');
-  const navigate = useNavigate();
+const BoardController = ({ onResultClick }) => {
+  const [keyword, setKeyword] = useState('');
+  const [field, setField] = useState('title');
+  const [results, setResults] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-  const handleSearchChange = (event) => {
-    setSearchTerm(event.target.value);
-  };
+  // 키워드 입력 변경
+  const handleKeywordChange = (e) => setKeyword(e.target.value);
 
-  const handleSearchSubmit = async () => { 
-    if (searchTerm.trim()) {
-      await onSearch(searchTerm, selectedSearchType);
+  // 검색 필드 변경
+  const handleFieldChange = (e) => setField(e.target.value);
+
+  // 검색 실행
+  const handleSearch = async () => {
+    if (!keyword.trim()) {
+      setError('검색어를 입력해주세요.');
+      return;
+    }
+    try {
+      setIsLoading(true);
+      setError(null);
+      // axios 등으로 API 호출
+      // 예시: const response = await axios.get('/api/posts/search', { params: { field, keyword } });
+      // setResults(response.data.results || []);
+    } catch (err) {
+      setError('서버 오류가 발생했습니다.');
+      setResults([]);
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  // 엔터 키 입력 시 검색 실행
-  const handleKeyPress = (event) => {
-    if (event.key === 'Enter') {
-      handleSearchSubmit();
-    }
-  };
-
-  const handleWritePost = () => {
-    navigate('/write');
-  };
-
-  const handleSearchTypeChange = (event) => {
-    onSelectSearchType(event.target.value);
+  // 엔터키 처리
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') handleSearch();
   };
 
   return (
-    <div className="board-controls-container">
-      <div className="search-and-filter-container">
-        <div className="search-form"> 
-          <select 
-            value={selectedSearchType} 
-            onChange={handleSearchTypeChange} 
-            className="search-scope-select"
-          >
-            <option value="title">제목 검색</option>
-            <option value="author">작성자 검색</option>
-          </select>
-          <input
-            type="text"
-            placeholder={selectedSearchType === 'title' ? "제목으로 검색..." : "작성자명으로 검색..."}
-            value={searchTerm}
-            onChange={handleSearchChange}
-            onKeyPress={handleKeyPress}
-            className="search-input"
-          />
-          <button 
-            type="button" 
-            onClick={handleSearchSubmit} 
-            className="search-button"
-            disabled={!searchTerm.trim()}
-          >
-            검색
-          </button>
-        </div>
+    <div className="search-container">
+      <div className="search-bar">
+        <select value={field} onChange={handleFieldChange} className="search-select">
+          <option value="title">제목</option>
+          <option value="user">작성자</option>
+        </select>
+        <input
+          type="text"
+          placeholder={`${field === 'title' ? '제목' : '작성자'}으로 검색...`}
+          value={keyword}
+          onChange={handleKeywordChange}
+          onKeyPress={handleKeyPress}
+          className="search-input"
+        />
+        <button
+          onClick={handleSearch}
+          className="search-button"
+          disabled={isLoading || !keyword.trim()}
+        >
+          {isLoading ? '검색 중...' : '검색'}
+        </button>
       </div>
-      
-      <button onClick={handleWritePost} className="write-post-button">
-        게시글 작성
-      </button>
+      {error && <div className="error-message">{error}</div>}
+      {/* 검색 결과 렌더링 */}
+      {results.length > 0 && (
+        <div className="search-results">
+          <h3>검색 결과 ({results.length}건)</h3>
+          <div className="results-container">
+            {results.map((post) => (
+              <div
+                key={post.PST_id || post.id}
+                className="search-result-item"
+                onClick={() => onResultClick(post.BRD_id, post.PST_id)}
+              >
+                <h4>{post.title}</h4>
+                {post.content && <p className="post-content">{post.content}</p>}
+                <div className="post-meta">
+                  <span>{post.author || post.username || '익명'}</span>
+                  {post.created_at && (
+                    <span>{new Date(post.created_at).toLocaleDateString()}</span>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+      {!isLoading && results.length === 0 && keyword.trim() && !error && (
+        <div className="no-results">검색 결과가 없습니다.</div>
+      )}
     </div>
   );
 };
 
-export default BoardControls;
+export default BoardController;

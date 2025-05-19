@@ -1,28 +1,27 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import MDEditor from '@uiw/react-md-editor';
-import './PostWritePage.css';
+import React, { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import MDEditor from "@uiw/react-md-editor";
+import "./PostWritePage.css";
 
-const API_BASE_URL = 'http://13.60.93.77/api';
+const API_BASE_URL = "http://13.60.93.77/api";
 
 const PostWritePage = ({ currentUser }) => {
   const navigate = useNavigate();
   const { BRD_id: paramBRDId, PST_id } = useParams();
   const isEditMode = !!PST_id;
 
-  const [PST_title, setTitle] = useState('');
-  const [PST_content, setContent] = useState('');
-  const [BRD_id, setSelectedBoard] = useState('');
+  const [PST_title, setTitle] = useState("");
+  const [PST_content, setContent] = useState("");
+  const [BRD_id, setSelectedBoard] = useState("");
   const [boardTypes, setBoardTypes] = useState([]);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // 게시판 목록 로딩
   useEffect(() => {
     const fetchBoards = async () => {
       try {
         const response = await fetch(`${API_BASE_URL}/boards`, {
-          credentials: 'include',
+          credentials: "include",
         });
 
         if (!response.ok) {
@@ -30,31 +29,32 @@ const PostWritePage = ({ currentUser }) => {
         }
 
         const data = await response.json();
-
-        // '전체' 게시판 제외
-        const filteredBoards = data.filter(board => board.BRD_name !== '전체');
+        const filteredBoards = data.filter(
+          (board) => board.BRD_name !== "전체"
+        );
         setBoardTypes(filteredBoards);
 
-        if (filteredBoards.length > 0) {
+        if (filteredBoards.length > 0 && !isEditMode) {
           setSelectedBoard(Number(filteredBoards[0].BRD_id));
         }
       } catch (err) {
-        console.error('게시판 목록 불러오기 실패:', err);
-        setError('게시판 목록을 불러오는 데 실패했습니다.');
+        console.error("게시판 목록 불러오기 실패:", err);
+        setError("게시판 목록을 불러오는 데 실패했습니다.");
       }
     };
 
     fetchBoards();
   }, [isEditMode]);
 
-  // 수정 모드일 경우 게시글 데이터 불러오기
   useEffect(() => {
     const fetchPost = async () => {
       if (!isEditMode) return;
 
       try {
-        const res = await fetch(`${API_BASE_URL}/boards/${paramBRDId}/posts/${PST_id}`);
-        if (!res.ok) throw new Error('게시글 정보를 불러오는 데 실패했습니다.');
+        const res = await fetch(
+          `${API_BASE_URL}/boards/${paramBRDId}/posts/${PST_id}`
+        );
+        if (!res.ok) throw new Error("게시글 정보를 불러오는 데 실패했습니다.");
         const data = await res.json();
 
         setTitle(data.data.PST_title);
@@ -62,7 +62,7 @@ const PostWritePage = ({ currentUser }) => {
         setSelectedBoard(Number(data.data.board.BRD_id));
       } catch (err) {
         console.error(err);
-        setError('게시글 불러오기 실패: ' + err.message);
+        setError("게시글 불러오기 실패: " + err.message);
       }
     };
 
@@ -74,40 +74,38 @@ const PostWritePage = ({ currentUser }) => {
   };
 
   const handlePostSubmit = async () => {
-    setError('');
+    setError("");
     setIsSubmitting(true);
 
     if (!currentUser || !currentUser.isLoggedIn) {
-      setError('게시글을 작성하려면 로그인이 필요합니다.');
-      navigate('/login');
+      setError("게시글을 작성하려면 로그인이 필요합니다.");
+      navigate("/login");
       setIsSubmitting(false);
       return;
     }
 
     if (!PST_title.trim() || !PST_content.trim()) {
-      setError('제목과 내용을 모두 입력해주세요.');
+      setError("제목과 내용을 모두 입력해주세요.");
       setIsSubmitting(false);
       return;
     }
 
     try {
       const numericBRD_id = Number(BRD_id);
+      if (isNaN(numericBRD_id))
+        throw new Error("게시판 ID가 올바르지 않습니다.");
 
-      if (isNaN(numericBRD_id)) {
-        throw new Error('게시판 ID가 올바르지 않습니다.');
-      }
-
-      const method = isEditMode ? 'PUT' : 'POST';
+      const method = isEditMode ? "PUT" : "POST";
       const url = isEditMode
-        ? `${API_BASE_URL}/boards/${paramBRDId}/posts/${PST_id}`
+        ? `${API_BASE_URL}/posts/${PST_id}` // ✅ 수정용 경로
         : `${API_BASE_URL}/posts`;
 
       const response = await fetch(url, {
         method,
-        credentials: 'include',
+        credentials: "include",
         headers: {
-          'Content-Type': 'application/json',
-          Accept: 'application/json',
+          "Content-Type": "application/json",
+          Accept: "application/json",
         },
         body: JSON.stringify({
           BRD_id: numericBRD_id,
@@ -119,16 +117,20 @@ const PostWritePage = ({ currentUser }) => {
 
       const data = await response.json();
 
-      if (response.ok && data.PST_id) {
-        alert('게시글이 성공적으로 등록되었습니다.');
-        // 게시글 등록 후 메인페이지로 이동
-        navigate('/');
+      if (response.ok) {
+        alert(isEditMode ? '게시글이 수정되었습니다.' : '게시글이 등록되었습니다.');
+        if (isEditMode) {
+          navigate(`/boards/${numericBRD_id}/posts/${PST_id}`);
+        } else {
+          navigate('/'); // 이게 무조건 실행됨
+        }
+        return;
       } else {
         throw new Error(data.message || `오류 코드: ${response.status}`);
       }
     } catch (err) {
-      console.error('게시글 저장 실패:', err);
-      setError(err.message || '게시글 저장 중 오류가 발생했습니다.');
+      console.error("게시글 저장 실패:", err);
+      setError(err.message || "게시글 저장 중 오류가 발생했습니다.");
     } finally {
       setIsSubmitting(false);
     }
@@ -138,12 +140,17 @@ const PostWritePage = ({ currentUser }) => {
 
   return (
     <div className="post-write-container">
-      <h1 className="page-title">{isEditMode ? '게시글 수정' : '새 게시글 작성'}</h1>
-      
+      <h1 className="page-title">
+        {isEditMode ? "게시글 수정" : "새 게시글 작성"}
+      </h1>
+
       {error && (
         <p className="error-message">
-          {error.split('\n').map((line, i) => (
-            <span key={i}>{line}<br /></span>
+          {error.split("\n").map((line, i) => (
+            <span key={i}>
+              {line}
+              <br />
+            </span>
           ))}
         </p>
       )}
@@ -156,7 +163,7 @@ const PostWritePage = ({ currentUser }) => {
             value={BRD_id}
             onChange={handleBoardChange}
             className="form-control"
-            disabled={isSubmitting || isEditMode} // 수정 모드에서는 게시판 선택 비활성화
+            disabled={isSubmitting || isEditMode}
             required
           >
             {boardTypes.length > 0 ? (
@@ -189,7 +196,7 @@ const PostWritePage = ({ currentUser }) => {
           <label htmlFor="content">내용 (Markdown)</label>
           <MDEditor
             value={PST_content}
-            onChange={(value) => setContent(value || '')}
+            onChange={(value) => setContent(value || "")}
             height={400}
             preview="edit"
           />
@@ -203,8 +210,12 @@ const PostWritePage = ({ currentUser }) => {
             disabled={isSubmitting}
           >
             {isSubmitting
-              ? (isEditMode ? '수정 중...' : '등록 중...')
-              : (isEditMode ? '수정' : '등록')}
+              ? isEditMode
+                ? "수정 중..."
+                : "등록 중..."
+              : isEditMode
+              ? "수정"
+              : "등록"}
           </button>
           <button
             type="button"
