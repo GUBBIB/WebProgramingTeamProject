@@ -84,8 +84,8 @@ const PostDetailPage = ({ currentUser }) => {
   if (isLoading) return <div className="post-detail-container">로딩 중...</div>;
   if (error) return <div className="post-detail-container error-message">❌ {error}</div>;
   if (!post) return <div className="post-detail-container">게시글이 존재하지 않습니다.</div>;
-
-  const isAuthor = currentUser && currentUser.id === post.data.user?.USR_id;
+  
+  const isAuthor = currentUser && currentUser.USR_id === post?.data?.user?.USR_id;
 
   return (
     <div className="post-detail-container">
