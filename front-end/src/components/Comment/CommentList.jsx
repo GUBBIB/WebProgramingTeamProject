@@ -29,9 +29,9 @@ const CommentList = ({ BRD_id, PST_id, currentUser }) => {
   }, [fetchComments]);
 
   // 댓글 작성 후 콜백
-  const onSubmitComment = async (commentText) => {
+  const onSubmitComment = async (COM_content) => {
     if (!currentUser?.isLoggedIn) return;
-
+    
     try {
       const res = await fetch(`${API_BASE_URL}/comments`, {
         method: 'POST',
@@ -40,9 +40,9 @@ const CommentList = ({ BRD_id, PST_id, currentUser }) => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          BRD_id,
-          PST_id,
-          CMT_content: commentText,
+          USR_id: currentUser?.USR_id,
+          PST_id: PST_id,
+          COM_content: COM_content,
         }),
       });
 
@@ -64,7 +64,7 @@ const CommentList = ({ BRD_id, PST_id, currentUser }) => {
       )}
 
       {comments?.map((comment) => (
-        <CommentItem key={comment.CMT_id} comment={comment} />
+        <CommentItem key={comment.COM_id} comment={comment} />
       ))}
 
       {/* 댓글 작성 폼 */}

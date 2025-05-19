@@ -65,6 +65,7 @@ const BoardControls = ({
           </button>
         </div>
       </div>
+      
       <button onClick={handleWritePost} className="write-post-button">
         게시글 작성
       </button>

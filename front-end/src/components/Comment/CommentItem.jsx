@@ -16,7 +16,7 @@ const CommentItem = ({ comment }) => {
   };
 
   // 작성자 닉네임 (없으면 익명)
-  const authorNickname = comment.user?.USR_nickname || '익명';
+  const authorNickname = comment.USR_nickname || '익명';
 
   return (
     <div className="comment-item">
@@ -25,7 +25,7 @@ const CommentItem = ({ comment }) => {
         <span className="comment-date">{formatDate(comment.created_at)}</span>
       </div>
       <div className="comment-body">
-        <p className="comment-text">{comment.CMT_content}</p>
+        <p className="comment-text">{comment.COM_content}</p>
       </div>
     </div>
   );
