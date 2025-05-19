@@ -64,12 +64,33 @@ const MainPage = () => {
     setCurrentUser(null);
   };
 
-  // (추가됨) 검색 핸들러
-  const handleSearch = (term, type) => {
-    console.log(`🔍 검색어: ${term}, 종류: ${type}`);
-    // 여기에 게시글 검색 API 호출을 넣으면 됨
-  };
+const handleSearch = async (searchType, searchTerm) => {
+    try {
+      const response = await fetch("/api/boards/search", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include", // 세션 인증 사용하는 경우
+        body: JSON.stringify({
+          field: searchType,
+          keyword: searchTerm,
+        }),
+      });
 
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error("검색 실패:", errorData.message);
+        return;
+      }
+
+      const data = await response.json();
+      console.log("검색 결과:", data);
+      // 여기서 data.results를 사용하여 화면에 출력하거나 상태 저장 가능
+    } catch (error) {
+      console.error("에러 발생:", error);
+    }
+  };
   return (
     <div>
       <Header currentUser={currentUser} onLogout={handleLogout} />
