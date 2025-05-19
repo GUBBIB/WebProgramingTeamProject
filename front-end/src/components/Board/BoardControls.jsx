@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 import "./BoardControls.css";
 
-const BoardControls = ({ onResultClick }) => {
+const BoardControls = ({ onSearch }) => {
   const [keyword, setKeyword] = useState('');
   const [field, setField] = useState('title');
   const [results, setResults] = useState([]);
@@ -14,7 +14,7 @@ const BoardControls = ({ onResultClick }) => {
   // 검색어 입력 핸들링
   const handleKeywordChange = (e) => setKeyword(e.target.value);
 
-  // 검색 기준(제목/작성자) 변경
+  // 검색 기준 변경 (title / user)
   const handleFieldChange = (e) => setField(e.target.value);
 
   // 검색 실행
@@ -24,24 +24,17 @@ const BoardControls = ({ onResultClick }) => {
       return;
     }
 
-    console.log('검색 실행됨');
-    console.log('field:', field);
-    console.log('keyword:', keyword);
-
     try {
       setIsLoading(true);
       setError(null);
 
       const query = new URLSearchParams({ field, keyword }).toString();
-      console.log('요청 URL:', `/api/boards/search`);
 
-      const response = await fetch(`/api/boards/search`, {
-        method: 'POST',
+      const response = await fetch(`/api/boards/search?${query}`, {
+        method: 'GET',
       });
 
       const data = await response.json();
-
-      console.log('서버 응답:', data);
 
       if (!response.ok) {
         throw new Error(data.message || '검색 실패');
@@ -60,17 +53,19 @@ const BoardControls = ({ onResultClick }) => {
   // 엔터키 입력 시 검색 실행
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') {
+      e.preventDefault(); // form 제출 방지용
       handleSearch();
     }
   };
 
+  // 게시글 작성 페이지 이동
   const handleWritePost = () => {
-  navigate('/write');
-  }
-  
+    navigate('/write');
+  };
+
   return (
-    <div className="search-container">
-      <div className="search-bar">
+    <div className="board-controls-container">
+      <div className="search-and-filter-container">
         <select
           value={field}
           onChange={handleFieldChange}
@@ -85,12 +80,12 @@ const BoardControls = ({ onResultClick }) => {
           placeholder={`${field === 'title' ? '제목' : '작성자'}으로 검색...`}
           value={keyword}
           onChange={handleKeywordChange}
-          onKeyDown={handleKeyDown} // 엔터키 검색 지원
+          onKeyDown={handleKeyDown}
           className="search-input"
         />
 
         <button
-          onClick={handleSearch}
+          onClick={onSearch(field, keyword)}
           className="search-button"
           disabled={isLoading || !keyword.trim()}
         >
@@ -100,39 +95,12 @@ const BoardControls = ({ onResultClick }) => {
 
       <button
         onClick={handleWritePost}
-        className="write-post-button">
+        className="write-post-button"
+      >
         게시글 작성
       </button>
 
       {error && <div className="error-message">{error}</div>}
-
-      {results.length > 0 && (
-        <div className="search-results">
-          <h3>검색 결과 ({results.length}건)</h3>
-          <div className="results-container">
-            {results.map((post) => (
-              <div
-                key={post.PST_id || post.id}
-                className="search-result-item"
-                onClick={() => onResultClick(post.BRD_id, post.PST_id)}
-              >
-                <h4>{post.title}</h4>
-                {post.content && <p className="post-content">{post.content}</p>}
-                <div className="post-meta">
-                  <span>{post.author || post.username || '익명'}</span>
-                  {post.created_at && (
-                    <span>{new Date(post.created_at).toLocaleDateString()}</span>
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {!isLoading && results.length === 0 && keyword.trim() && !error && (
-        <div className="no-results">검색 결과가 없습니다.</div>
-      )}
     </div>
   );
 };

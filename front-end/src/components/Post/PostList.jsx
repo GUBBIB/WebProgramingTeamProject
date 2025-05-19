@@ -1,12 +1,11 @@
-import React, { useEffect, useState, useCallback } from "react";
-import { useSearchParams } from "react-router-dom";
-import PostItem from "./PostItem";
-import "./PostList.css";
-import Pagination from "../Board/Pagination";
+import React, { useState, useEffect, useCallback } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import PostItem from './PostItem';
+import Pagination from '../Board/Pagination'; // 실제 경로 확인 필요
 
-const API_BASE_URL = "http://13.60.93.77/api";
+const API_BASE_URL = '/api'; // 예시 URL
 
-const PostList = ({ BRD_id }) => {
+const PostList = ({ BRD_id, onSelectedBoard, searchedPosts }) => { // (변경됨)
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -19,7 +18,6 @@ const PostList = ({ BRD_id }) => {
     total: 0,
   });
 
-  // ✅ fetchPosts를 useCallback으로 바깥에 정의
   const fetchPosts = useCallback(async () => {
     setLoading(true);
     setError(null);
@@ -55,9 +53,15 @@ const PostList = ({ BRD_id }) => {
     }
   }, [BRD_id, pagination.currentPage]);
 
+  // 🔧 검색 결과 우선 적용
   useEffect(() => {
-    fetchPosts();
-  }, [fetchPosts]);
+    if (searchedPosts) {
+      setPosts(searchedPosts.results || []);
+      setLoading(false);
+    } else {
+      fetchPosts();
+    }
+  }, [fetchPosts, searchedPosts]); // (변경됨)
 
   const handlePageChange = (page) => {
     setPagination((prev) => ({ ...prev, currentPage: page }));
@@ -87,11 +91,14 @@ const PostList = ({ BRD_id }) => {
         </tbody>
       </table>
 
-      <Pagination
-        currentPage={pagination.currentPage}
-        totalPages={pagination.totalPages}
-        onPageChange={handlePageChange}
-      />
+      {/* 🔧 검색 시에는 페이지네이션 숨김 */}
+      {!searchedPosts && (
+        <Pagination
+          currentPage={pagination.currentPage}
+          totalPages={pagination.totalPages}
+          onPageChange={handlePageChange}
+        />
+      )}
     </div>
   );
 };
