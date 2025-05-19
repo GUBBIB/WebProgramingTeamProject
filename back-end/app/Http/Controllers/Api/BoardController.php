@@ -41,7 +41,7 @@ class BoardController extends Controller
     public function board_Search_By_Keyword(Request $request)
     {
         $keyword = $request->input('keyword');
-        $field = $request->input('field'); // 'title' 또는 'user'
+        $field = $request->input('field');
 
         if (!$keyword || !$field) {
             return response()->json([
@@ -50,13 +50,13 @@ class BoardController extends Controller
         }
 
         if ($field === 'title') {
-            $results = Post::with('user') // user 정보 포함
-                ->where('title', 'like', "%{$keyword}%")
+            $results = Post::with('user')
+                ->where('PST_title', 'like', "%{$keyword}%")
                 ->get();
         } elseif ($field === 'user') {
             $results = Post::with('user')
                 ->whereHas('user', function ($query) use ($keyword) {
-                    $query->where('name', 'like', "%{$keyword}%");
+                    $query->where('USR_nickname', 'like', "%{$keyword}%");
                 })
                 ->get();
         } else {
