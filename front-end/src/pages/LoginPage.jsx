@@ -26,8 +26,9 @@ const LoginPage = ({ onLogin }) => {
         },
         credentials: 'include',
         body: JSON.stringify({ 
-          USR_email, 
-          USR_pass }),
+          USR_email: USR_email, 
+          USR_pass: USR_pass
+        }),
       });
 
       if (!res.ok) throw new Error('로그인 실패');

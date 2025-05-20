@@ -30,7 +30,11 @@ const SignupPage = ({ onRegister }) => {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
-        body: JSON.stringify({ USR_email, USR_pass, USR_nickname }),
+        body: JSON.stringify({
+          USR_email: USR_email,
+          USR_pass: USR_pass,
+          USR_nickname: USR_nickname,
+        })
       });
 
       if (!res.ok) throw new Error('회원가입 실패');
