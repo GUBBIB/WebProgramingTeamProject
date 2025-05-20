@@ -46,7 +46,10 @@ class AuthController extends Controller
 
         Auth::login($user); // 세션에 사용자 저장
 
-        return response()->json(['message' => '로그인 성공', 'user' => $user]);
+        return response()->json([
+            'message' => '로그인 성공', 
+            'user' => $user
+        ]);
     }
 
     // 로그아웃

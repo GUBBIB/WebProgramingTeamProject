@@ -20,15 +20,6 @@ Route::post('/boards/{BRD_id}/posts/{PST_id}/view', [PostController::class, 'inc
 
 Route::post('/boards/search', [BoardController::class, 'board_Search_By_Keyword']);
 
-// 로그인 관련 API
-Route::post('/register', [AuthController::class, 'register']);
-Route::post('/login', [AuthController::class, 'login']);
-Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
-Route::get('/user', [AuthController::class, 'user'])->middleware('auth:sanctum');
-
-// 회원정보 수정 API
-Route::post('/profile/update', [AuthController::class, 'updateProfile'])->middleware('auth:sanctum');
-
 // 게시글 수정
 Route::put('/posts/{PST_id}', [PostController::class, 'update']);
 
