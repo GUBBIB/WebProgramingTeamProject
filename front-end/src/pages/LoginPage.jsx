@@ -1,40 +1,46 @@
-import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import './LoginPage.css';
+import React, { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import "./LoginPage.css";
 
-const API_BASE_URL = '/api';
+const API_BASE_URL = "/api";
 
 const LoginPage = ({ onLogin }) => {
-  const [USR_email, setEmail] = useState('');
-  const [USR_pass, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [USR_email, setEmail] = useState("");
+  const [USR_pass, setPassword] = useState("");
+  const [error, setError] = useState("");
   const navigate = useNavigate();
+
+  // 로그인 관련 아주 중요한 코드 한 줄
+  const csrfToken = document
+    .querySelector('meta[name="csrf-token"]')
+    .getAttribute("content");
 
   const handleLoginClick = async (e) => {
     e.preventDefault();
-    setError('');
+    setError("");
     if (!USR_email.trim() || !USR_pass.trim()) {
-      setError('이메일과 비밀번호를 모두 입력해주세요.');
+      setError("이메일과 비밀번호를 모두 입력해주세요.");
       return;
     }
 
     try {
-      const res = await fetch('/api/login', {
-        method: 'POST',
+      const res = await fetch("/api/login", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
+          "X-CSRF-TOKEN": csrfToken,
         },
-        credentials: 'include',
-        body: JSON.stringify({ 
-          USR_email: USR_email, 
-          USR_pass: USR_pass
+        credentials: "include",
+        body: JSON.stringify({
+          USR_email: USR_email,
+          USR_pass: USR_pass,
         }),
       });
 
-      if (!res.ok) throw new Error('로그인 실패');
+      if (!res.ok) throw new Error("로그인 실패");
       const data = await res.json();
       onLogin(data.user);
-      navigate('/'); // 로그인 성공 후 메인페이지로 이동
+      navigate("/"); // 로그인 성공 후 메인페이지로 이동
     } catch (err) {
       alert(err.message);
     }
@@ -45,8 +51,11 @@ const LoginPage = ({ onLogin }) => {
       <h1 className="page-title">로그인</h1>
       {error && (
         <p className="error-message">
-          {error.split('\n').map((line, i) => (
-            <span key={i}>{line}<br /></span>
+          {error.split("\n").map((line, i) => (
+            <span key={i}>
+              {line}
+              <br />
+            </span>
           ))}
         </p>
       )}
@@ -76,12 +85,18 @@ const LoginPage = ({ onLogin }) => {
           />
         </div>
         <div className="form-actions">
-          <button type="button" onClick={handleLoginClick} className="submit-button">
+          <button
+            type="button"
+            onClick={handleLoginClick}
+            className="submit-button"
+          >
             로그인
           </button>
         </div>
         <div className="signup-link">
-          <p>계정이 없으신가요? <Link to="/signup">회원가입</Link></p>
+          <p>
+            계정이 없으신가요? <Link to="/signup">회원가입</Link>
+          </p>
         </div>
       </div>
     </div>

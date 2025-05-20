@@ -12,6 +12,9 @@ const SignupPage = ({ onRegister }) => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
+  // 로그인 관련 아주 중요한 코드 한 줄
+  const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
   const handleSignupClick = async () => {
     setError('');
 
@@ -28,7 +31,10 @@ const SignupPage = ({ onRegister }) => {
     try {
         const res = await fetch(`${API_BASE_URL}/register`, { //api 경로 `${API_BASE_URL} 추가
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          "X-CSRF-TOKEN": csrfToken,
+        },
         credentials: 'include',
         body: JSON.stringify({
           USR_email: USR_email,
