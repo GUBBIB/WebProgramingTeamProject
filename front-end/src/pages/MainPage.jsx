@@ -23,7 +23,7 @@ const MainPage = () => {
     fetch("/api/user", { credentials: "include" })
       .then((res) => (res.ok ? res.json() : Promise.reject()))
       .then((data) => {
-        console.log(data);
+        console.log("api 응답 json: ", data);
         if (data.user) {
           setCurrentUser({
             USR_id: data.user.USR_id,
@@ -33,6 +33,7 @@ const MainPage = () => {
         } else {
           setCurrentUser(null);
         }
+        console.log("currentUser seting 값: ", currentUser)
       })
       .catch(() => setCurrentUser(null));
   }, []);
