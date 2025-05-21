@@ -12,7 +12,7 @@ import BoardTypeSelector from "../components/Board/BoardTypeSelector";
 
 const MainPage = () => {
   const [selectedBoard, setSelectedBoard] = useState(1);
-  const [currentUser, setCurrentUser] = useState(null);
+  const [currentUser, setCurrentUser] = useState(undefined);
   const [searchedPosts, setSearchedPosts] = useState(null);
   const [searchType, setSearchType] = useState("title");
   const [searchTerm, setSearchTerm] = useState(null);
