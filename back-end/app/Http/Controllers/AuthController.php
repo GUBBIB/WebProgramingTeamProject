@@ -65,6 +65,7 @@ class AuthController extends Controller
     // 현재 로그인된 사용자 정보 확인
     public function user(Request $request)
     {
+        \Log::info("유저:", [$request->user()]);
         return response()->json(Auth::user());
     }
 
