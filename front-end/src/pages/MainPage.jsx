@@ -36,7 +36,7 @@ const MainPage = () => {
         console.log("currentUser seting 값: ", currentUser)
       })
       .catch(() => setCurrentUser(null));
-  }, []);
+  }, [currentUser]);
 
   // 로그인 성공 시 호출
   const handleLogin = (user) => {
