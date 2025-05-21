@@ -32,9 +32,9 @@ const MainPage = () => {
           const data = JSON.parse(text);
           if (data && data.USR_id) {
             setCurrentUser({
-              USR_id: data.user.USR_id,
+              USR_id: data.USR_id,
               isLoggedIn: true,
-              details: data.user,
+              details: data,
             });
           } else {
             console.warn("❌ user 정보 없음:", data);
