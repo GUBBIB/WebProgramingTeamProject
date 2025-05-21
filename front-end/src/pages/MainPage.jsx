@@ -20,6 +20,8 @@ const MainPage = () => {
 
   // 세션에서 로그\인 유저 정보 받아오기
   useEffect(() => {
+    console.log(currentUser);
+    
     fetch("/api/user", { 
       credentials: "include" 
     })
