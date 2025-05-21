@@ -30,7 +30,7 @@ const MainPage = () => {
 
         try {
           const data = JSON.parse(text);
-          if (data.user && data.user.USR_id) {
+          if (data && data.USR_id) {
             setCurrentUser({
               USR_id: data.user.USR_id,
               isLoggedIn: true,
