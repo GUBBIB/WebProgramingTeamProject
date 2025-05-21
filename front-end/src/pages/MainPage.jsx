@@ -20,29 +20,35 @@ const MainPage = () => {
 
   // 세션에서 로그\인 유저 정보 받아오기
   useEffect(() => {
-    console.log(currentUser);
-    
-    fetch("/api/user", { 
-      credentials: "include" 
-    })
-      .then((res) => (res.ok ? res.json() : Promise.reject()))
-      .then((data) => {
-        console.log("api 응답 json: ", data);
-        if (data) {
-          setCurrentUser({
-            USR_id: data.user.USR_id,
-            isLoggedIn: true,
-            details: data.user,
-          });
-        } else {
+    fetch("/api/user", { credentials: "include" })
+      .then(async (res) => {
+        console.log("응답 status:", res.status);
+        console.log("응답 Content-Type:", res.headers.get("content-type"));
+
+        const text = await res.text(); // JSON이 아닌 경우 확인 가능
+        console.log("응답 body (text):", text);
+
+        try {
+          const data = JSON.parse(text);
+          if (data.user && data.user.USR_id) {
+            setCurrentUser({
+              USR_id: data.user.USR_id,
+              isLoggedIn: true,
+              details: data.user,
+            });
+          } else {
+            console.warn("❌ user 정보 없음:", data);
+            setCurrentUser(null);
+          }
+        } catch (err) {
+          console.error("❌ JSON 파싱 에러:", err);
           setCurrentUser(null);
-          console.log("catch Error 발생", currentUser);
         }
-        console.log("정상 currentUser seting 값: ", currentUser);
       })
-      .catch(() => {
-        console.log("catch Error 발생");
-    });
+      .catch((err) => {
+        console.error("❌ fetch 실패:", err);
+        setCurrentUser(null);
+      });
   }, []);
 
   // 로그인 성공 시 호출
@@ -104,8 +110,7 @@ const MainPage = () => {
       console.log("검색 결과:", data);
       setSearchedPosts(data);
       // 여기서 data.results를 사용하여 화면에 출력하거나 상태 저장 가능
-    } catch (error) {
-    }
+    } catch (error) {}
   };
 
   return (
