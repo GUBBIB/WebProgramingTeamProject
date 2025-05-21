@@ -23,6 +23,7 @@ const MainPage = () => {
     fetch("/api/user", { credentials: "include" })
       .then((res) => (res.ok ? res.json() : Promise.reject()))
       .then((data) => {
+        console.log(data);
         if (data.user) {
           setCurrentUser({
             USR_id: data.user.USR_id,
