@@ -38,9 +38,7 @@ const MainPage = () => {
         console.log("정상 currentUser seting 값: ", currentUser);
       })
       .catch(() => {
-        
-        setCurrentUser(null);
-        console.log("catch Error currentUser seting 값: ", currentUser);
+        console.log("catch Error 발생");
     });
   }, []);
 
