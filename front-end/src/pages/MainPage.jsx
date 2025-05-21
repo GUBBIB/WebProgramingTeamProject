@@ -19,22 +19,27 @@ const MainPage = () => {
   const navigate = useNavigate();
 
   // 세션에서 로그인 유저 정보 받아오기
-  useEffect(() => {
-    fetch("/api/user", { credentials: "include" })
-      .then((res) => (res.ok ? res.json() : Promise.reject()))
-      .then((data) => {
-        if (data.user) {
-          setCurrentUser({
-            USR_id: data.user.USR_id,
-            isLoggedIn: true,
-            details: data.user,
-          });
-        } else {
-          setCurrentUser(null);
-        }
-      })
-      .catch(() => setCurrentUser(null));
-  }, []);
+// App.jsx or useEffect in Layout
+useEffect(() => {
+  const checkLogin = async () => {
+    try {
+      const res = await fetch('/api/user', {
+        credentials: 'include',
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setCurrentUser(data.user); // 로그인 정보 복구
+      } else {
+        setCurrentUser(null); // 세션 만료 등
+      }
+    } catch (err) {
+      console.error('유저 정보 확인 실패:', err);
+    }
+  };
+
+  checkLogin();
+}, []);
+
 
   // 로그인 성공 시 호출
   const handleLogin = (user) => {
