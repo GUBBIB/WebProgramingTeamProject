@@ -18,7 +18,7 @@ const MainPage = () => {
   const [searchTerm, setSearchTerm] = useState(null);
   const navigate = useNavigate();
 
-  // 세션에서 로그인 유저 정보 받아오기
+  // 세션에서 로그\인 유저 정보 받아오기
   useEffect(() => {
     fetch("/api/user", { 
       credentials: "include" 
@@ -26,7 +26,7 @@ const MainPage = () => {
       .then((res) => (res.ok ? res.json() : Promise.reject()))
       .then((data) => {
         console.log("api 응답 json: ", data);
-        if (data.user.has("USR_id")) {
+        if (data.user && data.user.USR_id) {
           setCurrentUser({
             USR_id: data.user.USR_id,
             isLoggedIn: true,
@@ -34,6 +34,7 @@ const MainPage = () => {
           });
         } else {
           setCurrentUser(null);
+          console.log("catch Error 발생", currentUser);
         }
         console.log("정상 currentUser seting 값: ", currentUser);
       })
