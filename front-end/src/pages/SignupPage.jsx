@@ -1,49 +1,46 @@
-import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import './SignupPage.css';
+import React, { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import "./SignupPage.css";
 
-const API_BASE_URL = '/api';
+const API_BASE_URL = "/api";
 
 const SignupPage = ({ onRegister }) => {
-  const [USR_nickname, setNickname] = useState('');
-  const [USR_email, setEmail] = useState('');
-  const [USR_pass, setPassword] = useState('');
-  const [USR_pass_confirmation, setConfirmPassword] = useState('');
-  const [error, setError] = useState('');
+  const [USR_nickname, setNickname] = useState("");
+  const [USR_email, setEmail] = useState("");
+  const [USR_pass, setPassword] = useState("");
+  const [USR_pass_confirmation, setConfirmPassword] = useState("");
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  // 로그인 관련 아주 중요한 코드 한 줄
-  const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-
   const handleSignupClick = async () => {
-    setError('');
+    setError("");
 
     if (USR_pass !== USR_pass_confirmation) {
-      setError('비밀번호가 일치하지 않습니다.');
+      setError("비밀번호가 일치하지 않습니다.");
       return;
     }
 
     if (!USR_nickname.trim() || !USR_email.trim() || !USR_pass.trim()) {
-      setError('모든 필드를 입력해주세요.');
+      setError("모든 필드를 입력해주세요.");
       return;
     }
 
     try {
-        const res = await fetch(`${API_BASE_URL}/register`, { //api 경로 `${API_BASE_URL} 추가
-        method: 'POST',
-        headers: { 
-          'Content-Type': 'application/json',
-          "X-CSRF-TOKEN": csrfToken,
+      const res = await fetch(`${API_BASE_URL}/register`, {
+        //api 경로 `${API_BASE_URL} 추가
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
         },
-        credentials: 'include',
+        credentials: "include",
         body: JSON.stringify({
           USR_email: USR_email,
           USR_pass: USR_pass,
           USR_nickname: USR_nickname,
-        })
+        }),
       });
 
-      if (!res.ok) throw new Error('회원가입 실패');
+      if (!res.ok) throw new Error("회원가입 실패");
       const data = await res.json();
       onRegister(data.user);
     } catch (err) {
@@ -56,7 +53,12 @@ const SignupPage = ({ onRegister }) => {
       <h1 className="page-title">회원가입</h1>
       {error && (
         <p className="error-message">
-          {error.split('\n').map((line, i) => <span key={i}>{line}<br /></span>)}
+          {error.split("\n").map((line, i) => (
+            <span key={i}>
+              {line}
+              <br />
+            </span>
+          ))}
         </p>
       )}
       <div className="signup-form">
@@ -109,12 +111,18 @@ const SignupPage = ({ onRegister }) => {
           />
         </div>
         <div className="form-actions">
-          <button type="button" onClick={handleSignupClick} className="submit-button">
+          <button
+            type="button"
+            onClick={handleSignupClick}
+            className="submit-button"
+          >
             가입하기
           </button>
         </div>
         <div className="login-link">
-          <p>이미 계정이 있으신가요? <Link to="/login">로그인</Link></p>
+          <p>
+            이미 계정이 있으신가요? <Link to="/login">로그인</Link>
+          </p>
         </div>
       </div>
     </div>

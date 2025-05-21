@@ -10,11 +10,6 @@ const LoginPage = ({ onLogin }) => {
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  // 로그인 관련 아주 중요한 코드 한 줄
-  const csrfToken = document
-    .querySelector('meta[name="csrf-token"]')
-    .getAttribute("content");
-
   const handleLoginClick = async (e) => {
     e.preventDefault();
     setError("");
@@ -27,8 +22,7 @@ const LoginPage = ({ onLogin }) => {
       const res = await fetch("/api/login", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
-          "X-CSRF-TOKEN": csrfToken,
+          "Content-Type": "application/json"
         },
         credentials: "include",
         body: JSON.stringify({
