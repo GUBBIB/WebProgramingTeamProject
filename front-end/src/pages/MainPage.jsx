@@ -20,11 +20,13 @@ const MainPage = () => {
 
   // 세션에서 로그인 유저 정보 받아오기
   useEffect(() => {
-    fetch("/api/user", { credentials: "include" })
+    fetch("/api/user", { 
+      credentials: "include" 
+    })
       .then((res) => (res.ok ? res.json() : Promise.reject()))
       .then((data) => {
         console.log("api 응답 json: ", data);
-        if (data.user) {
+        if (data.user.has("USR_id")) {
           setCurrentUser({
             USR_id: data.user.USR_id,
             isLoggedIn: true,
