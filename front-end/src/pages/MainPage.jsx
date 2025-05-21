@@ -26,7 +26,7 @@ const MainPage = () => {
       .then((res) => (res.ok ? res.json() : Promise.reject()))
       .then((data) => {
         console.log("api 응답 json: ", data);
-        if (data.user && data.user.USR_id) {
+        if (data) {
           setCurrentUser({
             USR_id: data.user.USR_id,
             isLoggedIn: true,
