@@ -35,9 +35,13 @@ const MainPage = () => {
         } else {
           setCurrentUser(null);
         }
-        console.log("currentUser seting 값: ", currentUser)
+        console.log("정상 currentUser seting 값: ", currentUser);
       })
-      .catch(() => setCurrentUser(null));
+      .catch(() => {
+        
+        setCurrentUser(null);
+        console.log("catch Error currentUser seting 값: ", currentUser);
+    });
   }, []);
 
   // 로그인 성공 시 호출
