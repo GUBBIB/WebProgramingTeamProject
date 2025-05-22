@@ -10,6 +10,8 @@ import "./MainPage.css";
 import BoardControls from "../components/Board/BoardControls";
 import BoardTypeSelector from "../components/Board/BoardTypeSelector";
 
+const API_BASE_URL = 'http://localhost:8000/api';
+
 const MainPage = () => {
   const [selectedBoard, setSelectedBoard] = useState(1);
   const [currentUser, setCurrentUser] = useState(undefined);
@@ -20,7 +22,7 @@ const MainPage = () => {
 
   // 세션에서 로그\인 유저 정보 받아오기
   useEffect(() => {
-    fetch("/api/user", { credentials: "include" })
+    fetch(`${API_BASE_URL}/user`, { credentials: "include" })
       .then(async (res) => {
         console.log("응답 status:", res.status);
         console.log("응답 Content-Type:", res.headers.get("content-type"));
@@ -88,7 +90,7 @@ const MainPage = () => {
       return;
     }
     try {
-      const response = await fetch("/api/boards/search", {
+      const response = await fetch(`${API_BASE_URL}/boards/search`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

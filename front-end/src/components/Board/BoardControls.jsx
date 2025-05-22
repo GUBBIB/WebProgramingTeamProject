@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from 'react-router-dom';
-
 import "./BoardControls.css";
+
+const API_BASE_URL = 'http://localhost:8000/api';
 
 const BoardControls = ({ onSearch }) => {
   const [keyword, setKeyword] = useState('');
@@ -30,7 +31,7 @@ const BoardControls = ({ onSearch }) => {
 
       const query = new URLSearchParams({ field, keyword }).toString();
 
-      const response = await fetch(`/api/boards/search?${query}`, {
+      const response = await fetch(`${API_BASE_URL}/boards/search?${query}`, {
         method: 'GET',
       });
 

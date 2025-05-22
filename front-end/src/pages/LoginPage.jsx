@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import "./LoginPage.css";
 
-const API_BASE_URL = "/api";
+const API_BASE_URL = 'http://localhost:8000/api';
 
 const LoginPage = ({ onLogin }) => {
   const [USR_email, setEmail] = useState("");
@@ -19,7 +19,7 @@ const LoginPage = ({ onLogin }) => {
     }
 
     try {
-      const res = await fetch("/api/login", {
+      const res = await fetch(`${API_BASE_URL}/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"

@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import './BoardTypeSelector.css';
 import PostList from '../Post/PostList';
 
-const API_BASE_URL = '/api';// 실제 API 주소에 맞게 수정
+const API_BASE_URL = 'http://localhost:8000/api';
 
 const BoardTypeSelector = ({ selectedBoard, onSelectedBoard, searchedPosts}) => {
   const [boardTypes, setBoardTypes] = useState([]);
