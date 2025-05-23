@@ -52,13 +52,13 @@ class BoardController extends Controller
         if ($field === 'title') {
             $results = Post::with('user', 'board')
                 ->where('PST_title', 'like', "%{$keyword}%")
-                ->get();
+                ->paginate(15);
         } elseif ($field === 'user') {
             $results = Post::with('user', 'board')
                 ->whereHas('user', function ($query) use ($keyword) {
                     $query->where('USR_nickname', 'like', "%{$keyword}%");
                 })
-                ->get();
+                ->paginate(15);
         } else {
             return response()->json([
                 'message' => '검색 기준은 title 또는 user 중 하나여야 합니다.'

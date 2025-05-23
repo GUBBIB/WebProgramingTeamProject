@@ -6,18 +6,14 @@ import Pagination from '../Board/Pagination'; // 실제 경로 확인 필요
 
 const API_BASE_URL = 'http://localhost:8000/api';
 
-const PostList = ({ BRD_id, onSelectedBoard, searchedPosts }) => { // (변경됨)
+const PostList = ({ BRD_id, onSelectedBoard, searchedPosts, pagination, setPagination}) => { // (변경됨)
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchParam] = useSearchParams();
   const pageParam = parseInt(searchParam.get("page") || "1", 10);
 
-  const [pagination, setPagination] = useState({
-    currentPage: pageParam,
-    totalPages: 1,
-    total: 0,
-  });
+
 
   const fetchPosts = useCallback(async () => {
     setLoading(true);

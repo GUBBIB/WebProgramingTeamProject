@@ -5,7 +5,7 @@ import PostList from '../Post/PostList';
 
 const API_BASE_URL = 'http://localhost:8000/api';
 
-const BoardTypeSelector = ({ selectedBoard, onSelectedBoard, searchedPosts}) => {
+const BoardTypeSelector = ({ selectedBoard, onSelectedBoard, searchedPosts, pagination, setPagination}) => {
   const [boardTypes, setBoardTypes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -76,7 +76,7 @@ const BoardTypeSelector = ({ selectedBoard, onSelectedBoard, searchedPosts}) => 
         ))}
       </div>
       {/* 선택된 게시판에 따라 PostList를 조건부 렌더링 */}
-      {selectedBoard && <PostList BRD_id={selectedBoard} searchedPosts={searchedPosts} />}
+      {selectedBoard && <PostList BRD_id={selectedBoard} searchedPosts={searchedPosts} pagination={pagination} setPagination={setPagination}/>}
     </div>
   );
 };

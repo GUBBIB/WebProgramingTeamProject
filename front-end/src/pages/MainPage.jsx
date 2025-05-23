@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Routes, Route, useNavigate } from "react-router-dom";
+import { Routes, Route, useNavigate, useSearchParams } from "react-router-dom";
 import Header from "../components/Header/Header";
 import PostDetailPage from "./PostDetailPage";
 import PostWritePage from "./PostWritePage";
@@ -10,6 +10,7 @@ import "./MainPage.css";
 import BoardControls from "../components/Board/BoardControls";
 import BoardTypeSelector from "../components/Board/BoardTypeSelector";
 
+
 const API_BASE_URL = 'http://localhost:8000/api';
 
 const MainPage = () => {
@@ -19,6 +20,13 @@ const MainPage = () => {
   const [searchType, setSearchType] = useState("title");
   const [searchTerm, setSearchTerm] = useState(null);
   const navigate = useNavigate();
+  const [searchParam] = useSearchParams();
+  const pageParam = parseInt(searchParam.get("page") || "1", 10);
+  const [pagination, setPagination] = useState({
+    currentPage: pageParam,
+    totalPages: 1,
+    total: 0,
+  });
 
   // 세션에서 로그\인 유저 정보 받아오기
   useEffect(() => {
@@ -90,7 +98,7 @@ const MainPage = () => {
       return;
     }
     try {
-      const response = await fetch(`${API_BASE_URL}/boards/search`, {
+      const response = await fetch(`${API_BASE_URL}/boards/search?page=${pagination}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -128,6 +136,8 @@ const MainPage = () => {
                   selectedBoard={selectedBoard}
                   onSelectedBoard={setSelectedBoard}
                   searchedPosts={searchedPosts}
+                  pagination={pagination}
+                  setPagination={setPagination}
                 />
                 <BoardControls
                   onSearch={handleSearch} // (추가됨)
