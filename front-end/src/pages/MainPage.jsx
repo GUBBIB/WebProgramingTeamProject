@@ -91,9 +91,10 @@ const MainPage = () => {
   };
 
   // 검색
-  const handleSearch = async (searchType, searchTerm) => {
+  const handleSearch = async (searchType, searchTerm, setKeyword) => {
     if (!searchTerm.trim()) {
       setSearchedPosts(null);
+      return;
     }
     try {
       const response = await fetch(
@@ -107,6 +108,7 @@ const MainPage = () => {
           body: JSON.stringify({
             field: searchType,
             keyword: searchTerm,
+            BRD_id: selectedBoard,
           }),
         }
       );
@@ -123,7 +125,6 @@ const MainPage = () => {
 
       const results = data.results;
 
-      // ✅ 여기서 바로 pagination, posts 적용
       setSearchedPosts({
         results: results.data || [], // posts 배열
       });
@@ -134,7 +135,12 @@ const MainPage = () => {
         total: results.total,
       });
     } catch (error) {}
+    setKeyword("");
   };
+
+  useEffect(() => {
+    setSearchedPosts(null);
+  }, [selectedBoard]);
 
   return (
     <div>

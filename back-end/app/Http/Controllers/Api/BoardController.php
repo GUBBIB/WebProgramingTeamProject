@@ -42,6 +42,7 @@ class BoardController extends Controller
     {
         $keyword = $request->input('keyword');
         $field = $request->input('field');
+        $BRD_id = $request->input('BRD_id');
 
         if (!$keyword || !$field) {
             return response()->json([
@@ -49,21 +50,24 @@ class BoardController extends Controller
             ], 400);
         }
 
-        if ($field === 'title') {
-            $results = Post::with('user', 'board')
-                ->where('PST_title', 'like', "%{$keyword}%")
-                ->paginate(15);
-        } elseif ($field === 'user') {
-            $results = Post::with('user', 'board')
-                ->whereHas('user', function ($query) use ($keyword) {
-                    $query->where('USR_nickname', 'like', "%{$keyword}%");
-                })
-                ->paginate(15);
-        } else {
-            return response()->json([
-                'message' => '검색 기준은 title 또는 user 중 하나여야 합니다.'
-            ], 400);
+        $query = Post::with('user', 'board');
+
+        if ($BRD_id && intval($BRD_id) !== 1) {
+            $query->where('BRD_id', $BRD_id);
         }
+
+        if ($field === 'title') {
+        $query->where('PST_title', 'like', "%{$keyword}%");
+    } elseif ($field === 'user') {
+        $query->whereHas('user', function ($q) use ($keyword) {
+            $q->where('USR_nickname', 'like', "%{$keyword}%");
+        });
+    } else {
+        return response()->json(['message' => '검색 기준은 title 또는 user 중 하나여야 합니다.'], 400);
+    }
+
+    $results = $query->paginate(15);
+
 
         return response()->json([
             'field' => $field,
