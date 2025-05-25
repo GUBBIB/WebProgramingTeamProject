@@ -10,8 +10,7 @@ import "./MainPage.css";
 import BoardControls from "../components/Board/BoardControls";
 import BoardTypeSelector from "../components/Board/BoardTypeSelector";
 
-
-const API_BASE_URL = 'http://localhost:8000/api';
+const API_BASE_URL = "http://localhost:8000/api";
 
 const MainPage = () => {
   const [selectedBoard, setSelectedBoard] = useState(1);
@@ -94,21 +93,23 @@ const MainPage = () => {
   // 검색
   const handleSearch = async (searchType, searchTerm) => {
     if (!searchTerm.trim()) {
-      setSearchedPosts(null); // ✅ 검색어 없으면 검색 상태 해제
-      return;
+      setSearchedPosts(null);
     }
     try {
-      const response = await fetch(`${API_BASE_URL}/boards/search?page=${pagination}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include", // 세션 인증 사용하는 경우
-        body: JSON.stringify({
-          field: searchType,
-          keyword: searchTerm,
-        }),
-      });
+      const response = await fetch(
+        `${API_BASE_URL}/boards/search?page=${pagination}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include", // 세션 인증 사용하는 경우
+          body: JSON.stringify({
+            field: searchType,
+            keyword: searchTerm,
+          }),
+        }
+      );
 
       if (!response.ok) {
         const errorData = await response.json();
@@ -117,9 +118,21 @@ const MainPage = () => {
       }
 
       const data = await response.json();
+
       console.log("검색 결과:", data);
-      setSearchedPosts(data);
-      // 여기서 data.results를 사용하여 화면에 출력하거나 상태 저장 가능
+
+      const results = data.results;
+
+      // ✅ 여기서 바로 pagination, posts 적용
+      setSearchedPosts({
+        results: results.data || [], // posts 배열
+      });
+
+      setPagination({
+        currentPage: results.current_page,
+        totalPages: results.last_page,
+        total: results.total,
+      });
     } catch (error) {}
   };
 
