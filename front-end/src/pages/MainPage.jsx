@@ -10,7 +10,7 @@ import "./MainPage.css";
 import BoardControls from "../components/Board/BoardControls";
 import BoardTypeSelector from "../components/Board/BoardTypeSelector";
 
-const API_BASE_URL = "http://localhost:8000/api";
+const API_BASE_URL = "/api";
 
 const MainPage = () => {
   const [selectedBoard, setSelectedBoard] = useState(1);

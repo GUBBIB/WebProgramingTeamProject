@@ -4,7 +4,7 @@ import PostItem from './PostItem';
 import "./PostList.css";
 import Pagination from '../Board/Pagination'; // 실제 경로 확인 필요
 
-const API_BASE_URL = 'http://localhost:8000/api';
+const API_BASE_URL = "/api";
 
 const PostList = ({ BRD_id, onSelectedBoard, searchedPosts, pagination, setPagination}) => { // (변경됨)
   const [posts, setPosts] = useState([]);

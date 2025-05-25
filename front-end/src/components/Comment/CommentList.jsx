@@ -3,7 +3,7 @@ import CommentItem from './CommentItem';
 import CommentForm from './CommentForm';
 import './Comment.css';
 
-const API_BASE_URL = 'http://localhost:8000/api';
+const API_BASE_URL = "/api";
 
 const CommentList = ({ BRD_id, PST_id, currentUser }) => {
   const [comments, setComments] = useState([]);
