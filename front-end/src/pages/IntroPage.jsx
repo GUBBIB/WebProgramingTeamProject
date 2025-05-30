@@ -1,13 +1,16 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./introPage.css";
 
 const IntroPage = () => {
   const [buttonClicked, setButtonClicked] = useState(false);
+  const navigate = useNavigate();
 
   const handleGoToBoard = () => {
     setButtonClicked(true);
     setTimeout(() => setButtonClicked(false), 300);
     console.log("게시글 작성하러 가기");
+    navigate("/board");
   };
 
   return (
@@ -17,7 +20,7 @@ const IntroPage = () => {
         <div className="intro-header">
           <div className="intro-logo-box">
             <img 
-              src=".\image\apatcche.png" 
+              src="./image/apatcche.png" 
               alt="Apppatche Logo" 
               className="intro-logo"
             />
