@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "./introPage.css";
+import "./IntroPage.css";
 
 const IntroPage = () => {
   const [buttonClicked, setButtonClicked] = useState(false);
