@@ -17,7 +17,7 @@ const IntroPage = () => {
         <div className="intro-header">
           <div className="intro-logo-box">
             <img 
-              src="..\Header\image\apatcche.png" 
+              src=".\image\apatcche.png" 
               alt="Apppatche Logo" 
               className="intro-logo"
             />
