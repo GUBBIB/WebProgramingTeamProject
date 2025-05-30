@@ -1,64 +1,139 @@
 .intro-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
   min-height: 100vh;
-  background-color: #f5f5f5;
-  padding: 20px;
+  background: linear-gradient(to bottom right, #ffe4e6, #fff1f2, #fbcfe8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
 }
 
-.intro-content {
-  max-width: 800px;
-  background-color: white;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  padding: 40px;
-  text-align: center;
+.intro-inner {
+  max-width: 80rem;
+  width: 100%;
+}
+
+.intro-header {
+  display: flex;
+  gap: 2rem;
+  margin-bottom: 3rem;
+  align-items: center;
+}
+
+.intro-logo-box {
+  flex-shrink: 0;
+}
+
+.intro-logo {
+  height: 4rem;
+  filter: drop-shadow(0 0 0.25rem rgba(0,0,0,0.2));
+}
+
+.intro-greeting-box {
+  border: 4px solid #f472b6;
+  background: linear-gradient(to right, #ffe4e6, #fff1f2, #fbcfe8);
+  padding: 2rem;
+  border-radius: 1.5rem;
+  box-shadow: 0 0 1rem rgba(0,0,0,0.1);
+  transition: transform 0.5s;
+}
+
+.intro-greeting-box:hover {
+  transform: scale(1.02);
 }
 
 .intro-title {
-  color: #333;
-  margin-bottom: 30px;
-  font-size: 2.5rem;
+  text-align: center;
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: #9d174d;
 }
 
-.intro-description {
-  margin-bottom: 40px;
+.intro-subtitle {
+  text-align: center;
+  margin-top: 0.5rem;
+  color: #be123c;
+  font-weight: 500;
+}
+
+.intro-cards {
+  display: flex;
+  gap: 2rem;
+  margin-bottom: 3rem;
+  justify-content: center;
+}
+
+.intro-card {
+  border-radius: 1.5rem;
+  padding: 2rem;
+  max-width: 20rem;
+  flex: 1;
+  box-shadow: 0 0 1rem rgba(0,0,0,0.1);
+  transition: all 0.3s ease-in-out;
+  text-align: center;
+}
+
+.intro-card:hover {
+  transform: scale(1.05) rotate(1deg);
+  box-shadow: 0 0 2rem rgba(0,0,0,0.2);
+}
+
+.intro-card.rose {
+  background: linear-gradient(to bottom right, #fff1f2, #ffe4e6);
+  border: 4px solid #fb7185;
+  color: #be123c;
+}
+
+.intro-card.pink {
+  background: linear-gradient(to bottom right, #fff1f2, #ffe4e6);
+  border: 4px solid #f472b6;
+  color: #db2777;
+}
+
+.intro-card.pink-rose {
+  background: linear-gradient(to bottom right, #ffe4e6, #fff1f2);
+  border: 4px solid #ec4899;
+  color: #db2777;
+}
+
+.card-title {
+  font-size: 1.25rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+.card-text {
+  font-weight: 500;
+  color: inherit;
   line-height: 1.6;
-  color: #555;
 }
 
-.intro-description p {
-  margin-bottom: 15px;
-  font-size: 1.1rem;
+.intro-button-wrap {
+  text-align: center;
 }
 
 .intro-button {
-  background-color: #4a90e2;
+  border: 4px solid #ec4899;
+  background: linear-gradient(to right, #f9a8d4, #fb7185);
+  padding: 1rem 2.5rem;
+  font-size: 1.25rem;
+  font-weight: bold;
   color: white;
-  border: none;
-  padding: 15px 30px;
-  font-size: 1.2rem;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
+  border-radius: 9999px;
+  box-shadow: 0 0 1rem rgba(0,0,0,0.1);
+  transition: all 0.3s ease-in-out;
 }
 
 .intro-button:hover {
-  background-color: #3a7bc8;
+  transform: scale(1.1);
+  box-shadow: 0 0 2rem rgba(0,0,0,0.2);
 }
 
-@media (max-width: 768px) {
-  .intro-content {
-    padding: 30px 20px;
-  }
-  
-  .intro-title {
-    font-size: 2rem;
-  }
-  
-  .intro-button {
-    padding: 12px 25px;
-    font-size: 1.1rem;
-  }
+.intro-button.clicked {
+  transform: scale(0.95);
+}
+
+.intro-button-sub {
+  margin-top: 1rem;
+  color: #ec4899;
+  font-weight: 500;
 }

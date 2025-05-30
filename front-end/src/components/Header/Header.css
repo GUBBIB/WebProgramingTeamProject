@@ -7,11 +7,9 @@
   border-bottom: 1px solid #dee2e6;
 }
 
-.logo a {
-  text-decoration: none;
-  color: #333;
-  font-size: 1.5rem;
-  font-weight: bold;
+.logo img.logo-image {
+  height: 40px; /* 로고 이미지 크기 조절 */
+  object-fit: contain;
 }
 
 .auth-buttons button {

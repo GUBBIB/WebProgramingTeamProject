@@ -8,31 +8,25 @@ const Header = ({ currentUser, onLogout }) => {
 
   return (
     <header className="header-container"> {/* 헤더 전체 컨테이너 */}
-      <div className="logo"> {/* 로고 및 메인 페이지 이동 */}
-        <Link to="/">아팠찌</Link>
+      <div className="logo"> {/* 로고 이미지 클릭 시 메인 페이지 이동 */}
+        <Link to="/">
+          <img src="/images/apatcche.png" alt="아팟찌 로고" className="logo-image" />
+        </Link>
       </div>
 
       <nav className="auth-buttons"> {/* 로그인/회원가입 또는 로그아웃/회원정보 버튼 영역 */}
         {isLoggedIn ? (
-          // 로그인한 경우
           <>
-            {/* 프로필 페이지로 이동 */}
             <Link to="/profile">
               <button>회원정보</button>
             </Link>
-
-            {/* 로그아웃 버튼 - 클릭 시 props로 전달된 onLogout 함수 실행 */}
             <button onClick={onLogout}>로그아웃</button>
           </>
         ) : (
-          // 로그인하지 않은 경우
           <>
-            {/* 로그인 페이지로 이동 */}
             <Link to="/login">
               <button>로그인</button>
             </Link>
-
-            {/* 회원가입 페이지로 이동 */}
             <Link to="/signup">
               <button>회원가입</button>
             </Link>
@@ -43,4 +37,4 @@ const Header = ({ currentUser, onLogout }) => {
   );
 };
 
-export default Header; // 컴포넌트 외부에서 사용 가능하게 export
+export default Header;
