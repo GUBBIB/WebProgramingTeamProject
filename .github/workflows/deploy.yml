@@ -23,7 +23,7 @@ jobs:
           script: |
             if [ -f ~/WebProgramingTeamProject/back-end/.env ]; then
               echo "📦 .env 파일 백업"
-              cp ~/WebProgramingTeamProject/back-end/.env ~/.env_backup
+              cp ~/WebProgramingTeamProject/back-end/.env ~/.env
             fi
 
             echo "🧹 기존 프로젝트 디렉토리 삭제"
@@ -47,11 +47,17 @@ jobs:
           script: |
             if [ -f ~/.env_backup ]; then
               echo "🔄 .env 복원"
-              mv ~/.env_backup ~/WebProgramingTeamProject/back-end/.env
+              mv ~/.env ~/WebProgramingTeamProject/back-end/.env
             fi
+
+            cd ~/WebProgramingTeamProject/back-end
+            composer install
+            sudo chown -R www-data:www-data storage bootstrap/cache
+            sudo chmod -R 775 storage bootstrap/cache
 
             echo "⚙️ React 프론트엔드 빌드"
             cd ~/WebProgramingTeamProject/front-end
+            npm install
             npm run build
 
             echo "🔁 Apache 재시작"
