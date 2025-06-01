@@ -28,9 +28,10 @@ class AIController extends Controller
         $response = Http::withHeaders([
             'Authorization' => 'Bearer ' . $apiKey,  // api-key를 Bearer 형식으로 추가
         ])->post('https://api.deepai.org/api/text-generator', [
-            'text' => $textToSend,
+            'model' => 'omni-moderation-latest',
+            'input' => $textToSend,
         ]);
-        
+
         if ($response->successful()) {
 
             $review = $response->json();
