@@ -45,15 +45,15 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            if [ -f ~/.env_backup ]; then
-              echo "🔄 .env 복원"
-              mv ~/.env ~/WebProgramingTeamProject/back-end/.env
-            fi
-
             cd ~/WebProgramingTeamProject/back-end
             composer install
             sudo chown -R www-data:www-data storage bootstrap/cache
             sudo chmod -R 775 storage bootstrap/cache
+
+            if [ -f ~/.env ]; then
+              echo "🔄 .env 복원"
+              mv ~/.env ~/WebProgramingTeamProject/back-end/.env
+            fi
 
             echo "⚙️ React 프론트엔드 빌드"
             cd ~/WebProgramingTeamProject/front-end
