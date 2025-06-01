@@ -27,7 +27,7 @@ class AIController extends Controller
 
         $response = Http::withHeaders([
             'Authorization' => 'Bearer ' . $apiKey,  // api-key를 Bearer 형식으로 추가
-        ])->post('https://api.deepai.org/api/text-generator', [
+        ])->post('https://api.openai.com/v1/moderations', [
             'model' => 'omni-moderation-latest',
             'input' => $textToSend,
         ]);
@@ -44,7 +44,8 @@ class AIController extends Controller
 
         return response()->json([
             'status' => 'error',
-            'message' => 'AI 호출 실패'
+            'message' => 'AI 호출 실패',
+            'debug' => $response->json(), // 디버깅 위해 실제 응답도 포함
         ], 500);
     }
 }
