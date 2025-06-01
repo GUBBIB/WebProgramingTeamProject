@@ -32,20 +32,34 @@ class AIController extends Controller
             'input' => $textToSend,
         ]);
 
-        if ($response->successful()) {
-
-            $review = $response->json();
-
-            return response()->json([
-                'status' => 'success',
-                'review' => $review
+        if ($response->status() == 429) { // Too Many Requests
+            sleep(1);  // 1초 대기
+            $response = Http::withHeaders([
+                'Authorization' => 'Bearer ' . $apiKey,  // api-key를 Bearer 형식으로 추가
+            ])->post('https://api.openai.com/v1/moderations', [
+                'model' => 'omni-moderation-latest',
+                'input' => $textToSend,
             ]);
         }
 
-        return response()->json([
-            'status' => 'error',
-            'message' => 'AI 호출 실패',
-            'debug' => $response->json(), // 디버깅 위해 실제 응답도 포함
-        ], 500);
+
+        if ($response->successful()) {
+            return response()->json([
+                'status' => 'success',
+                'result' => $response->json(),
+            ]);
+        } else {
+            // 실패한 경우
+            \Log::error('Moderation API 호출 실패', [
+                'status_code' => $response->status(),
+                'body' => $response->body(),
+            ]);
+        
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Moderation API 호출 실패',
+                'debug' => $response->json(),
+            ], 500);
+        }
     }
 }
