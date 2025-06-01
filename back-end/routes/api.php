@@ -27,4 +27,4 @@ Route::put('/posts/{PST_id}', [PostController::class, 'update']);
 // 게시글 삭제
 Route::delete('/posts/{PST_id}', [PostController::class, 'destroy']);
 
-Route::post('/ai-review', [AIController::class, 'ai_code_review']);
+Route::post('/ai-review', [AIController::class, 'ai_code_review'])->withoutMiddleware('auth');
