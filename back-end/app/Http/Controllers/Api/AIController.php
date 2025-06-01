@@ -50,7 +50,7 @@ class AIController extends Controller
             ]);
         } else {
             // 실패한 경우
-            \Log::error('Moderation API 호출 실패', [
+            Log::error('Moderation API 호출 실패', [
                 'status_code' => $response->status(),
                 'body' => $response->body(),
             ]);
