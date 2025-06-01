@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\AIController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\BoardController;
 use App\Http\Controllers\Api\PostController;
