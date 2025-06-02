@@ -102,4 +102,8 @@ class AuthController extends Controller
             'user' => $user
         ]);
     }
+
+    public function showLoginForm(){
+        return view('auth.login');  // 'auth.login' 뷰를 반환
+    }
 }

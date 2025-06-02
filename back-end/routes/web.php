@@ -11,6 +11,8 @@ Route::get('/', function () {
 Route::post('/api/register', [AuthController::class, 'register']);
 Route::post('/api/login', [AuthController::class, 'login']);
 
+Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login'); // 로그인 폼
+
 // 내부적으로 auth 라는 middleware 가 작성 돼 있고 
 // 사용자만 접근 가능
 Route::middleware(['auth'])->group(function () {
