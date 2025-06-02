@@ -10,7 +10,7 @@ const Header = ({ currentUser, onLogout }) => {
     <header className="header-container"> {/* 헤더 전체 컨테이너 */}
       <div className="logo"> {/* 로고 이미지 클릭 시 메인 페이지 이동 */}
         <Link to="/">
-          <img src="/image/apatcche.png" alt="아팟찌 로고" className="logo-image" />
+          <img src="./apatcche.png" alt="아팟찌 로고" className="logo-image" />
         </Link>
       </div>
 
