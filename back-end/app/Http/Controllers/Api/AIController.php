@@ -33,7 +33,7 @@ class AIController extends Controller
         ]);
 
         if ($response->status() == 429) { // Too Many Requests
-            sleep(1);  // 1초 대기
+            sleep(10);  // 10초 대기
             $response = Http::withHeaders([
                 'Authorization' => 'Bearer ' . $apiKey,  // api-key를 Bearer 형식으로 추가
             ])->post('https://api.openai.com/v1/moderations', [
