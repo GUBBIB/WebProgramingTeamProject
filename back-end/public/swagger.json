@@ -1,0 +1,975 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "아팠찌 페이지 json 형식",
+        "description": "이 프로젝트는 Laravel 백엔드 기반 API 문서입니다.",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/api/ai/code-review": {
+            "post": {
+                "tags": [
+                    "AI"
+                ],
+                "summary": "AI 코드 리뷰 요청",
+                "description": "입력된 언어, 코드, 상황을 기반으로 GPT 모델을 이용해 코드 리뷰를 수행합니다.",
+                "operationId": "aiCodeReview",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "language",
+                                    "code",
+                                    "situation"
+                                ],
+                                "properties": {
+                                    "language": {
+                                        "type": "string",
+                                        "example": "php"
+                                    },
+                                    "code": {
+                                        "type": "string",
+                                        "example": "echo 'Hello';"
+                                    },
+                                    "situation": {
+                                        "type": "string",
+                                        "example": "코드가 동작하지 않음"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "AI 코드 리뷰 성공",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "result": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "API 호출 실패",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Moderation API 호출 실패"
+                                        },
+                                        "debug": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/boards": {
+            "get": {
+                "tags": [
+                    "Board"
+                ],
+                "summary": "게시판 전체 목록 조회",
+                "operationId": "340166ccfaf8b6252fe2a00c03f0d5f2",
+                "responses": {
+                    "200": {
+                        "description": "게시판 목록 반환",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Board"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Board"
+                ],
+                "summary": "게시판 생성",
+                "operationId": "b4ed40d9ca8b2dd91687a796129d6e70",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "BRD_name"
+                                ],
+                                "properties": {
+                                    "BRD_name": {
+                                        "type": "string",
+                                        "example": "자유게시판"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "게시판 생성 성공",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "게시판이 생성되었습니다."
+                                        },
+                                        "board": {
+                                            "$ref": "#/components/schemas/Board"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "유효성 검사 실패"
+                    }
+                }
+            }
+        },
+        "/api/boards/search": {
+            "get": {
+                "tags": [
+                    "Board"
+                ],
+                "summary": "게시글 검색 (제목 또는 작성자 기준)",
+                "operationId": "d7c722a6b6ccea4bba3965568c22aad3",
+                "parameters": [
+                    {
+                        "name": "keyword",
+                        "in": "query",
+                        "description": "검색 키워드",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "field",
+                        "in": "query",
+                        "description": "검색 기준: title 또는 user",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "title",
+                                "user"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "BRD_id",
+                        "in": "query",
+                        "description": "게시판 ID (전체는 1)",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "검색 결과 반환",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "field": {
+                                            "type": "string",
+                                            "example": "title"
+                                        },
+                                        "keyword": {
+                                            "type": "string",
+                                            "example": "공지"
+                                        },
+                                        "results": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "잘못된 검색 조건"
+                    }
+                }
+            }
+        },
+        "/api/boards/{BRD_id}/posts/{PST_id}/comments": {
+            "get": {
+                "tags": [
+                    "Comment"
+                ],
+                "summary": "특정 게시글의 댓글 목록 조회",
+                "operationId": "b3dedd6fcddbb62a1ce8e094b5e6d7de",
+                "parameters": [
+                    {
+                        "name": "BRD_id",
+                        "in": "path",
+                        "description": "게시판 ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "PST_id",
+                        "in": "path",
+                        "description": "게시글 ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "댓글 목록 반환",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "post_id": {
+                                            "type": "integer",
+                                            "example": 3
+                                        },
+                                        "post_title": {
+                                            "type": "string",
+                                            "example": "3번 게시글입니다"
+                                        },
+                                        "board_id": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "comments": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "COM_id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "USR_id": {
+                                                        "type": "integer",
+                                                        "example": 5
+                                                    },
+                                                    "USR_nickname": {
+                                                        "type": "string",
+                                                        "example": "닉네임"
+                                                    },
+                                                    "COM_content": {
+                                                        "type": "string",
+                                                        "example": "댓글 내용입니다"
+                                                    },
+                                                    "created_at": {
+                                                        "type": "string",
+                                                        "format": "date-time"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "게시글을 찾을 수 없음"
+                    }
+                }
+            }
+        },
+        "/api/comments": {
+            "post": {
+                "tags": [
+                    "Comment"
+                ],
+                "summary": "댓글 작성 및 전체 목록 반환",
+                "operationId": "c6ce2c222c8502aadd6a287105e49307",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "USR_id",
+                                    "PST_id",
+                                    "COM_content"
+                                ],
+                                "properties": {
+                                    "USR_id": {
+                                        "type": "integer",
+                                        "example": 2
+                                    },
+                                    "PST_id": {
+                                        "type": "integer",
+                                        "example": 5
+                                    },
+                                    "COM_content": {
+                                        "type": "string",
+                                        "example": "댓글을 작성합니다"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "댓글 작성 성공 및 전체 댓글 반환",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "댓글이 성공적으로 작성되었습니다."
+                                        },
+                                        "new_comment": {
+                                            "type": "object"
+                                        },
+                                        "all_comments": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "게시글 존재하지 않음"
+                    },
+                    "422": {
+                        "description": "유효성 검사 실패"
+                    }
+                }
+            }
+        },
+        "/api/posts": {
+            "post": {
+                "tags": [
+                    "Post"
+                ],
+                "summary": "게시글 생성",
+                "operationId": "dcb66200c3132996151884ac232cf439",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "BRD_id",
+                                    "USR_id",
+                                    "PST_title",
+                                    "PST_content"
+                                ],
+                                "properties": {
+                                    "BRD_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "USR_id": {
+                                        "type": "integer",
+                                        "example": 2
+                                    },
+                                    "PST_title": {
+                                        "type": "string",
+                                        "example": "게시글 제목"
+                                    },
+                                    "PST_content": {
+                                        "type": "string",
+                                        "example": "게시글 내용"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "게시글 생성 성공",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "게시글이 성공적으로 작성되었습니다."
+                                        },
+                                        "data": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/boards/{BRD_id}/posts/{PST_id}": {
+            "get": {
+                "tags": [
+                    "Post"
+                ],
+                "summary": "게시글 상세 조회",
+                "operationId": "c1bd184445899a7da6a0ba5dbc9cc7ab",
+                "parameters": [
+                    {
+                        "name": "BRD_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "PST_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "게시글 상세 정보 반환"
+                    },
+                    "404": {
+                        "description": "게시글을 찾을 수 없음"
+                    }
+                }
+            }
+        },
+        "/api/boards/{BRD_id}": {
+            "get": {
+                "tags": [
+                    "Post"
+                ],
+                "summary": "특정 게시판의 게시글 목록 조회",
+                "operationId": "1eba5b273f2003691cde0c8629522269",
+                "parameters": [
+                    {
+                        "name": "BRD_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "게시글 목록 반환"
+                    }
+                }
+            }
+        },
+        "/api/boards/all": {
+            "get": {
+                "tags": [
+                    "Post"
+                ],
+                "summary": "전체 게시글 목록 조회",
+                "operationId": "2fcde6f2779e7b63de7a6c5068f96ce3",
+                "responses": {
+                    "200": {
+                        "description": "전체 게시글 목록 반환"
+                    }
+                }
+            }
+        },
+        "/api/boards/{BRD_id}/posts/{PST_id}/view": {
+            "post": {
+                "tags": [
+                    "Post"
+                ],
+                "summary": "게시글 조회수 증가",
+                "operationId": "3c873c1ab3da6d294e3e2ea08075ce13",
+                "parameters": [
+                    {
+                        "name": "BRD_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "PST_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "조회수 증가 완료"
+                    },
+                    "404": {
+                        "description": "게시글을 찾을 수 없음"
+                    }
+                }
+            }
+        },
+        "/api/posts/{PST_id}": {
+            "put": {
+                "tags": [
+                    "Post"
+                ],
+                "summary": "게시글 수정",
+                "operationId": "70473eed20f5e5105aa98b8fde1608ac",
+                "parameters": [
+                    {
+                        "name": "PST_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "PST_title",
+                                    "PST_content"
+                                ],
+                                "properties": {
+                                    "PST_title": {
+                                        "type": "string",
+                                        "example": "수정된 제목"
+                                    },
+                                    "PST_content": {
+                                        "type": "string",
+                                        "example": "수정된 내용"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "게시글 수정 성공"
+                    },
+                    "404": {
+                        "description": "게시글을 찾을 수 없음"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Post"
+                ],
+                "summary": "게시글 삭제",
+                "operationId": "3083840127c3a4f5d4dca172be05839a",
+                "parameters": [
+                    {
+                        "name": "PST_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "게시글 삭제 성공"
+                    },
+                    "404": {
+                        "description": "게시글을 찾을 수 없음"
+                    }
+                }
+            }
+        },
+        "/api/register": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "회원가입",
+                "operationId": "8a56853624e025573120a09a4c75d468",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "USR_email",
+                                    "USR_pass"
+                                ],
+                                "properties": {
+                                    "USR_email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "test@example.com"
+                                    },
+                                    "USR_pass": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "password123"
+                                    },
+                                    "USR_nickname": {
+                                        "type": "string",
+                                        "example": "nickname"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "회원가입 완료"
+                    }
+                }
+            }
+        },
+        "/api/login": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "로그인",
+                "operationId": "a3b306d14572d1f4bd6c064b3233e7b8",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "USR_email",
+                                    "USR_pass"
+                                ],
+                                "properties": {
+                                    "USR_email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "test@example.com"
+                                    },
+                                    "USR_pass": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "password123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "로그인 성공"
+                    },
+                    "401": {
+                        "description": "이메일 또는 비밀번호 오류"
+                    }
+                }
+            }
+        },
+        "/api/logout": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "로그아웃",
+                "operationId": "fe8f3429cd6979b3b4517e186505f9f9",
+                "responses": {
+                    "200": {
+                        "description": "로그아웃 완료"
+                    }
+                }
+            }
+        },
+        "/api/user": {
+            "get": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "현재 로그인된 사용자 정보 확인",
+                "operationId": "7c1cf647d76fad4b3eb1549fa4fe2f4c",
+                "responses": {
+                    "200": {
+                        "description": "사용자 정보 반환"
+                    }
+                }
+            }
+        },
+        "/api/user/profile": {
+            "put": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "프로필 수정",
+                "operationId": "4a75ccb2b8a3aa3f7230a2a2dd1de04d",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "USR_nickname"
+                                ],
+                                "properties": {
+                                    "USR_nickname": {
+                                        "type": "string",
+                                        "example": "new_nickname"
+                                    },
+                                    "USR_pass": {
+                                        "type": "string",
+                                        "example": "newpassword123"
+                                    },
+                                    "USR_pass_confirmation": {
+                                        "type": "string",
+                                        "example": "newpassword123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "회원정보 수정 성공"
+                    },
+                    "401": {
+                        "description": "로그인 필요"
+                    },
+                    "422": {
+                        "description": "유효성 검사 실패"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Board": {
+                "title": "Board",
+                "required": [
+                    "BRD_name"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "BRD_name": {
+                        "type": "string",
+                        "example": "공지사항"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "Comments": {
+                "title": "Comments",
+                "required": [
+                    "USR_id",
+                    "PST_id",
+                    "COM_content"
+                ],
+                "properties": {
+                    "COM_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "USR_id": {
+                        "type": "integer",
+                        "example": 12
+                    },
+                    "PST_id": {
+                        "type": "integer",
+                        "example": 101
+                    },
+                    "COM_content": {
+                        "type": "string",
+                        "example": "이 글 정말 유익하네요!"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2024-06-01T12:34:56Z"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2024-06-01T12:35:00Z"
+                    }
+                },
+                "type": "object"
+            },
+            "Post": {
+                "title": "Post",
+                "required": [
+                    "BRD_id",
+                    "USR_id",
+                    "PST_title",
+                    "PST_content"
+                ],
+                "properties": {
+                    "PST_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "BRD_id": {
+                        "type": "integer",
+                        "example": 2
+                    },
+                    "USR_id": {
+                        "type": "integer",
+                        "example": 3
+                    },
+                    "PST_title": {
+                        "type": "string",
+                        "example": "라라벨 게시판 만들기"
+                    },
+                    "PST_content": {
+                        "type": "string",
+                        "example": "이 글은 라라벨로 만든 게시판 예제입니다."
+                    },
+                    "PST_views": {
+                        "type": "integer",
+                        "example": 123
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2024-06-01T12:00:00Z"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2024-06-01T12:10:00Z"
+                    }
+                },
+                "type": "object"
+            },
+            "User": {
+                "title": "User",
+                "required": [
+                    "USR_email",
+                    "USR_pass"
+                ],
+                "properties": {
+                    "USR_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "USR_email": {
+                        "type": "string",
+                        "example": "user@example.com"
+                    },
+                    "USR_pass": {
+                        "type": "string",
+                        "format": "password",
+                        "example": "hashed_password"
+                    },
+                    "USR_nickname": {
+                        "type": "string",
+                        "example": "홍길동"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2024-06-01T12:00:00Z"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2024-06-01T12:10:00Z"
+                    }
+                },
+                "type": "object"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "AI",
+            "description": "AI"
+        },
+        {
+            "name": "Board",
+            "description": "Board"
+        },
+        {
+            "name": "Comment",
+            "description": "Comment"
+        },
+        {
+            "name": "Post",
+            "description": "Post"
+        },
+        {
+            "name": "Auth",
+            "description": "Auth"
+        }
+    ]
+}
