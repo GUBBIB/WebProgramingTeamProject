@@ -49,6 +49,9 @@ jobs:
             composer install
             sudo chown -R www-data:www-data storage bootstrap/cache
             sudo chmod -R 775 storage bootstrap/cache
+            sudo chown ubuntu:www-data storage/logs/laravel.log
+            sudo chmod 664 storage/logs/laravel.log
+            sudo chmod -R 775 storage/api-docs
 
             if [ -f ~/.env ]; then
               echo "🔄 .env 복원"
