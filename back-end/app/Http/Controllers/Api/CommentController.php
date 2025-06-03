@@ -10,10 +10,54 @@ use App\Models\Post;
 
 class CommentController extends Controller
 {
-    // 특정 게시글의 댓글 목록 조회
+    /**
+     * @OA\Get(
+     *     path="/api/boards/{BRD_id}/posts/{PST_id}/comments",
+     *     summary="특정 게시글의 댓글 목록 조회",
+     *     tags={"Comment"},
+     *     @OA\Parameter(
+     *         name="BRD_id",
+     *         in="path",
+     *         required=true,
+     *         description="게시판 ID",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Parameter(
+     *         name="PST_id",
+     *         in="path",
+     *         required=true,
+     *         description="게시글 ID",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="댓글 목록 반환",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="post_id", type="integer", example=3),
+     *             @OA\Property(property="post_title", type="string", example="3번 게시글입니다"),
+     *             @OA\Property(property="board_id", type="integer", example=1),
+     *             @OA\Property(
+     *                 property="comments",
+     *                 type="array",
+     *                 @OA\Items(
+     *                     @OA\Property(property="COM_id", type="integer", example=1),
+     *                     @OA\Property(property="USR_id", type="integer", example=5),
+     *                     @OA\Property(property="USR_nickname", type="string", example="닉네임"),
+     *                     @OA\Property(property="COM_content", type="string", example="댓글 내용입니다"),
+     *                     @OA\Property(property="created_at", type="string", format="date-time")
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="게시글을 찾을 수 없음"
+     *     )
+     * )
+     */
     public function coments_List_Search($BRD_id, $PST_id)
     {
-        $post = Post::with(['comments.user']) // 댓글 + 작성자까지 eager load
+        $post = Post::with(['comments.user'])
             ->where('BRD_id', $BRD_id)
             ->where('PST_id', $PST_id)
             ->first();
@@ -38,7 +82,39 @@ class CommentController extends Controller
         ]);
     }
 
-    // 댓글 작성 및 전체 목록 반환
+    /**
+     * @OA\Post(
+     *     path="/api/comments",
+     *     summary="댓글 작성 및 전체 목록 반환",
+     *     tags={"Comment"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"USR_id", "PST_id", "COM_content"},
+     *             @OA\Property(property="USR_id", type="integer", example=2),
+     *             @OA\Property(property="PST_id", type="integer", example=5),
+     *             @OA\Property(property="COM_content", type="string", example="댓글을 작성합니다")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="댓글 작성 성공 및 전체 댓글 반환",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="댓글이 성공적으로 작성되었습니다."),
+     *             @OA\Property(property="new_comment", type="object"),
+     *             @OA\Property(property="all_comments", type="array", @OA\Items(type="object"))
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="게시글 존재하지 않음"
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="유효성 검사 실패"
+     *     )
+     * )
+     */
     public function store(Request $request)
     {
         $request->validate([
@@ -50,7 +126,6 @@ class CommentController extends Controller
         $USR_id = $request->input('USR_id');
         $PST_id = $request->input('PST_id');
 
-        // 게시글 존재 확인
         $postExists = Post::where('PST_id', $PST_id)->exists();
 
         if (!$postExists) {
@@ -59,7 +134,6 @@ class CommentController extends Controller
             ], 404);
         }
 
-        // 댓글 저장
         $comment = Comments::create([
             'USR_id' => $USR_id,
             'PST_id' => $PST_id,
@@ -67,7 +141,6 @@ class CommentController extends Controller
         ]);
         $comment->load('user');
 
-        // 전체 댓글 조회
         $allComments = Comments::with('user')
             ->where('PST_id', $PST_id)
             ->orderBy('created_at', 'asc')

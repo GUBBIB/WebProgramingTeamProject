@@ -10,7 +10,23 @@ use App\Models\User;
 
 class AuthController extends Controller
 {
-    // 회원가입
+    /**
+     * @OA\Post(
+     *     path="/api/register",
+     *     summary="회원가입",
+     *     tags={"Auth"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"USR_email", "USR_pass"},
+     *             @OA\Property(property="USR_email", type="string", format="email", example="test@example.com"),
+     *             @OA\Property(property="USR_pass", type="string", format="password", example="password123"),
+     *             @OA\Property(property="USR_nickname", type="string", example="nickname")
+     *         )
+     *     ),
+     *     @OA\Response(response=201, description="회원가입 완료")
+     * )
+     */
     public function register(Request $request)
     {
         $request->validate([
@@ -25,12 +41,28 @@ class AuthController extends Controller
             'USR_nickname' => $request->USR_nickname,
         ]);
 
-        Auth::login($user); // 회원가입 후 자동 로그인
+        Auth::login($user);
 
         return response()->json(['message' => '회원가입 완료', 'user' => $user], 201);
     }
 
-    // 로그인
+    /**
+     * @OA\Post(
+     *     path="/api/login",
+     *     summary="로그인",
+     *     tags={"Auth"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"USR_email", "USR_pass"},
+     *             @OA\Property(property="USR_email", type="string", format="email", example="test@example.com"),
+     *             @OA\Property(property="USR_pass", type="string", format="password", example="password123")
+     *         )
+     *     ),
+     *     @OA\Response(response=200, description="로그인 성공"),
+     *     @OA\Response(response=401, description="이메일 또는 비밀번호 오류")
+     * )
+     */
     public function login(Request $request)
     {
         $request->validate([
@@ -44,7 +76,7 @@ class AuthController extends Controller
             return response()->json(['message' => '이메일 또는 비밀번호가 잘못되었습니다.'], 401);
         }
 
-        Auth::login($user); // 세션에 사용자 저장
+        Auth::login($user);
 
         return response()->json([
             'message' => '로그인 성공', 
@@ -52,24 +84,56 @@ class AuthController extends Controller
         ]);
     }
 
-    // 로그아웃
+    /**
+     * @OA\Post(
+     *     path="/api/logout",
+     *     summary="로그아웃",
+     *     tags={"Auth"},
+     *     @OA\Response(response=200, description="로그아웃 완료")
+     * )
+     */
     public function logout(Request $request)
     {
-        Auth::logout(); // 세션 삭제
+        Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
         return response()->json(['message' => '로그아웃 완료']);
     }
 
-    // 현재 로그인된 사용자 정보 확인
+    /**
+     * @OA\Get(
+     *     path="/api/user",
+     *     summary="현재 로그인된 사용자 정보 확인",
+     *     tags={"Auth"},
+     *     @OA\Response(response=200, description="사용자 정보 반환")
+     * )
+     */
     public function user(Request $request)
     {
         \Log::info("유저:", [$request->user()]);
         return response()->json(Auth::user());
     }
 
-    // 프로필 수정
+    /**
+     * @OA\Put(
+     *     path="/api/user/profile",
+     *     summary="프로필 수정",
+     *     tags={"Auth"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"USR_nickname"},
+     *             @OA\Property(property="USR_nickname", type="string", example="new_nickname"),
+     *             @OA\Property(property="USR_pass", type="string", example="newpassword123"),
+     *             @OA\Property(property="USR_pass_confirmation", type="string", example="newpassword123")
+     *         )
+     *     ),
+     *     @OA\Response(response=200, description="회원정보 수정 성공"),
+     *     @OA\Response(response=401, description="로그인 필요"),
+     *     @OA\Response(response=422, description="유효성 검사 실패")
+     * )
+     */
     public function updateProfile(Request $request)
     {
         $user = Auth::user();
@@ -104,6 +168,6 @@ class AuthController extends Controller
     }
 
     public function showLoginForm(){
-        return view('auth.login');  // 'auth.login' 뷰를 반환
+        return view('auth.login');
     }
 }
