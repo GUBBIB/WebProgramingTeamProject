@@ -31,10 +31,7 @@ class AIController extends Controller
         ])->post('https://api.openai.com/v1/chat/completions', [
             'model' => 'gpt-3.5-turbo',
             'messages' => [
-                [
-                    'role' => 'user', 
-                    'content' => $textToSend,
-                ]
+                ['role' => 'user', 'content' => $textToSend]
             ]
         ]);
 
