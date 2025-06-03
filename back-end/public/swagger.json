@@ -27,15 +27,15 @@
                                 "properties": {
                                     "language": {
                                         "type": "string",
-                                        "example": "php"
+                                        "example": "java"
                                     },
                                     "code": {
                                         "type": "string",
-                                        "example": "echo 'Hello';"
+                                        "example": "int a = 3; int b = 10; printf(\\'%%d\\', a/b);"
                                     },
                                     "situation": {
                                         "type": "string",
-                                        "example": "코드가 동작하지 않음"
+                                        "example": "실수가 아니라 정수가 나옴"
                                     }
                                 },
                                 "type": "object"
@@ -55,6 +55,70 @@
                                             "example": "success"
                                         },
                                         "result": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "string",
+                                                    "example": "chatcmpl-BePb0p6PgWwvh9IRkGEUIN9K7UCR6"
+                                                },
+                                                "object": {
+                                                    "type": "string",
+                                                    "example": "chat.completion"
+                                                },
+                                                "created": {
+                                                    "type": "integer",
+                                                    "example": 1748971210
+                                                },
+                                                "model": {
+                                                    "type": "string",
+                                                    "example": "gpt-4o-mini-2024-07-18"
+                                                },
+                                                "choices": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "index": {
+                                                                "type": "integer",
+                                                                "example": 0
+                                                            },
+                                                            "message": {
+                                                                "properties": {
+                                                                    "role": {
+                                                                        "type": "string",
+                                                                        "example": "assistant"
+                                                                    },
+                                                                    "content": {
+                                                                        "type": "string",
+                                                                        "example": "Java에서는 두 개의 정수(int) 타입을 나누면 결과도 정수형으로..."
+                                                                    }
+                                                                },
+                                                                "type": "object"
+                                                            },
+                                                            "finish_reason": {
+                                                                "type": "string",
+                                                                "example": "stop"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "usage": {
+                                                    "properties": {
+                                                        "prompt_tokens": {
+                                                            "type": "integer",
+                                                            "example": 78
+                                                        },
+                                                        "completion_tokens": {
+                                                            "type": "integer",
+                                                            "example": 340
+                                                        },
+                                                        "total_tokens": {
+                                                            "type": "integer",
+                                                            "example": 418
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                }
+                                            },
                                             "type": "object"
                                         }
                                     },

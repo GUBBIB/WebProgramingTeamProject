@@ -9,8 +9,6 @@ use Illuminate\Support\Facades\Log;
 
 class AIController extends Controller
 {
-
-
     /**
      * @OA\Post(
      *     path="/api/ai/code-review",
@@ -22,9 +20,9 @@ class AIController extends Controller
      *         required=true,
      *         @OA\JsonContent(
      *             required={"language","code","situation"},
-     *             @OA\Property(property="language", type="string", example="php"),
-     *             @OA\Property(property="code", type="string", example="echo 'Hello';"),
-     *             @OA\Property(property="situation", type="string", example="코드가 동작하지 않음")
+     *             @OA\Property(property="language", type="string", example="java"),
+     *             @OA\Property(property="code", type="string", example="int a = 3; int b = 10; printf(\'%%d\', a/b);"),
+     *             @OA\Property(property="situation", type="string", example="실수가 아니라 정수가 나옴")
      *         )
      *     ),
      *     @OA\Response(
@@ -32,7 +30,35 @@ class AIController extends Controller
      *         description="AI 코드 리뷰 성공",
      *         @OA\JsonContent(
      *             @OA\Property(property="status", type="string", example="success"),
-     *             @OA\Property(property="result", type="object")
+     *             @OA\Property(
+     *                 property="result",
+     *                 type="object",
+     *                 @OA\Property(property="id", type="string", example="chatcmpl-BePb0p6PgWwvh9IRkGEUIN9K7UCR6"),
+     *                 @OA\Property(property="object", type="string", example="chat.completion"),
+     *                 @OA\Property(property="created", type="integer", example=1748971210),
+     *                 @OA\Property(property="model", type="string", example="gpt-4o-mini-2024-07-18"),
+     *                 @OA\Property(
+     *                     property="choices",
+     *                     type="array",
+     *                     @OA\Items(
+     *                         @OA\Property(property="index", type="integer", example=0),
+     *                         @OA\Property(
+     *                             property="message",
+     *                             type="object",
+     *                             @OA\Property(property="role", type="string", example="assistant"),
+     *                             @OA\Property(property="content", type="string", example="Java에서는 두 개의 정수(int) 타입을 나누면 결과도 정수형으로...")
+     *                         ),
+     *                         @OA\Property(property="finish_reason", type="string", example="stop")
+     *                     )
+     *                 ),
+     *                 @OA\Property(
+     *                     property="usage",
+     *                     type="object",
+     *                     @OA\Property(property="prompt_tokens", type="integer", example=78),
+     *                     @OA\Property(property="completion_tokens", type="integer", example=340),
+     *                     @OA\Property(property="total_tokens", type="integer", example=418)
+     *                 )
+     *             )
      *         )
      *     ),
      *     @OA\Response(
@@ -49,18 +75,14 @@ class AIController extends Controller
 
     public function ai_code_review(Request $request)
     {
-
-        // 사용자 입력 정보들
         $language = $request->input('language');
         $code = $request->input('code');
         $situation = $request->input('situation');
 
-        // api key
         $apiKey = env('GPTAI_API_KEY');
         Log::info('GPTAI API Key:', ['api_key' => $apiKey]);
 
         $textToSend = "언어: $language\n코드: $code\n상황: $situation\n한국어로 왜 이런 상황이 나왔는지 구체적인 코드와 해결책을 제공해 주세요.";
-
 
         $response = Http::withHeaders([
             'Content-Type' => 'application/json',
@@ -73,16 +95,12 @@ class AIController extends Controller
             ]
         ]);
 
-
-
-
         if ($response->successful()) {
             return response()->json([
                 'status' => 'success',
                 'result' => $response->json(),
             ]);
         } else {
-            // 실패한 경우
             Log::error('Moderation API 호출 실패', [
                 'status_code' => $response->status(),
                 'body' => $response->body(),
