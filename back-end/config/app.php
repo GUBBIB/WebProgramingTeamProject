@@ -127,5 +127,8 @@ return [
 	/*
     * Laravel Framework Service Providers...*/
     L5Swagger\L5SwaggerServiceProvider::class,
+    Illuminate\Auth\AuthServiceProvider::class,
+    Illuminate\Broadcasting\BroadcastServiceProvider::class,
+    Illuminate\Foundation\Providers\ConsoleSupportServiceProvider::class,
     ]
 ];
