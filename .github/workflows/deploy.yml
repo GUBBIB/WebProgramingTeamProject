@@ -56,8 +56,10 @@ jobs:
                         
             sudo chown -R www-data:www-data storage bootstrap/cache
             sudo chmod -R 775 storage bootstrap/cache
+
             sudo chown ubuntu:www-data storage/logs/laravel.log
             sudo chmod 664 storage/logs/laravel.log
+            
             sudo chown -R ubuntu:www-data storage/api-docs
             sudo chmod -R 775 storage/api-docs
 

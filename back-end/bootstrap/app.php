@@ -24,9 +24,6 @@ return Application::configure(basePath: dirname(__DIR__))
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ]);
     })
-    ->withBindings([
-        \Illuminate\Contracts\Foundation\MaintenanceMode::class => \Illuminate\Foundation\MaintenanceModeManager::class,
-    ])
     ->withExceptions(function (Exceptions $exceptions) {
         //
     })->create();
