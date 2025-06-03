@@ -27,9 +27,10 @@ class AIController extends Controller
 
         $response = Http::withHeaders([
             'Content-Type' => 'application/json',
-            'Authorization' => 'Bearer ' . $apiKey,
+            'Authorization' => 'Bearer '. $apiKey,
         ])->post('https://api.openai.com/v1/chat/completions', [
             'model' => 'gpt-4o-mini',
+            'store' => true,
             'messages' => [
                 ['role' => 'user', 'content' => $textToSend]
             ]
