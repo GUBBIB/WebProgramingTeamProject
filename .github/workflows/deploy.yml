@@ -46,17 +46,22 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             cd ~/WebProgramingTeamProject/back-end
+
+            # ✅ 1. .env 먼저 복원
+            if [ -f ~/.env ]; then
+              echo "🔄 .env 복원"
+              mv ~/.env ~/WebProgramingTeamProject/back-end/.env
+            fi
+
+            # ✅ 2. composer install 이후
             composer install
+
+            # ✅ 3. 퍼미션 작업은 맨 마지막에!
             sudo chown -R www-data:www-data storage bootstrap/cache
             sudo chmod -R 775 storage bootstrap/cache
             sudo chown ubuntu:www-data storage/logs/laravel.log
             sudo chmod 664 storage/logs/laravel.log
             sudo chmod -R 775 storage/api-docs
-
-            if [ -f ~/.env ]; then
-              echo "🔄 .env 복원"
-              mv ~/.env ~/WebProgramingTeamProject/back-end/.env
-            fi
 
             echo "⚙️ React 프론트엔드 빌드"
             cd ~/WebProgramingTeamProject/front-end
