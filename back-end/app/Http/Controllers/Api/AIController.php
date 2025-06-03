@@ -26,8 +26,9 @@ class AIController extends Controller
 
 
         $response = Http::withHeaders([
-            'Authorization' => 'Bearer ' . $apiKey,  // api-key를 Bearer 형식으로 추가
-        ])->post('https://api.openai.com/v1/moderations', [
+            'Content-Type' => 'application/json',
+            'Authorization' => 'Bearer ' . $apiKey,
+        ])->post('https://api.openai.com/v1/responses', [
             'model' => 'omni-moderation-latest',
             'input' => $textToSend,
         ]);
