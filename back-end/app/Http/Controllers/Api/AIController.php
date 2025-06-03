@@ -30,7 +30,12 @@ class AIController extends Controller
             'Authorization' => 'Bearer ' . $apiKey,
         ])->post('https://api.openai.com/v1/chat/completions', [
             'model' => 'gpt-3.5-turbo',
-            'input' => $textToSend,
+            'messages' => [
+                [
+                    'role' => 'user', 
+                    'content' => $textToSend,
+                ]
+            ]
         ]);
 
 
