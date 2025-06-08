@@ -6,7 +6,7 @@
         "version": "1.0.0"
     },
     "paths": {
-        "/api/ai/code-review": {
+        "/api/ai-review": {
             "post": {
                 "tags": [
                     "AI"
