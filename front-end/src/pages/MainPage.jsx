@@ -9,6 +9,7 @@ import ProfilePage from "./ProfilePage";
 import "./MainPage.css";
 import BoardControls from "../components/Board/BoardControls";
 import BoardTypeSelector from "../components/Board/BoardTypeSelector";
+import GPTCodeHelper from "../components/GPTCodeHelper/GPTCodeHelper";
 
 const API_BASE_URL = "/api";
 
@@ -145,6 +146,7 @@ const MainPage = () => {
   return (
     <div>
       <Header currentUser={currentUser} onLogout={handleLogout} />
+      
       <div className="app-main-content">
         <Routes>
           <Route
@@ -181,6 +183,14 @@ const MainPage = () => {
               )
             }
           />
+
+          <Route
+            path="/ai-review"
+            element={
+              <GPTCodeHelper />
+            }
+          />
+
 
           {/* ✅ 게시글 수정 (PST_id 존재 시 수정 모드로 PostWritePage 재사용) */}
           <Route

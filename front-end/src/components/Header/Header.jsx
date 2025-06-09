@@ -16,6 +16,10 @@ const Header = ({ currentUser, onLogout }) => {
         {isLoggedIn ? (
           // 로그인한 경우
           <>
+            <Link to="/ai-review">
+              <button>AI 리뷰 코드</button>
+            </Link>
+
             {/* 프로필 페이지로 이동 */}
             <Link to="/profile">
               <button>회원정보</button>
