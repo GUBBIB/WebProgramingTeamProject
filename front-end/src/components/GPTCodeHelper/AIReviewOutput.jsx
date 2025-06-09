@@ -2,8 +2,7 @@ import { useEffect } from 'react';
 import MDEditor from '@uiw/react-md-editor';
 
 const AIReviewOutput = ({ rawResult }) => {
-  const rawContent = rawResult?.choices?.[0]?.message?.content ?? '';
-  const markdownText = decodeURIComponent(escape(rawContent)); // 🔥 핵심
+  const markdownText = rawResult?.choices?.[0]?.message?.content ?? ''; // ✅ 이걸로 충분함
 
   useEffect(() => {
     console.log('디코딩된 마크다운:', markdownText);
