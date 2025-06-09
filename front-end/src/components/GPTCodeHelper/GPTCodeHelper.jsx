@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import ReactMarkdown from 'react-markdown';
+import MDEditor from '@uiw/react-md-editor';
 
 function GPTCodeHelper() {
   const [language, setLanguage] = useState('');
@@ -44,7 +44,7 @@ function GPTCodeHelper() {
     <div className="max-w-4xl mx-auto p-6 border border-black space-y-4">
       <input
         type="text"
-        placeholder="언어 입력 (예: java, python)"
+        placeholder="언어 입력"
         value={language}
         onChange={(e) => setLanguage(e.target.value)}
         className="w-full border border-black p-2"
@@ -56,7 +56,7 @@ function GPTCodeHelper() {
         className="w-full border border-black p-2 h-32"
       />
       <textarea
-        placeholder="현재 상황 입력 (예: 왜 결과가 이렇게 나오나요?)"
+        placeholder="현재 상황 입력"
         value={situation}
         onChange={(e) => setSituation(e.target.value)}
         className="w-full border border-black p-2 h-20"
@@ -64,21 +64,16 @@ function GPTCodeHelper() {
       <button
         onClick={handleSubmit}
         className="bg-black text-white px-4 py-2"
-        disabled={loading}
       >
-        {loading ? 'GPT에게 요청 중...' : 'GPT에 질문하기'}
+        GPT에 질문하기
       </button>
 
-      <div className="border border-black p-4 min-h-[100px] prose max-w-none">
-        {result ? (
-          <ReactMarkdown>{result}</ReactMarkdown>
-        ) : (
-          'GPT가 마크다운 형식으로 코드 리뷰를 알려줍니다.'
-        )}
+      {/* 마크다운 렌더링 */}
+      <div className="border border-black p-4 min-h-[100px]" data-color-mode="light">
+        <MDEditor.Markdown source={result} style={{ whiteSpace: 'pre-wrap' }} />
       </div>
     </div>
   );
 }
-
 
 export default GPTCodeHelper;
