@@ -32,8 +32,8 @@ const ProfilePage = ({ currentUser, onProfileUpdate }) => {
                     'Accept': 'application/json',
                 },
                 body: JSON.stringify({
-                    USR_nickname,
-                    USR_pass,
+                    "USR_nickname": USR_nickname,
+                    "USR_pass": USR_pass,
                 }),
             });
 
