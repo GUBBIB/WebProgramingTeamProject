@@ -12,10 +12,6 @@ const IntroPage = () => {
 
   return (
     <div className="intro-container">
-      <header className="intro-header">
-        <img src={logo} alt="Logo" className="intro-logo" />
-      </header>
-
       <main className="intro-main">
         <div className="intro-card intro-greeting-card">
           <h2>환영합니다!</h2>
