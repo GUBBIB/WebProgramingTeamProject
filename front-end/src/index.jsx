@@ -5,6 +5,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import IntroPage from "./pages/IntroPage";
 import MainPage from "./pages/MainPage";
+import GPTCodeHelper from "./components/GPTCodeHelper/GPTCodeHelper";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -13,6 +14,7 @@ root.render(
       <Routes>
         <Route path="/" element={<IntroPage />} />
         <Route path="/main" element={<MainPage />} />
+        <Route path="/ai-review" element={<GPTCodeHelper />} />
       </Routes>
     </BrowserRouter>
   </React.StrictMode>
