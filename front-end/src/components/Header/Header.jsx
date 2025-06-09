@@ -10,7 +10,7 @@ const Header = ({ currentUser, onLogout }) => {
   return (
     <header className="header-container"> {/* 헤더 전체 컨테이너 */}
       <div className="logo"> {/* 로고 및 메인 페이지 이동 */}
-        <Link to="/main">
+        <Link to="/">
         <img src={logo} alt="로고" className="logo-image" />
         </Link>
       </div>
