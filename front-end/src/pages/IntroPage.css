@@ -1,0 +1,75 @@
+.intro-logo-container {
+  position: relative;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  padding: 1rem 2rem;
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.intro-logo {
+  height: 50px;
+  object-fit: contain;
+}
+
+.intro-header {
+  padding: 20px;
+}
+
+.intro-main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 20px;
+}
+
+.intro-card {
+  background-color: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  padding: 24px;
+  margin: 12px;
+  width: 100%;
+  max-width: 800px;
+  text-align: center;
+}
+
+.intro-greeting-card {
+  margin-bottom: 32px;
+}
+
+.intro-card-group {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  max-width: 800px;
+}
+
+@media (min-width: 768px) {
+  .intro-card-group {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  .intro-card {
+    flex: 1;
+  }
+}
+
+.intro-button {
+  margin-top: 40px;
+  background-color: #4f46e5;
+  color: white;
+  border: none;
+  padding: 16px 32px;
+  font-size: 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.intro-button:hover {
+  background-color: #4338ca;
+}

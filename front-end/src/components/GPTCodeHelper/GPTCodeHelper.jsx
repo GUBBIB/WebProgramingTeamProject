@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import MDEditor from '@uiw/react-md-editor';
+import './GPTCodeHelper.css';
 
 const GPTCodeHelper = () => {
   const [language, setLanguage] = useState('');
@@ -42,34 +43,35 @@ const GPTCodeHelper = () => {
   };
 
   return (
-    <div className="p-4 space-y-4">
-      <textarea
-        placeholder="언어 (예: java)"
+    <div className="gpt-helper-container">
+      <input
+        type="text"
+        placeholder="언어 입력 (예: java, python)"
         value={language}
         onChange={(e) => setLanguage(e.target.value)}
-        className="border w-full p-2"
+        className="gpt-helper-input"
       />
       <textarea
         placeholder="코드 입력"
         value={code}
         onChange={(e) => setCode(e.target.value)}
-        className="border w-full p-2 h-32"
+        className="gpt-helper-textarea"
       />
       <textarea
         placeholder="상황 설명"
         value={situation}
         onChange={(e) => setSituation(e.target.value)}
-        className="border w-full p-2"
+        className="gpt-helper-textarea"
       />
       <button
         onClick={handleSubmit}
+        className="gpt-helper-button"
         disabled={loading}
-        className="bg-blue-600 text-white px-4 py-2 rounded"
       >
         {loading ? 'GPT에 질문 중...' : 'GPT에 질문하기'}
       </button>
 
-      <div className="border border-black p-4 min-h-[100px]">
+      <div className="gpt-helper-result">
         {markdownText ? (
           <MDEditor.Markdown
             source={markdownText}

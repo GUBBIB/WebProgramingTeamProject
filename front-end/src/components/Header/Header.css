@@ -1,21 +1,32 @@
 .header-container {
+  position: relative;
   display: flex;
-  justify-content: space-between;
   align-items: center;
   padding: 1rem 2rem;
   background-color: #f8f9fa;
   border-bottom: 1px solid #dee2e6;
+  height: 80px; /* 인트로 페이지와 동일한 높이 보장 */
 }
 
-.logo a {
-  text-decoration: none;
-  color: #333;
-  font-size: 1.5rem;
-  font-weight: bold;
+.logo {
+  position: absolute;
+  top: 1rem;
+  left: 2rem;
+}
+
+.logo-image {
+  height: 50px;
+  object-fit: contain;
+}
+
+.auth-buttons {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
 }
 
 .auth-buttons button {
-  margin-left: 1rem;
   padding: 0.5rem 1rem;
   border: 1px solid #007bff;
   background-color: #007bff;
