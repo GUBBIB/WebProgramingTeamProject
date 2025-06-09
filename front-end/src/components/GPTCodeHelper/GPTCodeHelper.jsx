@@ -68,10 +68,6 @@ function GPTCodeHelper() {
       </button>
 
       <AIReviewOutput rawResult={result} />
-
-      <MDEditor.Markdown
-        source={`## 테스트\n\n다음은 코드 예시입니다:\n\`\`\`java\nint a = 3;\nint b = 10;\nSystem.out.printf("%d", a / b);\n\`\`\``}
-      />
     </div>
   );
 }
