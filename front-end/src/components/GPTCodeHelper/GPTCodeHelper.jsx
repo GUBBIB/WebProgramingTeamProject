@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import MDEditor from "@uiw/react-md-editor";
+import AIReviewOutput from "./AIReviewOutput";
 
 function GPTCodeHelper() {
   const [language, setLanguage] = useState("");
@@ -66,13 +67,7 @@ function GPTCodeHelper() {
         GPT에 질문하기
       </button>
 
-      {/* 마크다운 렌더링 */}
-      <div className="border border-black p-4 min-h-[100px]">
-        <MDEditor.Markdown
-          source={result?.choices?.[0]?.message?.content ?? ""}
-          style={{ whiteSpace: "pre-wrap" }}
-        />
-      </div>
+      <AIReviewOutput rawResult={result} />
     </div>
   );
 }
