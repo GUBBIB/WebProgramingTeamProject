@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom'; // 페이지 간 이동을 위한 Link 사용
 import './Header.css'; // 헤더 스타일링
+import logo from '../../assets/logo.png'; 
 
 // Header 컴포넌트는 로그인 여부에 따라 다른 메뉴를 보여줌
 const Header = ({ currentUser, onLogout }) => {
@@ -9,7 +10,9 @@ const Header = ({ currentUser, onLogout }) => {
   return (
     <header className="header-container"> {/* 헤더 전체 컨테이너 */}
       <div className="logo"> {/* 로고 및 메인 페이지 이동 */}
-        <Link to="/">아팠찌</Link>
+        <Link to="/main">
+        <img src={logo} alt="로고" className="logo-image" />
+        </Link>
       </div>
 
       <nav className="auth-buttons"> {/* 로그인/회원가입 또는 로그아웃/회원정보 버튼 영역 */}

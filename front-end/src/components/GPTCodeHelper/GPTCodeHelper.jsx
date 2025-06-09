@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import './GPTCodeHelper.css';
 
 function GPTCodeHelper() {
   const [language, setLanguage] = useState('');
@@ -15,12 +16,12 @@ function GPTCodeHelper() {
       const res = await fetch('/api/ai-review', {
         method: 'POST',
         headers: {
-             'Content-Type': 'application/json' 
-            },
+          'Content-Type': 'application/json',
+        },
         body: JSON.stringify({
-            "language": language,
-            "code": code,
-            "situation": situation,
+          language,
+          code,
+          situation,
         }),
       });
 
@@ -40,34 +41,34 @@ function GPTCodeHelper() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-6 border border-black space-y-4">
+    <div className="gpt-helper-container">
       <input
         type="text"
         placeholder="언어 입력 (예: java, python)"
         value={language}
         onChange={(e) => setLanguage(e.target.value)}
-        className="w-full border border-black p-2"
+        className="gpt-helper-input"
       />
       <textarea
         placeholder="코드 입력"
         value={code}
         onChange={(e) => setCode(e.target.value)}
-        className="w-full border border-black p-2 h-32"
+        className="gpt-helper-textarea"
       />
       <textarea
         placeholder="현재 상황 입력 (예: 왜 결과가 이렇게 나오나요?)"
         value={situation}
         onChange={(e) => setSituation(e.target.value)}
-        className="w-full border border-black p-2 h-20"
+        className="gpt-helper-textarea"
       />
       <button
         onClick={handleSubmit}
-        className="bg-black text-white px-4 py-2"
+        className="gpt-helper-button"
         disabled={loading}
       >
         {loading ? 'GPT에게 요청 중...' : 'GPT에 질문하기'}
       </button>
-      <div className="border border-black p-4 whitespace-pre-wrap min-h-[100px]">
+      <div className="gpt-helper-result">
         {result || 'GPT가 마크다운 형식으로 코드 리뷰를 알려줍니다.'}
       </div>
     </div>
