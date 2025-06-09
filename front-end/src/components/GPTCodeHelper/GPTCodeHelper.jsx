@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import ReactMarkdown from 'react-markdown';
 
 function GPTCodeHelper() {
   const [language, setLanguage] = useState('');
@@ -67,11 +68,17 @@ function GPTCodeHelper() {
       >
         {loading ? 'GPT에게 요청 중...' : 'GPT에 질문하기'}
       </button>
-      <div className="border border-black p-4 whitespace-pre-wrap min-h-[100px]">
-        {result || 'GPT가 마크다운 형식으로 코드 리뷰를 알려줍니다.'}
+
+      <div className="border border-black p-4 min-h-[100px] prose max-w-none">
+        {result ? (
+          <ReactMarkdown>{result}</ReactMarkdown>
+        ) : (
+          'GPT가 마크다운 형식으로 코드 리뷰를 알려줍니다.'
+        )}
       </div>
     </div>
   );
 }
+
 
 export default GPTCodeHelper;
