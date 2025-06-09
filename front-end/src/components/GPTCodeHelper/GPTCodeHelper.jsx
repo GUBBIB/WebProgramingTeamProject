@@ -1,40 +1,41 @@
-import React, { useState } from 'react';
-import MDEditor from '@uiw/react-md-editor';
+import React, { useState } from "react";
+import MDEditor from "@uiw/react-md-editor";
 
 function GPTCodeHelper() {
-  const [language, setLanguage] = useState('');
-  const [code, setCode] = useState('');
-  const [situation, setSituation] = useState('');
-  const [result, setResult] = useState('');
+  const [language, setLanguage] = useState("");
+  const [code, setCode] = useState("");
+  const [situation, setSituation] = useState("");
+  const [result, setResult] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async () => {
     setLoading(true);
-    setResult('');
+    setResult("");
 
     try {
-      const res = await fetch('/api/ai-review', {
-        method: 'POST',
+      const res = await fetch("/api/ai-review", {
+        method: "POST",
         headers: {
-             'Content-Type': 'application/json' 
-            },
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify({
-            "language": language,
-            "code": code,
-            "situation": situation,
+          language: language,
+          code: code,
+          situation: situation,
         }),
       });
 
       const data = await res.json();
 
-      if (data.status === 'success') {
-        const reply = data.result?.choices?.[0]?.message?.content ?? '응답이 없습니다.';
+      if (data.status === "success") {
+        const reply =
+          data.result?.choices?.[0]?.message?.content ?? "응답이 없습니다.";
         setResult(reply);
       } else {
-        setResult('GPT 응답 처리 중 오류가 발생했습니다.');
+        setResult("GPT 응답 처리 중 오류가 발생했습니다.");
       }
     } catch (error) {
-      setResult('요청 중 오류가 발생했습니다.');
+      setResult("요청 중 오류가 발생했습니다.");
     } finally {
       setLoading(false);
     }
@@ -61,16 +62,16 @@ function GPTCodeHelper() {
         onChange={(e) => setSituation(e.target.value)}
         className="w-full border border-black p-2 h-20"
       />
-      <button
-        onClick={handleSubmit}
-        className="bg-black text-white px-4 py-2"
-      >
+      <button onClick={handleSubmit} className="bg-black text-white px-4 py-2">
         GPT에 질문하기
       </button>
 
       {/* 마크다운 렌더링 */}
-      <div className="border border-black p-4 min-h-[100px]" data-color-mode="light">
-        <MDEditor.Markdown source={result} style={{ whiteSpace: 'pre-wrap' }} />
+      <div className="border border-black p-4 min-h-[100px]">
+        <MDEditor.Markdown
+          source={result?.choices?.[0]?.message?.content ?? ""}
+          style={{ whiteSpace: "pre-wrap" }}
+        />
       </div>
     </div>
   );
