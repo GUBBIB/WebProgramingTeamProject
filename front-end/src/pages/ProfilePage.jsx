@@ -24,7 +24,7 @@ const ProfilePage = ({ currentUser, onProfileUpdate }) => {
         }
 
         try {
-            const response = await fetch(`${API_BASE_URL}/profile/update`, {
+            const response = await fetch(`${API_BASE_URL}/profile`, {
                 method: 'POST',
                 credentials: 'include',
                 headers: {
