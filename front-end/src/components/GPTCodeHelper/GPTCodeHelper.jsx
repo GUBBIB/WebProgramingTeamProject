@@ -13,12 +13,16 @@ const GPTCodeHelper = () => {
     setMarkdownText('');
 
     try {
-      const res = await fetch('/ai-review', {
+      const res = await fetch('/api/ai-review', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ language, code, situation }),
+        body: JSON.stringify({ 
+          "language": language, 
+          "code": code, 
+          "situation": situation
+        }),
       });
 
       const json = await res.json();
