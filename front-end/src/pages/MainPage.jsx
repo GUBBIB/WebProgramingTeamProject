@@ -10,6 +10,7 @@ import "./MainPage.css";
 import BoardControls from "../components/Board/BoardControls";
 import BoardTypeSelector from "../components/Board/BoardTypeSelector";
 import GPTCodeHelper from "../components/GPTCodeHelper/GPTCodeHelper";
+import IntroPage from "./IntroPage";
 
 const API_BASE_URL = "/api";
 
@@ -149,8 +150,12 @@ const MainPage = () => {
       
       <div className="app-main-content">
         <Routes>
-          <Route
+          <Route 
             path="/"
+            element={<IntroPage />}
+          />
+          <Route
+            path="/main"
             element={
               <div>
                 <BoardTypeSelector
