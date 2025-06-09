@@ -82,7 +82,7 @@ class AIController extends Controller
         $apiKey = env('GPTAI_API_KEY');
         Log::info('GPTAI API Key:', ['api_key' => $apiKey]);
 
-        $textToSend = "언어: $language\n코드: $code\n상황: $situation\n한국어로 왜 이런 상황이 나왔는지 구체적인 코드와 해결책을 제공해 주세요.";
+        $textToSend = "언어: $language\n코드: $code\n상황: $situation\n한국어로 왜 이런 상황이 나왔는지 또는 왜 이렇게 코드 결과가 나오는지 또는 왜 이렇게 코드를 짜야하는지 마크다운 형식으로 구체적인 코드와 해결책을 제공해 주세요.";
 
         $response = Http::withHeaders([
             'Content-Type' => 'application/json',
